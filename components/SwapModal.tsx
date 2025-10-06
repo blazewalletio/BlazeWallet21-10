@@ -286,7 +286,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                     <Zap className="w-3 h-3" />
                     Powered by:
                   </span>
-                  <span className="font-medium text-primary-400">1inch</span>
+                  <span className="font-medium text-primary-400">Live prices</span>
                 </div>
               </motion.div>
             )}
@@ -315,7 +315,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mb-4">
               <p className="text-xs text-blue-300">
                 <Zap className="w-3 h-3 inline mr-1" />
-                Arc gebruikt 1inch voor de beste swap prijzen door 100+ DEXes te vergelijken.
+                Arc berekent swap prijzen op basis van live marktdata. Direct swappen is momenteel in onderhoud.
               </p>
             </div>
 
