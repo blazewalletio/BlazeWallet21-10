@@ -50,6 +50,7 @@ export default function Dashboard() {
   const [totalValueUSD, setTotalValueUSD] = useState(0);
   const [change24h, setChange24h] = useState(2.5);
   const [chartData, setChartData] = useState<number[]>([]);
+  const [selectedTimeRange, setSelectedTimeRange] = useState<number | null>(24); // Default: 24 hours
 
   const chain = CHAINS[currentChain];
   const blockchain = new BlockchainService(currentChain as any);
@@ -128,11 +129,9 @@ export default function Dashboard() {
       const nativeChange = await priceService.get24hChange(chain.nativeCurrency.symbol);
       setChange24h(nativeChange);
       
-      // Update chart data from history
-      const recentSnapshots = portfolioHistory.getRecentSnapshots(20);
-      if (recentSnapshots.length > 0) {
-        setChartData(recentSnapshots.map(s => s.balance));
-      }
+      // Update chart data from history based on selected time range
+      updateChartData();
+    
       
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -142,11 +141,30 @@ export default function Dashboard() {
     }
   };
 
+  // Update chart data when time range changes
+  const updateChartData = () => {
+    const recentSnapshots = portfolioHistory.getRecentSnapshots(20, selectedTimeRange);
+    if (recentSnapshots.length > 0) {
+      setChartData(recentSnapshots.map(s => s.balance));
+      
+      // Update change percentage for selected range
+      const rangeChange = portfolioHistory.getChangePercentage(selectedTimeRange);
+      if (rangeChange !== 0) {
+        setChange24h(rangeChange);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchData(true); // Force refresh on mount
     const interval = setInterval(() => fetchData(true), 30000); // Update every 30 seconds
     return () => clearInterval(interval);
   }, [address, currentChain]);
+
+  // Update chart when time range changes
+  useEffect(() => {
+    updateChartData();
+  }, [selectedTimeRange]);
 
   const formattedAddress = address ? BlockchainService.formatAddress(address) : '';
   const isPositiveChange = change24h >= 0;
@@ -258,13 +276,21 @@ export default function Dashboard() {
                     ) : (
                       <TrendingDown className="w-4 h-4" />
                     )}
-                    <span>{isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% vandaag</span>
+                    <span>
+                      {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% 
+                      {selectedTimeRange === 1 ? ' afgelopen uur' : 
+                       selectedTimeRange === 24 ? ' vandaag' : 
+                       selectedTimeRange === 72 ? ' afgelopen 3 dagen' :
+                       selectedTimeRange === 168 ? ' deze week' :
+                       selectedTimeRange === 720 ? ' deze maand' :
+                       ' totaal'}
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Mini Chart - Real Data */}
-              <div className="h-20 flex items-end gap-1">
+              <div className="h-20 flex items-end gap-1 mb-4">
                 {chartData.length > 0 ? (
                   // Show real portfolio history
                   (() => {
@@ -297,6 +323,31 @@ export default function Dashboard() {
                     />
                   ))
                 )}
+              </div>
+
+              {/* Time Range Selector */}
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { label: '1u', hours: 1 },
+                  { label: '1d', hours: 24 },
+                  { label: '3d', hours: 72 },
+                  { label: '1w', hours: 168 },
+                  { label: '1m', hours: 720 },
+                  { label: 'Alles', hours: null },
+                ].map((range) => (
+                  <motion.button
+                    key={range.label}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedTimeRange(range.hours)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                      selectedTimeRange === range.hours
+                        ? 'bg-primary-500 text-white shadow-lg'
+                        : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                    }`}
+                  >
+                    {range.label}
+                  </motion.button>
+                ))}
               </div>
             </div>
           </motion.div>

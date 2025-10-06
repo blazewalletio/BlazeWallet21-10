@@ -67,51 +67,77 @@ export class PortfolioHistory {
     this.saveToStorage();
   }
 
-  // Get recent snapshots for chart (last N points)
-  getRecentSnapshots(count: number = 20): BalanceSnapshot[] {
+  // Get snapshots within a specific time range
+  getSnapshotsInRange(hours: number | null = null): BalanceSnapshot[] {
     if (this.snapshots.length === 0) {
       return [];
     }
 
-    // If we have fewer snapshots than requested, return all
-    if (this.snapshots.length <= count) {
+    // If null, return all snapshots
+    if (hours === null) {
       return this.snapshots;
     }
 
+    const now = Date.now();
+    const cutoffTime = now - (hours * 60 * 60 * 1000);
+
+    // Filter snapshots within the time range
+    const filtered = this.snapshots.filter(s => s.timestamp >= cutoffTime);
+
+    return filtered.length > 0 ? filtered : this.snapshots;
+  }
+
+  // Get recent snapshots for chart (last N points from a time range)
+  getRecentSnapshots(count: number = 20, hours: number | null = null): BalanceSnapshot[] {
+    const rangeSnapshots = this.getSnapshotsInRange(hours);
+    
+    if (rangeSnapshots.length === 0) {
+      return [];
+    }
+
+    // If we have fewer snapshots than requested, return all
+    if (rangeSnapshots.length <= count) {
+      return rangeSnapshots;
+    }
+
     // Return evenly distributed snapshots across the range
-    const step = Math.floor(this.snapshots.length / count);
+    const step = Math.floor(rangeSnapshots.length / count);
     const result: BalanceSnapshot[] = [];
     
     for (let i = 0; i < count; i++) {
-      const index = Math.min(i * step, this.snapshots.length - 1);
-      result.push(this.snapshots[index]);
+      const index = Math.min(i * step, rangeSnapshots.length - 1);
+      result.push(rangeSnapshots[index]);
     }
 
     return result;
   }
 
-  // Get the change percentage over the snapshots
-  getChangePercentage(): number {
-    if (this.snapshots.length < 2) {
+  // Get the change percentage over a specific time range
+  getChangePercentage(hours: number | null = null): number {
+    const rangeSnapshots = this.getSnapshotsInRange(hours);
+    
+    if (rangeSnapshots.length < 2) {
       return 0;
     }
 
-    const first = this.snapshots[0].balance;
-    const last = this.snapshots[this.snapshots.length - 1].balance;
+    const first = rangeSnapshots[0].balance;
+    const last = rangeSnapshots[rangeSnapshots.length - 1].balance;
 
     if (first === 0) return 0;
 
     return ((last - first) / first) * 100;
   }
 
-  // Get change in absolute value
-  getChangeValue(): number {
-    if (this.snapshots.length < 2) {
+  // Get change in absolute value over a specific time range
+  getChangeValue(hours: number | null = null): number {
+    const rangeSnapshots = this.getSnapshotsInRange(hours);
+    
+    if (rangeSnapshots.length < 2) {
       return 0;
     }
 
-    const first = this.snapshots[0].balance;
-    const last = this.snapshots[this.snapshots.length - 1].balance;
+    const first = rangeSnapshots[0].balance;
+    const last = rangeSnapshots[rangeSnapshots.length - 1].balance;
 
     return last - first;
   }
