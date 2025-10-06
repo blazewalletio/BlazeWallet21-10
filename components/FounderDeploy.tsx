@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { Rocket, AlertCircle, CheckCircle2, Copy, ExternalLink } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
+import { CHAINS } from '@/lib/chains';
 
 export default function FounderDeploy() {
   const { wallet, currentChain } = useWalletStore();
+  const chain = CHAINS[currentChain];
   const [step, setStep] = useState<'ready' | 'deploying' | 'success'>('ready');
   const [tokenAddress, setTokenAddress] = useState('');
   const [copied, setCopied] = useState(false);
@@ -60,11 +62,11 @@ export default function FounderDeploy() {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-slate-400">Network:</span>
-            <span>{currentChain.name}</span>
+            <span>{chain.name}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-slate-400">Balance:</span>
-            <span>{wallet.balance} {currentChain.symbol}</span>
+            <span>{wallet.balance} {chain.nativeCurrency.symbol}</span>
           </div>
         </div>
       </div>
@@ -85,7 +87,7 @@ export default function FounderDeploy() {
               <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5" />
               <div>
                 <div className="font-medium">Network Selected</div>
-                <div className="text-sm text-slate-400">{currentChain.name} ({currentChain.id === 97 ? 'Testnet' : 'Mainnet'})</div>
+                <div className="text-sm text-slate-400">{chain.name} ({chain.id === 97 ? 'Testnet' : 'Mainnet'})</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -98,8 +100,8 @@ export default function FounderDeploy() {
                 <div className="font-medium">Gas Fees Available</div>
                 <div className="text-sm text-slate-400">
                   {parseFloat(wallet.balance) > 0 
-                    ? `${wallet.balance} ${currentChain.symbol} available`
-                    : `Need ${currentChain.symbol} for gas fees`
+                    ? `${wallet.balance} ${chain.nativeCurrency.symbol} available`
+                    : `Need ${chain.nativeCurrency.symbol} for gas fees`
                   }
                 </div>
               </div>
@@ -155,9 +157,9 @@ export default function FounderDeploy() {
             </div>
 
             <div>
-              <div className="text-sm text-slate-400 mb-2">Step 3: Deploy to {currentChain.name}</div>
+              <div className="text-sm text-slate-400 mb-2">Step 3: Deploy to {chain.name}</div>
               <div className="bg-slate-900/50 rounded-lg p-3 font-mono text-sm">
-                npm run deploy:{currentChain.id === 97 ? 'testnet' : 'bsc'}
+                npm run deploy:{chain.id === 97 ? 'testnet' : 'bsc'}
               </div>
             </div>
 
@@ -186,7 +188,7 @@ export default function FounderDeploy() {
           <div className="text-center mb-6">
             <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto mb-3" />
             <h3 className="text-2xl font-bold mb-2">🎉 Arc Token Deployed!</h3>
-            <p className="text-slate-400">Your token is now live on {currentChain.name}</p>
+            <p className="text-slate-400">Your token is now live on {chain.name}</p>
           </div>
 
           <div className="bg-slate-900/50 rounded-lg p-4 mb-4">
@@ -204,7 +206,7 @@ export default function FounderDeploy() {
 
           <div className="grid grid-cols-2 gap-3">
             <a
-              href={`${currentChain.explorer}/address/${tokenAddress}`}
+              href={`${chain.explorerUrl}/address/${tokenAddress}`}
               target="_blank"
               rel="noopener noreferrer"
               className="py-2 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center gap-2 transition-colors"
