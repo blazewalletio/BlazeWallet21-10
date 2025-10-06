@@ -7,6 +7,16 @@ import { useThemeStore, THEMES } from '@/lib/theme-store';
 export default function ThemeSelector() {
   const { currentTheme, setTheme } = useThemeStore();
 
+  const handleThemeClick = (themeId: string) => {
+    console.log('🎨 Theme clicked:', themeId);
+    console.log('📦 Current theme before:', currentTheme);
+    setTheme(themeId);
+    console.log('✅ setTheme called');
+    console.log('📦 Current theme after:', useThemeStore.getState().currentTheme);
+  };
+
+  console.log('🔍 ThemeSelector render - current theme:', currentTheme);
+
   return (
     <div className="space-y-4">
       <div>
@@ -23,7 +33,7 @@ export default function ThemeSelector() {
           return (
             <motion.button
               key={theme.id}
-              onClick={() => setTheme(theme.id)}
+              onClick={() => handleThemeClick(theme.id)}
               className={`
                 relative p-4 rounded-xl border-2 transition-all
                 ${isActive 

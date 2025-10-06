@@ -129,9 +129,14 @@ export const useThemeStore = create<ThemeStore>()(
       currentTheme: 'blaze', // Default theme
       
       setTheme: (themeId: string) => {
+        console.log('🔧 setTheme called with:', themeId);
         if (THEMES[themeId]) {
+          console.log('✅ Theme exists, applying:', THEMES[themeId].name);
           set({ currentTheme: themeId });
           applyTheme(THEMES[themeId]);
+          console.log('🎨 Theme applied!');
+        } else {
+          console.error('❌ Theme not found:', themeId);
         }
       },
       
@@ -147,7 +152,15 @@ export const useThemeStore = create<ThemeStore>()(
 
 // Apply theme to CSS variables
 export function applyTheme(theme: Theme) {
+  console.log('🎨 applyTheme called for:', theme.name);
+  
+  if (typeof window === 'undefined') {
+    console.log('⚠️ Window is undefined, skipping theme application');
+    return;
+  }
+  
   const root = document.documentElement;
+  console.log('📝 Setting CSS variables...');
   root.style.setProperty('--color-primary', theme.colors.primary);
   root.style.setProperty('--color-primary-dark', theme.colors.primaryDark);
   root.style.setProperty('--color-secondary', theme.colors.secondary);
@@ -157,6 +170,11 @@ export function applyTheme(theme: Theme) {
   root.style.setProperty('--color-text', theme.colors.text);
   root.style.setProperty('--color-text-secondary', theme.colors.textSecondary);
   root.style.setProperty('--gradient-primary', theme.gradient);
+  
+  console.log('✅ CSS variables set:', {
+    primary: root.style.getPropertyValue('--color-primary'),
+    gradient: root.style.getPropertyValue('--gradient-primary')
+  });
 }
 
 // Initialize theme on app load

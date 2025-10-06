@@ -8,9 +8,13 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   // Apply theme on mount and when it changes
   useEffect(() => {
+    console.log('🔄 ThemeProvider useEffect triggered, current theme:', currentTheme);
     const theme = getTheme();
+    console.log('📦 Got theme from store:', theme.name);
     applyTheme(theme);
   }, [currentTheme, getTheme]);
+
+  console.log('🎨 ThemeProvider render, current theme:', currentTheme);
 
   return <>{children}</>;
 }
