@@ -269,7 +269,7 @@ export default function Dashboard() {
             transition={{ delay: 0.25 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setShowQuickPay(true)}
-            className="glass-card relative overflow-hidden p-6 rounded-2xl pulse-glow"
+            className="glass-card relative overflow-hidden p-6 rounded-2xl subtle-shimmer cursor-pointer hover:bg-white/5 transition-colors"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 animate-gradient" />
             <div className="relative z-10 flex items-center gap-4">
