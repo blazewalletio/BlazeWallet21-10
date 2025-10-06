@@ -19,6 +19,7 @@ import SwapModal from './SwapModal';
 import ChainSelector from './ChainSelector';
 import TokenSelector from './TokenSelector';
 import PortfolioChart from './PortfolioChart';
+import MiniChart from './MiniChart';
 import SettingsModal from './SettingsModal';
 import DebugPanel from './DebugPanel';
 import AnimatedNumber from './AnimatedNumber';
@@ -248,11 +249,20 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Real-time Portfolio Chart */}
-              <div className="h-20 flex items-end gap-0.5">
-                <PortfolioChart currentValue={totalValueUSD} address={address || ''} timeframe="1D" />
+              {/* Mini Portfolio Chart */}
+              <div className="h-20">
+                <MiniChart currentValue={totalValueUSD} address={address || ''} />
               </div>
             </div>
+          </motion.div>
+
+          {/* Full Portfolio Chart */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <PortfolioChart currentValue={totalValueUSD} address={address || ''} />
           </motion.div>
 
           {/* Quick Pay Highlight */}
