@@ -82,12 +82,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 className="inline-block"
               >
                 <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center mb-6">
-                  <ArcIcon size={48} />
+                  <BlazeLogo size={48} animate={false} />
                 </div>
               </motion.div>
 
               <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 tracking-tight">
-                Arc
+                BLAZE
               </h1>
               <p className="text-slate-400 text-lg mb-2">
                 Your financial arc

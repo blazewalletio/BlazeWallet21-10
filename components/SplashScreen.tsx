@@ -73,7 +73,7 @@ export default function SplashScreen() {
             
             {/* Main Icon */}
             <div className="relative w-24 h-24 mx-auto bg-gradient-primary rounded-3xl flex items-center justify-center shadow-2xl">
-              <ArcLogo size={56} animate={true} />
+              <BlazeLogo size={56} animate={true} />
             </div>
           </div>
         </motion.div>
