@@ -83,14 +83,26 @@ export class BlockchainService {
     try {
       const chainId = await this.provider.getNetwork().then(n => Number(n.chainId));
       
+      // Get API keys from environment (optional, but recommended)
+      const getApiKey = (chain: number): string => {
+        const keys: Record<number, string | undefined> = {
+          1: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          11155111: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          56: process.env.NEXT_PUBLIC_BSCSCAN_API_KEY,
+          97: process.env.NEXT_PUBLIC_BSCSCAN_API_KEY,
+          137: process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY,
+        };
+        return keys[chain] || 'YourApiKeyToken';
+      };
+
       // API endpoints for different chains
-      const apiConfig: Record<number, { url: string; key: string }> = {
-        1: { url: 'https://api.etherscan.io/api', key: 'YourEtherscanAPIKey' }, // Ethereum
-        56: { url: 'https://api.bscscan.com/api', key: 'YourBscScanAPIKey' }, // BSC
-        97: { url: 'https://api-testnet.bscscan.com/api', key: 'YourBscScanAPIKey' }, // BSC Testnet
-        137: { url: 'https://api.polygonscan.com/api', key: 'YourPolygonScanAPIKey' }, // Polygon
-        42161: { url: 'https://api.arbiscan.io/api', key: 'YourArbiscanAPIKey' }, // Arbitrum
-        11155111: { url: 'https://api-sepolia.etherscan.io/api', key: 'YourEtherscanAPIKey' }, // Sepolia
+      const apiConfig: Record<number, { url: string; v2: boolean }> = {
+        1: { url: 'https://api.etherscan.io/v2/api', v2: true }, // Ethereum V2
+        56: { url: 'https://api.bscscan.com/api', v2: false }, // BSC
+        97: { url: 'https://api-testnet.bscscan.com/api', v2: false }, // BSC Testnet
+        137: { url: 'https://api.polygonscan.com/api', v2: false }, // Polygon
+        42161: { url: 'https://api.arbiscan.io/api', v2: false }, // Arbitrum
+        11155111: { url: 'https://api-sepolia.etherscan.io/v2/api', v2: true }, // Sepolia V2
       };
 
       const config = apiConfig[chainId];
@@ -99,20 +111,48 @@ export class BlockchainService {
         return [];
       }
 
-      // Fetch transactions (works without API key for basic usage, but rate limited)
-      const response = await fetch(
-        `${config.url}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc`
-      );
+      const apiKey = getApiKey(chainId);
+
+      // Build API URL
+      let apiUrl: string;
+      if (config.v2) {
+        // Etherscan V2 format (requires API key)
+        apiUrl = `${config.url}?chainid=${chainId}&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
+      } else {
+        // V1 format for other chains
+        apiUrl = `${config.url}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
+      }
+
+      console.log(`Fetching transactions for chain ${chainId}...`);
+
+      // Fetch transactions
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        console.error(`API error: ${response.status}`);
+        return [];
       }
 
       const data = await response.json();
-      
+
       if (data.status !== '1') {
+        console.warn(`API returned status: ${data.status}, message: ${data.message}`);
+        
+        // If API key is missing or invalid, show helpful message
+        if (data.message && data.message.includes('API Key')) {
+          console.warn('💡 Tip: Add a free Etherscan API key to .env.local for transaction history');
+          console.warn('Get your key at: https://etherscan.io/apis');
+        }
+        
         return [];
       }
+
+      if (!data.result || !Array.isArray(data.result)) {
+        console.warn('No transaction results found');
+        return [];
+      }
+
+      console.log(`✅ Loaded ${data.result.length} transactions`);
 
       // Format transactions
       return data.result.map((tx: any) => ({
