@@ -126,7 +126,7 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set, get) => ({
-      currentTheme: 'blaze', // Default theme
+      currentTheme: 'fire', // Default theme
       
       setTheme: (themeId: string) => {
         console.log('🔧 setTheme called with:', themeId);
@@ -140,9 +140,9 @@ export const useThemeStore = create<ThemeStore>()(
         }
       },
       
-      getTheme: () => {
-        return THEMES[get().currentTheme] || THEMES.blaze;
-      },
+          getTheme: () => {
+            return THEMES[get().currentTheme] || THEMES.fire;
+          },
     }),
     {
       name: 'blaze-theme-storage',

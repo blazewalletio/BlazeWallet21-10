@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 :root {
-  /* Default theme variables (Blaze) */
-  --color-primary: #f97316;
-  --color-primary-dark: #c2410c;
-  --color-secondary: #ef4444;
-  --color-accent: #f59e0b;
-  --color-background: #020617;
-  --color-surface: #1e293b;
-  --color-text: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --gradient-primary: linear-gradient(135deg, #f97316 0%, #ef4444 50%, #f59e0b 100%);
+  /* Default theme variables (Blaze Fire) */
+  --color-primary: #ff6b35;
+  --color-primary-dark: #d63447;
+  --color-secondary: #ff5722;
+  --color-accent: #ffd23f;
+  --color-background: #0a0908;
+  --color-surface: #1f1715;
+  --color-text: #fff8f0;
+  --color-text-secondary: #d4a574;
+  --gradient-primary: linear-gradient(135deg, #ff6b35 0%, #ff5722 33%, #d63447 66%, #ffd23f 100%);
 }
 
 @layer base {
