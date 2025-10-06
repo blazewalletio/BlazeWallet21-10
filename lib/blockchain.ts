@@ -151,66 +151,18 @@ export class BlockchainService {
         }
       }
 
-      // Fallback: Scan recent blocks using RPC (always works!)
-      console.log('🔄 Scanning blockchain directly for transactions...');
-      return await this.scanRecentBlocks(address, limit);
+      // No API key or API failed - show helpful message
+      console.error('❌ Transaction history unavailable');
+      console.error('📋 To view transaction history, add a valid Etherscan API key:');
+      console.error('   1. Create free account: https://etherscan.io/register');
+      console.error('   2. Get API key: https://etherscan.io/myapikey');
+      console.error('   3. Add to Vercel: NEXT_PUBLIC_ETHERSCAN_API_KEY');
+      console.error('   4. Redeploy app');
+      
+      return [];
 
     } catch (error) {
       console.error('Error fetching transaction history:', error);
-      return [];
-    }
-  }
-
-  // Fallback method: Scan recent blocks for transactions (slower but always works)
-  private async scanRecentBlocks(address: string, limit: number = 10): Promise<any[]> {
-    try {
-      const latestBlock = await this.provider.getBlockNumber();
-      const transactions: any[] = [];
-      const blocksToScan = 1000; // Scan last 1000 blocks (~3-4 hours on Ethereum)
-      const startBlock = Math.max(0, latestBlock - blocksToScan);
-
-      console.log(`Scanning blocks ${startBlock} to ${latestBlock}...`);
-
-      // Scan blocks in chunks for better performance
-      const chunkSize = 100;
-      for (let i = latestBlock; i >= startBlock && transactions.length < limit; i -= chunkSize) {
-        const chunkStart = Math.max(startBlock, i - chunkSize);
-        
-        try {
-          // Get transaction count for this address in this range
-          const history = await this.provider.getHistory(address, chunkStart, i);
-          
-          for (const tx of history) {
-            if (transactions.length >= limit) break;
-            
-            const receipt = await tx.wait();
-            if (receipt) {
-              transactions.push({
-                hash: tx.hash,
-                from: tx.from,
-                to: tx.to || '',
-                value: ethers.formatEther(tx.value),
-                timestamp: Date.now(), // Approximate (we'd need block timestamp)
-                isError: receipt.status === 0,
-                gasUsed: receipt.gasUsed.toString(),
-                gasPrice: tx.gasPrice?.toString() || '0',
-                blockNumber: tx.blockNumber?.toString() || '0',
-              });
-            }
-          }
-        } catch (chunkError) {
-          console.warn(`Error scanning block chunk ${chunkStart}-${i}`);
-          continue;
-        }
-
-        if (transactions.length >= limit) break;
-      }
-
-      console.log(`✅ Found ${transactions.length} transactions via blockchain scan`);
-      return transactions;
-
-    } catch (error) {
-      console.error('Error scanning blocks:', error);
       return [];
     }
   }
