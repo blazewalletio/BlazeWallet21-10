@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { ethers } from 'ethers';
+import * as bip39 from 'bip39';
 import { Token, Chain } from './types';
 import { CHAINS, DEFAULT_CHAIN } from './chains';
 
@@ -59,8 +60,15 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   importWallet: async (mnemonic: string) => {
     try {
-      // Validate and create wallet from mnemonic
-      const wallet = ethers.Wallet.fromPhrase(mnemonic);
+      // ⚠️ CRITICAL: Validate BIP39 mnemonic BEFORE creating wallet
+      const cleanMnemonic = mnemonic.trim().toLowerCase();
+      
+      if (!bip39.validateMnemonic(cleanMnemonic)) {
+        throw new Error('Ongeldige recovery phrase. Controleer je woorden en checksum.');
+      }
+      
+      // Create wallet from validated mnemonic
+      const wallet = ethers.Wallet.fromPhrase(cleanMnemonic);
       
       // Restore chain preference
       const savedChain = typeof window !== 'undefined' 
@@ -70,7 +78,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       set({
         wallet,
         address: wallet.address,
-        mnemonic,
+        mnemonic: cleanMnemonic,
         isLocked: false,
         currentChain: savedChain,
       });
@@ -78,10 +86,10 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       // Store in localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('wallet_address', wallet.address);
-        localStorage.setItem('wallet_mnemonic', mnemonic);
+        localStorage.setItem('wallet_mnemonic', cleanMnemonic);
       }
     } catch (error) {
-      throw new Error('Ongeldige recovery phrase');
+      throw new Error('Ongeldige recovery phrase. Controleer je woorden en checksum.');
     }
   },
 
@@ -94,14 +102,21 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   unlockWallet: async (mnemonic: string) => {
     try {
-      const wallet = ethers.Wallet.fromPhrase(mnemonic);
+      // ⚠️ CRITICAL: Validate BIP39 mnemonic
+      const cleanMnemonic = mnemonic.trim().toLowerCase();
+      
+      if (!bip39.validateMnemonic(cleanMnemonic)) {
+        throw new Error('Ongeldige recovery phrase. Controleer je woorden en checksum.');
+      }
+      
+      const wallet = ethers.Wallet.fromPhrase(cleanMnemonic);
       set({
         wallet,
         address: wallet.address,
         isLocked: false,
       });
     } catch (error) {
-      throw new Error('Ongeldige recovery phrase');
+      throw new Error('Ongeldige recovery phrase. Controleer je woorden en checksum.');
     }
   },
 

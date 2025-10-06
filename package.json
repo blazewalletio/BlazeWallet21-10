@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@zxing/library": "^0.21.3",
+    "bip39": "^3.1.0",
     "canvas-confetti": "^1.9.3",
     "ethers": "^6.13.0",
     "framer-motion": "^11.3.0",
