@@ -73,26 +73,31 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         amountInWei
       );
 
-      // Debug: Log full response
-      console.log('Full quote response:', JSON.stringify(quoteData, null, 2));
-      console.log('toTokenAmount:', (quoteData as any)?.toTokenAmount);
-      console.log('source:', (quoteData as any)?.source);
+      // API can return either 'toAmount' or 'toTokenAmount' depending on source
+      const outputAmount = (quoteData as any)?.toTokenAmount || (quoteData as any)?.toAmount;
+      const sourceProvider = (quoteData as any)?.source;
       
-      if (quoteData && (quoteData as any).toTokenAmount && (quoteData as any).toTokenAmount !== '0') {
-        console.log('✅ Server quote success:', (quoteData as any).source);
+      console.log('Quote received:', {
+        outputAmount,
+        source: sourceProvider,
+        protocols: (quoteData as any)?.protocols
+      });
+      
+      if (quoteData && outputAmount && outputAmount !== '0') {
+        console.log('✅ Quote success!');
         setQuote(quoteData);
         
         // Format output amount based on token decimals
         const decimals = toToken === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? 6 : 18;
-        const formatted = ethers.formatUnits((quoteData as any).toTokenAmount, decimals);
+        const formatted = ethers.formatUnits(outputAmount, decimals);
         setToAmount(formatted);
         
-        setSwapProvider((quoteData as any).source === '1inch' ? '1inch' : 'price-estimate');
+        setSwapProvider(sourceProvider === '1inch' ? '1inch' : 'price-estimate');
       } else {
         console.error('Quote check failed:', {
           hasQuoteData: !!quoteData,
-          toTokenAmount: (quoteData as any)?.toTokenAmount,
-          isZero: (quoteData as any)?.toTokenAmount === '0'
+          outputAmount,
+          sourceProvider
         });
         setError('Geen quote beschikbaar voor dit token pair');
       }
@@ -182,7 +187,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
   };
 
   const getExchangeRate = (): string => {
-    if (!quote || !fromAmount || parseFloat(fromAmount) === 0) return '0.0';
+    if (!quote || !fromAmount || parseFloat(fromAmount) === 0 || !toAmount || parseFloat(toAmount) === 0) return '0.0';
     const rate = parseFloat(toAmount) / parseFloat(fromAmount);
     return rate.toFixed(6);
   };
