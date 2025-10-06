@@ -1,11 +1,11 @@
 {
-  "name": "Arc - Your Financial Arc",
-  "short_name": "Arc",
-  "description": "Bend money. Lightning fast crypto wallet with Quick Pay.",
+  "name": "BLAZE - Lightning Fast Crypto",
+  "short_name": "BLAZE",
+  "description": "Set your finances on fire. Lightning fast crypto wallet with Quick Pay.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",
-  "theme_color": "#8b5cf6",
+  "theme_color": "#f97316",
   "orientation": "portrait",
   "categories": ["finance", "utilities"],
   "shortcuts": [

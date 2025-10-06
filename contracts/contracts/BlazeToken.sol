@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
- * @title Arc Token
- * @dev The utility token that powers Arc wallet - V4 Enhanced
+ * @title Blaze Token
+ * @dev The utility token that powers BLAZE Wallet - V4 Enhanced
  * 
  * Distribution (1B total):
  * - 25% Public Sale & Liquidity (250M)
@@ -26,7 +26,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  * - No anti-dump mechanisms (Bitcoin approach)
  * - Multi-chain ready
  */
-contract ArcToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGuard {
+contract BlazeToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGuard {
     
     // Distribution addresses
     address public publicSaleWallet;
@@ -90,7 +90,7 @@ contract ArcToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
         address _teamWallet,
         address _strategicWallet,
         address _liquidityWallet
-    ) ERC20("Arc Token", "ARC") Ownable(msg.sender) {
+    ) ERC20("Blaze Token", "BLAZE") Ownable(msg.sender) {
         require(_publicSaleWallet != address(0), "Invalid public sale wallet");
         require(_founderWallet != address(0), "Invalid founder wallet");
         require(_communityWallet != address(0), "Invalid community wallet");

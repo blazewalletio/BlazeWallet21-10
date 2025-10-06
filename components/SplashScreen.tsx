@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import ArcLogo from './ArcLogo';
+import BlazeLogo from './BlazeLogo';
 
 export default function SplashScreen() {
   return (

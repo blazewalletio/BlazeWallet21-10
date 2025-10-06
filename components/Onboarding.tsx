@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, CheckCircle2, Copy, Check } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
-import { ArcIcon } from './ArcLogo';
+import BlazeLogo from './BlazeLogo';
 
 interface OnboardingProps {
   onComplete: () => void;

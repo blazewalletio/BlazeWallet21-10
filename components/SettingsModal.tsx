@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Shield, Key, Trash2, Download, 
-  Eye, EyeOff, Copy, Check, Bell, Moon, Sun 
+  Eye, EyeOff, Copy, Check, Bell, Moon, Sun, Palette 
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
+import ThemeSelector from './ThemeSelector';
 
 interface SettingsModalProps {
   isOpen: boolean;

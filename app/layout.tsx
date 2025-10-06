@@ -5,10 +5,10 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Arc - Your Financial Arc",
-  description: "Bend money. Lightning fast crypto wallet with revolutionary design.",
+  title: "BLAZE - Lightning Fast Crypto",
+  description: "Set your finances on fire. Lightning fast crypto wallet with revolutionary design.",
   manifest: "/manifest.json",
-  themeColor: "#8b5cf6",
+  themeColor: "#f97316",
   viewport: {
     width: "device-width",
     initialScale: 1,
