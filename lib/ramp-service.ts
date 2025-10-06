@@ -30,7 +30,7 @@ export class RampService {
 
   // Open Ramp widget using official SDK
   static openWidget(config: RampConfig) {
-    new RampInstantSDK({
+    const widget = new RampInstantSDK({
       hostAppName: config.hostAppName,
       hostLogoUrl: config.hostLogoUrl || 'https://arcwallet.vercel.app/icon-512.png',
       userAddress: config.userAddress,
@@ -38,20 +38,11 @@ export class RampService {
       variant: 'auto', // Automatically adapts to mobile/desktop
       // Optional: Add revenue share API key
       ...(config.hostApiKey && { hostApiKey: config.hostApiKey }),
-    })
-      .on('*', (event) => {
-        // Log all events for debugging
-        console.log('Ramp event:', event);
-      })
-      .on('WIDGET_CLOSE', () => {
-        console.log('Ramp widget closed');
-      })
-      .on('PURCHASE_SUCCESSFUL', (event) => {
-        console.log('Purchase successful!', event);
-      })
-      .on('PURCHASE_FAILED', (event) => {
-        console.error('Purchase failed:', event);
-      })
-      .show();
+    });
+
+    // Show the widget
+    widget.show();
+    
+    return widget;
   }
 }
