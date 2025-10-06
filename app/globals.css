@@ -16,23 +16,21 @@
 }
 
 @layer base {
-  :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-  }
-
   * {
     @apply border-slate-800;
   }
 
   body {
-    @apply bg-slate-950 text-slate-50;
+    background-color: var(--color-background) !important;
+    color: var(--color-text) !important;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   /* Glassmorphism utilities */
   .glass {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+    background-color: var(--color-surface) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .glass-card {
@@ -59,8 +57,15 @@
 
   /* Smooth transitions */
   * {
-    @apply transition-colors duration-200;
+    @apply transition-colors duration-300;
   }
+  
+  /* Force theme colors on Tailwind classes */
+  .bg-slate-950 { background-color: var(--color-background) !important; }
+  .bg-slate-900 { background-color: var(--color-background) !important; }
+  .bg-slate-800 { background-color: var(--color-surface) !important; }
+  .text-slate-50 { color: var(--color-text) !important; }
+  .text-slate-400 { color: var(--color-text-secondary) !important; }
 }
 
 @layer components {
