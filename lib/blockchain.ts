@@ -78,7 +78,7 @@ export class BlockchainService {
     }
   }
 
-  // Get transaction history from block explorer APIs
+  // Get transaction history from block explorer APIs with RPC fallback
   async getTransactionHistory(address: string, limit: number = 10): Promise<any[]> {
     try {
       const chainId = await this.provider.getNetwork().then(n => Number(n.chainId));
@@ -92,7 +92,7 @@ export class BlockchainService {
           97: process.env.NEXT_PUBLIC_BSCSCAN_API_KEY,
           137: process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY,
         };
-        return keys[chain] || 'YourApiKeyToken';
+        return keys[chain] || '';
       };
 
       // API endpoints for different chains
@@ -106,68 +106,111 @@ export class BlockchainService {
       };
 
       const config = apiConfig[chainId];
-      if (!config) {
-        console.warn(`No API config for chain ${chainId}`);
-        return [];
-      }
-
       const apiKey = getApiKey(chainId);
 
-      // Build API URL
-      let apiUrl: string;
-      if (config.v2) {
-        // Etherscan V2 format (requires API key)
-        apiUrl = `${config.url}?chainid=${chainId}&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
-      } else {
-        // V1 format for other chains
-        apiUrl = `${config.url}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
-      }
+      // Try block explorer API first (if config exists and API key available)
+      if (config && apiKey) {
+        try {
+          // Build API URL
+          let apiUrl: string;
+          if (config.v2) {
+            // Etherscan V2 format (requires API key)
+            apiUrl = `${config.url}?chainid=${chainId}&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
+          } else {
+            // V1 format for other chains
+            apiUrl = `${config.url}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
+          }
 
-      console.log(`Fetching transactions for chain ${chainId}...`);
+          console.log(`🔍 Trying block explorer API for chain ${chainId}...`);
 
-      // Fetch transactions
-      const response = await fetch(apiUrl);
+          const response = await fetch(apiUrl);
+          
+          if (response.ok) {
+            const data = await response.json();
 
-      if (!response.ok) {
-        console.error(`API error: ${response.status}`);
-        return [];
-      }
-
-      const data = await response.json();
-
-      if (data.status !== '1') {
-        console.warn(`API returned status: ${data.status}, message: ${data.message}`);
-        
-        // If API key is missing or invalid, show helpful message
-        if (data.message && data.message.includes('API Key')) {
-          console.warn('💡 Tip: Add a free Etherscan API key to .env.local for transaction history');
-          console.warn('Get your key at: https://etherscan.io/apis');
+            if (data.status === '1' && data.result && Array.isArray(data.result)) {
+              console.log(`✅ Loaded ${data.result.length} transactions from block explorer`);
+              
+              return data.result.map((tx: any) => ({
+                hash: tx.hash,
+                from: tx.from,
+                to: tx.to,
+                value: ethers.formatEther(tx.value),
+                timestamp: parseInt(tx.timeStamp) * 1000,
+                isError: tx.isError === '1',
+                gasUsed: tx.gasUsed,
+                gasPrice: tx.gasPrice,
+                blockNumber: tx.blockNumber,
+              }));
+            } else {
+              console.warn(`Block explorer API failed: ${data.message || 'Unknown error'}`);
+            }
+          }
+        } catch (explorerError) {
+          console.warn('Block explorer API unavailable, falling back to RPC scan');
         }
-        
-        return [];
       }
 
-      if (!data.result || !Array.isArray(data.result)) {
-        console.warn('No transaction results found');
-        return [];
-      }
+      // Fallback: Scan recent blocks using RPC (always works!)
+      console.log('🔄 Scanning blockchain directly for transactions...');
+      return await this.scanRecentBlocks(address, limit);
 
-      console.log(`✅ Loaded ${data.result.length} transactions`);
-
-      // Format transactions
-      return data.result.map((tx: any) => ({
-        hash: tx.hash,
-        from: tx.from,
-        to: tx.to,
-        value: ethers.formatEther(tx.value),
-        timestamp: parseInt(tx.timeStamp) * 1000,
-        isError: tx.isError === '1',
-        gasUsed: tx.gasUsed,
-        gasPrice: tx.gasPrice,
-        blockNumber: tx.blockNumber,
-      }));
     } catch (error) {
       console.error('Error fetching transaction history:', error);
+      return [];
+    }
+  }
+
+  // Fallback method: Scan recent blocks for transactions (slower but always works)
+  private async scanRecentBlocks(address: string, limit: number = 10): Promise<any[]> {
+    try {
+      const latestBlock = await this.provider.getBlockNumber();
+      const transactions: any[] = [];
+      const blocksToScan = 1000; // Scan last 1000 blocks (~3-4 hours on Ethereum)
+      const startBlock = Math.max(0, latestBlock - blocksToScan);
+
+      console.log(`Scanning blocks ${startBlock} to ${latestBlock}...`);
+
+      // Scan blocks in chunks for better performance
+      const chunkSize = 100;
+      for (let i = latestBlock; i >= startBlock && transactions.length < limit; i -= chunkSize) {
+        const chunkStart = Math.max(startBlock, i - chunkSize);
+        
+        try {
+          // Get transaction count for this address in this range
+          const history = await this.provider.getHistory(address, chunkStart, i);
+          
+          for (const tx of history) {
+            if (transactions.length >= limit) break;
+            
+            const receipt = await tx.wait();
+            if (receipt) {
+              transactions.push({
+                hash: tx.hash,
+                from: tx.from,
+                to: tx.to || '',
+                value: ethers.formatEther(tx.value),
+                timestamp: Date.now(), // Approximate (we'd need block timestamp)
+                isError: receipt.status === 0,
+                gasUsed: receipt.gasUsed.toString(),
+                gasPrice: tx.gasPrice?.toString() || '0',
+                blockNumber: tx.blockNumber?.toString() || '0',
+              });
+            }
+          }
+        } catch (chunkError) {
+          console.warn(`Error scanning block chunk ${chunkStart}-${i}`);
+          continue;
+        }
+
+        if (transactions.length >= limit) break;
+      }
+
+      console.log(`✅ Found ${transactions.length} transactions via blockchain scan`);
+      return transactions;
+
+    } catch (error) {
+      console.error('Error scanning blocks:', error);
       return [];
     }
   }
