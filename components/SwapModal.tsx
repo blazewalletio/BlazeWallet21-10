@@ -8,15 +8,12 @@ import { CHAINS, POPULAR_TOKENS } from '@/lib/chains';
 import { SwapService } from '@/lib/swap-service';
 import { ethers } from 'ethers';
 
-// Lazy load Uniswap to avoid build issues
-let UniswapService: any = null;
-
 interface SwapModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type SwapProvider = 'uniswap' | '1inch' | 'price-estimate';
+type SwapProvider = '1inch' | 'price-estimate';
 
 export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
   const { address, currentChain, balance, wallet } = useWalletStore();
@@ -68,49 +65,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
         : fromToken;
 
-      // Lazy load Uniswap service (client-side only)
-      if (!UniswapService && typeof window !== 'undefined') {
-        try {
-          const module = await import('@/lib/uniswap-service');
-          UniswapService = module.UniswapService;
-        } catch (err) {
-          console.log('Uniswap SDK not available');
-        }
-      }
-
-      // Try Uniswap first (if supported on chain)
-      if (UniswapService && UniswapService.isSupported(chain.id)) {
-        try {
-          console.log('Trying Uniswap routing...');
-          const uniswapService = new UniswapService(chain.id, chain.rpcUrl);
-          const uniswapQuote = await uniswapService.getQuote(
-            fromAddress,
-            toToken,
-            amountInWei,
-            18, // ETH decimals
-            toToken === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? 6 : 18 // USDT = 6, others = 18
-          );
-
-          if (uniswapQuote) {
-            console.log('✅ Uniswap quote success!');
-            setQuote({
-              toTokenAmount: uniswapQuote.outputAmount,
-              fromTokenAmount: amountInWei,
-              estimatedGas: uniswapQuote.gasEstimate,
-              source: 'uniswap',
-              route: uniswapQuote.route,
-            });
-            setToAmount(uniswapQuote.outputAmountFormatted);
-            setSwapProvider('uniswap');
-            setIsLoadingQuote(false);
-            return;
-          }
-        } catch (err) {
-          console.log('Uniswap failed, trying fallback...');
-        }
-      }
-
-      // Fallback to server-side quote (1inch or price estimate)
+      // Get quote from server (1inch or price estimate)
       const swapService = new SwapService(chain.id);
       const quoteData = await swapService.getQuote(
         fromAddress,
@@ -156,29 +111,8 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
       let txHash: string;
 
-      // Load Uniswap if needed
-      if (!UniswapService && typeof window !== 'undefined') {
-        const module = await import('@/lib/uniswap-service');
-        UniswapService = module.UniswapService;
-      }
-
-      // Execute swap based on provider
-      if (swapProvider === 'uniswap' && quote.route && UniswapService) {
-        console.log('Executing Uniswap swap...');
-        const uniswapService = new UniswapService(chain.id, chain.rpcUrl);
-        
-        const minAmountOut = (BigInt(quote.toTokenAmount) * 995n) / 1000n; // 0.5% slippage
-        
-        txHash = await uniswapService.executeSwap(
-          wallet,
-          fromAddress,
-          toToken,
-          amountInWei,
-          minAmountOut.toString(),
-          18,
-          toToken === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? 6 : 18
-        );
-      } else if (swapProvider === '1inch') {
+      // Execute swap via 1inch
+      if (swapProvider === '1inch') {
         console.log('Executing 1inch swap...');
         const swapService = new SwapService(chain.id);
         
@@ -208,7 +142,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         await tx.wait();
         txHash = tx.hash;
       } else {
-        throw new Error('Direct swappen met price estimates is niet mogelijk. Gebruik Uniswap.app of voeg 1inch API key toe.');
+        throw new Error('Direct swappen niet mogelijk. Voeg 1inch API key toe (zie ONEINCH_API_SETUP.md) of gebruik een externe DEX.');
       }
 
       console.log('✅ Swap successful:', txHash);
@@ -245,8 +179,6 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
   const getProviderLabel = (): string => {
     switch (swapProvider) {
-      case 'uniswap':
-        return 'Uniswap V3';
       case '1inch':
         return '1inch';
       case 'price-estimate':
@@ -258,8 +190,6 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
   const getProviderColor = (): string => {
     switch (swapProvider) {
-      case 'uniswap':
-        return 'text-pink-400';
       case '1inch':
         return 'text-blue-400';
       case 'price-estimate':
@@ -273,7 +203,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
     return quote && 
            fromAmount && 
            parseFloat(fromAmount) > 0 && 
-           (swapProvider === 'uniswap' || swapProvider === '1inch') &&
+           swapProvider === '1inch' &&
            !isLoadingQuote &&
            !isSwapping;
   };
@@ -449,12 +379,13 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
           )}
 
           {/* Info */}
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mb-4">
-            <p className="text-xs text-blue-300">
+          <div className={`${swapProvider === '1inch' ? 'bg-blue-500/10 border-blue-500/20' : 'bg-amber-500/10 border-amber-500/20'} border rounded-xl p-3 mb-4`}>
+            <p className={`text-xs ${swapProvider === '1inch' ? 'text-blue-300' : 'text-amber-300'}`}>
               <Zap className="w-3 h-3 inline mr-1" />
-              {swapProvider === 'uniswap' && 'Uniswap V3: Direct on-chain routing, geen API key nodig ✅'}
-              {swapProvider === '1inch' && '1inch: Beste rates door 100+ DEXes te vergelijken 🚀'}
-              {swapProvider === 'price-estimate' && 'Price estimate: Voeg 1inch API key toe voor echte swaps'}
+              {swapProvider === '1inch' ? 
+                '1inch: Beste rates door 100+ DEXes te vergelijken 🚀' : 
+                'Voeg 1inch API key toe voor echte swaps (zie ONEINCH_API_SETUP.md)'
+              }
             </p>
           </div>
 
@@ -480,7 +411,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
           {/* Additional Info */}
           <p className="text-xs text-slate-500 mt-3 text-center">
-            Controleer altijd de details voor je swapped. Slippage: {swapProvider === 'uniswap' ? '0.5%' : '1%'}
+            Controleer altijd de details voor je swapped. Slippage: 1%
           </p>
         </motion.div>
       </div>
