@@ -72,6 +72,35 @@ export const CHAINS: Record<string, Chain> = {
     icon: 'Ξ',
     isTestnet: true,
   },
+  bsc: {
+    id: 56,
+    name: 'BNB Smart Chain',
+    shortName: 'BSC',
+    rpcUrl: 'https://bsc-dataseed.binance.org',
+    explorerUrl: 'https://bscscan.com',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    color: '#F3BA2F',
+    icon: '💎',
+  },
+  bscTestnet: {
+    id: 97,
+    name: 'BSC Testnet',
+    shortName: 'BSC-T',
+    rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+    explorerUrl: 'https://testnet.bscscan.com',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'tBNB',
+      decimals: 18,
+    },
+    color: '#F3BA2F',
+    icon: '🧪',
+    isTestnet: true,
+  },
 };
 
 export const DEFAULT_CHAIN = 'ethereum';
@@ -148,4 +177,28 @@ export const POPULAR_TOKENS: Record<string, any[]> = {
       logo: '💲',
     },
   ],
+  bsc: [
+    {
+      address: '0x55d398326f99059fF775485246999027B3197955',
+      symbol: 'USDT',
+      name: 'Tether USD',
+      decimals: 18,
+      logo: '💵',
+    },
+    {
+      address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+      symbol: 'USDC',
+      name: 'USD Coin',
+      decimals: 18,
+      logo: '💲',
+    },
+    {
+      address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+      symbol: 'BUSD',
+      name: 'Binance USD',
+      decimals: 18,
+      logo: '💰',
+    },
+  ],
+  bscTestnet: [],
 };
