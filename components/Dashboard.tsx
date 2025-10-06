@@ -19,7 +19,6 @@ import SwapModal from './SwapModal';
 import ChainSelector from './ChainSelector';
 import TokenSelector from './TokenSelector';
 import PortfolioChart from './PortfolioChart';
-import MiniChart from './MiniChart';
 import SettingsModal from './SettingsModal';
 import DebugPanel from './DebugPanel';
 import AnimatedNumber from './AnimatedNumber';
@@ -50,11 +49,13 @@ export default function Dashboard() {
   const [showFounderDeploy, setShowFounderDeploy] = useState(false);
   const [totalValueUSD, setTotalValueUSD] = useState(0);
   const [change24h, setChange24h] = useState(2.5);
+  const [chartData, setChartData] = useState<number[]>([]);
 
   const chain = CHAINS[currentChain];
   const blockchain = new BlockchainService(currentChain as any);
   const tokenService = new TokenService(chain.rpcUrl);
   const priceService = new PriceService();
+  const portfolioHistory = getPortfolioHistory();
 
   const fetchData = async (force = false) => {
     if (!address) return;
@@ -111,14 +112,27 @@ export default function Dashboard() {
           (sum, token) => sum + parseFloat(token.balanceUSD || '0'),
           0
         );
-        setTotalValueUSD(nativeValueUSD + tokensTotalUSD);
+        const totalValue = nativeValueUSD + tokensTotalUSD;
+        setTotalValueUSD(totalValue);
+        
+        // Save to portfolio history
+        portfolioHistory.addSnapshot(totalValue, address, currentChain);
       } else {
         setTotalValueUSD(nativeValueUSD);
+        
+        // Save to portfolio history
+        portfolioHistory.addSnapshot(nativeValueUSD, address, currentChain);
       }
 
       // Get 24h change
       const nativeChange = await priceService.get24hChange(chain.nativeCurrency.symbol);
       setChange24h(nativeChange);
+      
+      // Update chart data from history
+      const recentSnapshots = portfolioHistory.getRecentSnapshots(20);
+      if (recentSnapshots.length > 0) {
+        setChartData(recentSnapshots.map(s => s.balance));
+      }
       
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -249,20 +263,42 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Mini Portfolio Chart */}
-              <div className="h-20">
-                <MiniChart currentValue={totalValueUSD} address={address || ''} />
+              {/* Mini Chart - Real Data */}
+              <div className="h-20 flex items-end gap-1">
+                {chartData.length > 0 ? (
+                  // Show real portfolio history
+                  (() => {
+                    const minValue = Math.min(...chartData);
+                    const maxValue = Math.max(...chartData);
+                    const range = maxValue - minValue || 1; // Avoid division by zero
+                    
+                    return chartData.map((value, i) => {
+                      const heightPercent = ((value - minValue) / range) * 80 + 20;
+                      return (
+                        <motion.div
+                          key={i}
+                          initial={{ height: 0 }}
+                          animate={{ height: `${heightPercent}%` }}
+                          transition={{ delay: i * 0.03, duration: 0.5 }}
+                          className={`flex-1 rounded-t ${isPositiveChange ? 'bg-emerald-500/30' : 'bg-rose-500/30'}`}
+                        />
+                      );
+                    });
+                  })()
+                ) : (
+                  // Placeholder while loading data
+                  Array.from({ length: 20 }).map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ height: 0 }}
+                      animate={{ height: '50%' }}
+                      transition={{ delay: i * 0.05, duration: 0.5 }}
+                      className="flex-1 rounded-t bg-slate-500/20"
+                    />
+                  ))
+                )}
               </div>
             </div>
-          </motion.div>
-
-          {/* Full Portfolio Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-          >
-            <PortfolioChart currentValue={totalValueUSD} address={address || ''} />
           </motion.div>
 
           {/* Quick Pay Highlight */}
