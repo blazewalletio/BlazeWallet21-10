@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Shield, Key, Trash2, Download, 
-  Eye, EyeOff, Copy, Check, Bell, Moon, Sun 
+  Eye, EyeOff, Copy, Check, Bell, Moon, Sun, Palette 
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
+import { useThemeStore } from '@/lib/theme-store';
+import { themes, ThemeId } from '@/lib/themes';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -15,6 +17,7 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { mnemonic, resetWallet, address } = useWalletStore();
+  const { themeId, setTheme } = useThemeStore();
   const [showMnemonic, setShowMnemonic] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -67,6 +70,56 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </div>
 
               <div className="space-y-6">
+                {/* Theme Selector */}
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Thema
+                  </h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    {Object.values(themes).map((theme) => (
+                      <motion.button
+                        key={theme.id}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setTheme(theme.id)}
+                        className={`relative overflow-hidden rounded-xl p-4 border-2 transition-all ${
+                          themeId === theme.id
+                            ? 'border-white shadow-lg'
+                            : 'border-white/20 hover:border-white/40'
+                        }`}
+                        style={{
+                          background: theme.background.gradient,
+                        }}
+                      >
+                        <div className="relative z-10 flex items-center gap-3">
+                          <div className="text-3xl">{theme.icon}</div>
+                          <div className="flex-1 text-left">
+                            <div className="font-bold text-white">{theme.name}</div>
+                            <div className="text-sm text-white/80">{theme.description}</div>
+                          </div>
+                          {themeId === theme.id && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="w-6 h-6 bg-white rounded-full flex items-center justify-center"
+                            >
+                              <Check className="w-4 h-4 text-pink-600" />
+                            </motion.div>
+                          )}
+                        </div>
+                        {/* Theme preview overlay */}
+                        {theme.id === 'neon' && (
+                          <div className="absolute inset-0 opacity-30 pointer-events-none" 
+                            style={{
+                              background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 1px, transparent 1px, transparent 2px)'
+                            }}
+                          />
+                        )}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Account Info */}
                 <div>
                   <h3 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">

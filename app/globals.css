@@ -6,6 +6,16 @@
   :root {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
+    
+    /* Theme CSS variables (will be set by ThemeProvider) */
+    --theme-bg-primary: #FF1B8D;
+    --theme-bg-secondary: #B645FF;
+    --theme-accent-primary: #FF1B8D;
+    --theme-accent-secondary: #B645FF;
+    --theme-text-primary: #FFFFFF;
+    --theme-text-secondary: rgba(255, 255, 255, 0.8);
+    --theme-card-bg: rgba(255, 255, 255, 0.1);
+    --theme-card-border: rgba(255, 255, 255, 0.2);
   }
 
   * {
@@ -13,7 +23,7 @@
   }
 
   body {
-    @apply bg-slate-950 text-slate-50;
+    @apply text-slate-50;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -233,4 +243,156 @@
 
 .slide-up-fade {
   animation: slide-up-fade 0.5s ease-out forwards;
+}
+
+/* ============================================
+   BLAZE THEME SYSTEM
+   ============================================ */
+
+/* Theme Backgrounds */
+.theme-bg {
+  background: linear-gradient(135deg, 
+    var(--theme-bg-primary) 0%, 
+    var(--theme-bg-secondary) 100%
+  );
+  transition: background 0.5s ease;
+}
+
+/* Hot Pink Thunder Theme */
+.theme-hot-pink .theme-bg {
+  background: linear-gradient(135deg, #FF1B8D 0%, #B645FF 100%);
+}
+
+.theme-hot-pink .theme-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at top right, rgba(255, 77, 184, 0.3), transparent 50%),
+              radial-gradient(ellipse at bottom left, rgba(182, 69, 255, 0.3), transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-hot-pink .glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(255, 27, 141, 0.2);
+}
+
+.theme-hot-pink .glass-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(255, 27, 141, 0.3);
+}
+
+/* Elegant Thunder Theme */
+.theme-elegant .theme-bg {
+  background: linear-gradient(135deg, #1A0B2E 0%, #0F0520 100%);
+}
+
+.theme-elegant .theme-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at top right, rgba(180, 69, 255, 0.15), transparent 60%),
+              radial-gradient(ellipse at bottom left, rgba(255, 27, 141, 0.1), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-elegant .glass-card {
+  background: rgba(180, 69, 255, 0.08);
+  border: 1px solid rgba(180, 69, 255, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(180, 69, 255, 0.15);
+}
+
+.theme-elegant .glass-card:hover {
+  background: rgba(180, 69, 255, 0.12);
+  border-color: rgba(255, 27, 141, 0.3);
+  box-shadow: 0 0 30px rgba(255, 27, 141, 0.2);
+}
+
+/* Neon Blaze Theme */
+.theme-neon .theme-bg {
+  background: linear-gradient(135deg, #0A0118 0%, #000000 100%);
+}
+
+.theme-neon .theme-overlay {
+  position: fixed;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    radial-gradient(ellipse at center, rgba(255, 27, 141, 0.1), transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  animation: scanlines 8s linear infinite;
+}
+
+.theme-neon .glass-card {
+  background: rgba(10, 1, 24, 0.9);
+  border: 2px solid #FF1B8D;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 0 20px rgba(255, 27, 141, 0.5),
+    inset 0 0 20px rgba(182, 69, 255, 0.1);
+}
+
+.theme-neon .glass-card:hover {
+  border-color: #B645FF;
+  box-shadow: 
+    0 0 30px rgba(255, 27, 141, 0.8),
+    0 0 60px rgba(182, 69, 255, 0.4),
+    inset 0 0 30px rgba(182, 69, 255, 0.2);
+}
+
+@keyframes scanlines {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100px;
+  }
+}
+
+/* Neon glow text */
+.theme-neon .neon-text {
+  color: #FF1B8D;
+  text-shadow: 
+    0 0 10px rgba(255, 27, 141, 0.8),
+    0 0 20px rgba(255, 27, 141, 0.6),
+    0 0 30px rgba(182, 69, 255, 0.4);
+}
+
+/* Theme-aware buttons */
+.theme-hot-pink .btn-primary {
+  background: #FFFFFF;
+  color: #FF1B8D;
+  box-shadow: 0 4px 20px rgba(255, 27, 141, 0.3);
+}
+
+.theme-hot-pink .btn-primary:hover {
+  box-shadow: 0 8px 30px rgba(255, 27, 141, 0.5);
+  transform: translateY(-2px);
+}
+
+.theme-elegant .btn-primary {
+  background: linear-gradient(135deg, #FF1B8D 0%, #B645FF 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 27, 141, 0.3);
+}
+
+.theme-neon .btn-primary {
+  background: transparent;
+  color: #FF1B8D;
+  border: 2px solid #FF1B8D;
+  box-shadow: 0 0 20px rgba(255, 27, 141, 0.5);
+}
+
+.theme-neon .btn-primary:hover {
+  background: rgba(255, 27, 141, 0.1);
+  box-shadow: 0 0 30px rgba(255, 27, 141, 0.8);
 }
