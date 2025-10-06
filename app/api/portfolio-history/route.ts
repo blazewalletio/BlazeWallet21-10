@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
+import { kv } from '@vercel/kv';
 
 interface HistoryPoint {
   timestamp: number;
   value: number;
 }
 
-// In-memory cache voor development (in productie zou dit Vercel KV zijn)
-// Voor nu gebruiken we een simpele server-side storage die werkt op alle platforms
-const historyCache = new Map<string, HistoryPoint[]>();
+// Helper function om KV key te genereren
+function getHistoryKey(address: string): string {
+  return `portfolio:${address.toLowerCase()}`;
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -19,8 +21,10 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Haal history op voor dit wallet address
-    const history = historyCache.get(address.toLowerCase()) || [];
+    const key = getHistoryKey(address);
+    
+    // Haal history op uit Vercel KV
+    const history = await kv.get<HistoryPoint[]>(key) || [];
     
     // Filter op timeframe
     const now = Date.now();
@@ -52,7 +56,8 @@ export async function GET(request: Request) {
       address,
       timeframe,
       history: filteredHistory,
-      count: filteredHistory.length
+      count: filteredHistory.length,
+      storage: 'vercel-kv'
     });
   } catch (error) {
     console.error('Error fetching portfolio history:', error);
@@ -76,10 +81,10 @@ export async function POST(request: Request) {
     }
 
     const now = Date.now();
-    const key = address.toLowerCase();
+    const key = getHistoryKey(address);
     
-    // Haal bestaande history op
-    let history = historyCache.get(key) || [];
+    // Haal bestaande history op uit Vercel KV
+    let history = await kv.get<HistoryPoint[]>(key) || [];
     
     // Voorkom te veel data points (max 1 per 5 minuten)
     const lastPoint = history[history.length - 1];
@@ -96,15 +101,19 @@ export async function POST(request: Request) {
     const twoYearsAgo = now - (365 * 2 * 24 * 60 * 60 * 1000);
     history = history.filter(p => p.timestamp > twoYearsAgo);
     
-    // Bewaar terug
-    historyCache.set(key, history);
+    // Bewaar terug naar Vercel KV (permanent!)
+    await kv.set(key, history, {
+      // Data blijft 2 jaar geldig
+      ex: 365 * 2 * 24 * 60 * 60
+    });
     
     return NextResponse.json({
       success: true,
       address,
       value,
       timestamp: now,
-      totalPoints: history.length
+      totalPoints: history.length,
+      storage: 'vercel-kv'
     });
   } catch (error) {
     console.error('Error saving portfolio history:', error);

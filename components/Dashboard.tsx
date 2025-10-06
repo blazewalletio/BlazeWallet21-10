@@ -251,6 +251,7 @@ export default function Dashboard() {
               {/* Real-time Portfolio Chart */}
               <div className="h-20 flex items-end gap-0.5">
                 <PortfolioChart currentValue={totalValueUSD} address={address || ''} timeframe="1D" />
+              </div>
             </div>
           </motion.div>
 
