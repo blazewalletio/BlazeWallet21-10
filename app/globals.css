@@ -65,9 +65,15 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-primary text-white rounded-xl font-semibold;
-    @apply hover:shadow-lg hover:shadow-primary-500/50 hover:scale-105;
+    @apply px-6 py-3 text-white rounded-xl font-semibold;
+    background: var(--gradient-primary);
+    @apply hover:shadow-lg hover:scale-105;
     @apply active:scale-95 transition-all duration-200;
+    box-shadow: 0 10px 25px -5px rgba(var(--color-primary), 0.3);
+  }
+  
+  .btn-primary:hover {
+    box-shadow: 0 20px 40px -10px rgba(var(--color-primary), 0.5);
   }
 
   .btn-secondary {
@@ -78,14 +84,23 @@
 
   .input-field {
     @apply w-full glass-card px-4 py-3 text-slate-100 placeholder-slate-500;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary-500/50;
-    @apply transition-all duration-200;
+    @apply focus:outline-none transition-all duration-200;
+    border: 2px solid transparent;
+  }
+  
+  .input-field:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.1);
   }
 
   .card-hover {
     @apply transform transition-all duration-300;
     @apply hover:scale-[1.02] hover:-translate-y-1;
-    @apply hover:shadow-2xl hover:shadow-primary-500/20;
+    @apply hover:shadow-2xl;
+  }
+  
+  .card-hover:hover {
+    box-shadow: 0 25px 50px -12px rgba(var(--color-primary), 0.25);
   }
 }
 
