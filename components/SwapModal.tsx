@@ -2,31 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowDown, Zap, AlertCircle, Loader2, RefreshCw } from 'lucide-react';
+import { X, ArrowDown, Zap, AlertCircle, Loader2, RefreshCw, CheckCircle } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { CHAINS, POPULAR_TOKENS } from '@/lib/chains';
+import { UniswapService } from '@/lib/uniswap-service';
 import { SwapService } from '@/lib/swap-service';
 import { ethers } from 'ethers';
-import { BlockchainService } from '@/lib/blockchain';
 
 interface SwapModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+type SwapProvider = 'uniswap' | '1inch' | 'price-estimate';
+
 export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
-  const { address, currentChain, balance } = useWalletStore();
+  const { address, currentChain, balance, wallet } = useWalletStore();
   const [fromToken, setFromToken] = useState<string>('native');
   const [toToken, setToToken] = useState<string>('');
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingQuote, setIsLoadingQuote] = useState(false);
+  const [isSwapping, setIsSwapping] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [quote, setQuote] = useState<any>(null);
+  const [swapProvider, setSwapProvider] = useState<SwapProvider>('price-estimate');
 
   const chain = CHAINS[currentChain];
   const popularTokens = POPULAR_TOKENS[currentChain] || [];
-  const swapService = new SwapService(chain.id);
 
   // Set default toToken when modal opens
   useEffect(() => {
@@ -35,51 +39,178 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
     }
   }, [isOpen, popularTokens]);
 
-  // Get quote when amount changes
+  // Get quote when amount changes (with debounce)
   useEffect(() => {
-    if (fromAmount && parseFloat(fromAmount) > 0 && fromToken && toToken) {
-      fetchQuote();
-    } else {
-      setToAmount('');
-      setQuote(null);
-    }
+    const timer = setTimeout(() => {
+      if (fromAmount && parseFloat(fromAmount) > 0 && fromToken && toToken) {
+        fetchQuote();
+      } else {
+        setToAmount('');
+        setQuote(null);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [fromAmount, fromToken, toToken]);
 
   const fetchQuote = async () => {
     if (!fromAmount || !fromToken || !toToken) return;
 
-    setIsLoading(true);
+    setIsLoadingQuote(true);
     setError('');
+    setQuote(null);
 
     try {
       const amountInWei = ethers.parseEther(fromAmount).toString();
       const fromAddress = fromToken === 'native' 
-        ? SwapService.getNativeTokenAddress()
+        ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
         : fromToken;
-      
+
+      // Try Uniswap first (if supported on chain)
+      if (UniswapService.isSupported(chain.id)) {
+        try {
+          console.log('Trying Uniswap routing...');
+          const uniswapService = new UniswapService(chain.id, chain.rpcUrl);
+          const uniswapQuote = await uniswapService.getQuote(
+            fromAddress,
+            toToken,
+            amountInWei,
+            18, // ETH decimals
+            toToken === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? 6 : 18 // USDT = 6, others = 18
+          );
+
+          if (uniswapQuote) {
+            console.log('✅ Uniswap quote success!');
+            setQuote({
+              toTokenAmount: uniswapQuote.outputAmount,
+              fromTokenAmount: amountInWei,
+              estimatedGas: uniswapQuote.gasEstimate,
+              source: 'uniswap',
+              route: uniswapQuote.route,
+            });
+            setToAmount(uniswapQuote.outputAmountFormatted);
+            setSwapProvider('uniswap');
+            setIsLoadingQuote(false);
+            return;
+          }
+        } catch (err) {
+          console.log('Uniswap failed, trying fallback...');
+        }
+      }
+
+      // Fallback to server-side quote (1inch or price estimate)
+      const swapService = new SwapService(chain.id);
       const quoteData = await swapService.getQuote(
         fromAddress,
         toToken,
         amountInWei
       );
 
-      if (quoteData) {
+      if (quoteData && quoteData.toTokenAmount && quoteData.toTokenAmount !== '0') {
+        console.log('✅ Server quote success:', quoteData.source);
         setQuote(quoteData);
-        setToAmount(ethers.formatEther(quoteData.toAmount));
+        
+        // Format output amount based on token decimals
+        const decimals = toToken === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? 6 : 18;
+        const formatted = ethers.formatUnits(quoteData.toTokenAmount, decimals);
+        setToAmount(formatted);
+        
+        setSwapProvider(quoteData.source === '1inch' ? '1inch' : 'price-estimate');
       } else {
-        setError('Kan geen quote ophalen. Probeer het opnieuw.');
+        setError('Geen quote beschikbaar voor dit token pair');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Quote error:', err);
-      setError('Fout bij ophalen van quote');
+      setError(err.message || 'Fout bij ophalen van quote');
     } finally {
-      setIsLoading(false);
+      setIsLoadingQuote(false);
     }
   };
 
   const handleSwap = async () => {
-    // Direct swapping temporarily disabled - show price quotes only
-    setError('Direct swappen is momenteel in onderhoud. Gebruik Uniswap.app of PancakeSwap voor nu. Quotes blijven beschikbaar voor prijsinformatie.');
+    if (!wallet || !quote || !fromAmount) {
+      setError('Wallet, quote of amount ontbreekt');
+      return;
+    }
+
+    setIsSwapping(true);
+    setError('');
+
+    try {
+      const amountInWei = ethers.parseEther(fromAmount).toString();
+      const fromAddress = fromToken === 'native' 
+        ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+        : fromToken;
+
+      let txHash: string;
+
+      // Execute swap based on provider
+      if (swapProvider === 'uniswap' && quote.route) {
+        console.log('Executing Uniswap swap...');
+        const uniswapService = new UniswapService(chain.id, chain.rpcUrl);
+        
+        const minAmountOut = (BigInt(quote.toTokenAmount) * 995n) / 1000n; // 0.5% slippage
+        
+        txHash = await uniswapService.executeSwap(
+          wallet,
+          fromAddress,
+          toToken,
+          amountInWei,
+          minAmountOut.toString(),
+          18,
+          toToken === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? 6 : 18
+        );
+      } else if (swapProvider === '1inch') {
+        console.log('Executing 1inch swap...');
+        const swapService = new SwapService(chain.id);
+        
+        const txData = await swapService.getSwapTransaction(
+          fromAddress,
+          toToken,
+          amountInWei,
+          wallet.address,
+          1 // 1% slippage
+        );
+
+        if (!txData || !txData.tx) {
+          throw new Error('Kon swap transactie niet ophalen van 1inch');
+        }
+
+        // Send transaction
+        const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
+        const signer = wallet.connect(provider);
+
+        const tx = await signer.sendTransaction({
+          to: txData.tx.to,
+          data: txData.tx.data,
+          value: txData.tx.value || '0',
+          gasLimit: txData.tx.gas || '300000',
+        });
+
+        await tx.wait();
+        txHash = tx.hash;
+      } else {
+        throw new Error('Direct swappen met price estimates is niet mogelijk. Gebruik Uniswap.app of voeg 1inch API key toe.');
+      }
+
+      console.log('✅ Swap successful:', txHash);
+      setSuccess(true);
+      
+      // Reset form after 2 seconds
+      setTimeout(() => {
+        setFromAmount('');
+        setToAmount('');
+        setQuote(null);
+        setSuccess(false);
+        onClose();
+      }, 2000);
+
+    } catch (err: any) {
+      console.error('Swap error:', err);
+      setError(err.message || 'Swap mislukt');
+    } finally {
+      setIsSwapping(false);
+    }
   };
 
   const getTokenSymbol = (address: string): string => {
@@ -88,206 +219,253 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
     return token?.symbol || 'Token';
   };
 
-  const getTokenName = (address: string): string => {
-    if (address === 'native') return chain.nativeCurrency.name;
-    const token = popularTokens.find(t => t.address.toLowerCase() === address.toLowerCase());
-    return token?.name || 'Unknown';
-  };
-
   const getExchangeRate = (): string => {
-    if (!quote || !fromAmount || !toAmount) return '---';
+    if (!quote || !fromAmount || parseFloat(fromAmount) === 0) return '0.0';
     const rate = parseFloat(toAmount) / parseFloat(fromAmount);
     return rate.toFixed(6);
   };
 
+  const getProviderLabel = (): string => {
+    switch (swapProvider) {
+      case 'uniswap':
+        return 'Uniswap V3';
+      case '1inch':
+        return '1inch';
+      case 'price-estimate':
+        return 'Price estimate';
+      default:
+        return 'Unknown';
+    }
+  };
+
+  const getProviderColor = (): string => {
+    switch (swapProvider) {
+      case 'uniswap':
+        return 'text-pink-400';
+      case '1inch':
+        return 'text-blue-400';
+      case 'price-estimate':
+        return 'text-slate-400';
+      default:
+        return 'text-slate-400';
+    }
+  };
+
+  const canSwap = (): boolean => {
+    return quote && 
+           fromAmount && 
+           parseFloat(fromAmount) > 0 && 
+           (swapProvider === 'uniswap' || swapProvider === '1inch') &&
+           !isLoadingQuote &&
+           !isSwapping;
+  };
+
+  if (!isOpen) return null;
+
   return (
     <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm pointer-events-auto"
-          />
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="absolute inset-0 bg-black/80 backdrop-blur-sm pointer-events-auto"
+        />
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-md glass-card rounded-3xl p-6 pointer-events-auto max-h-[90vh] overflow-y-auto"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold flex items-center gap-2">
-                <Zap className="w-6 h-6 text-primary-500" />
-                Swap
-              </h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* From Token */}
-            <div className="glass-card mb-2">
-              <div className="text-xs text-slate-400 mb-2">Van</div>
-              <div className="flex items-center gap-3">
-                <input
-                  type="number"
-                  value={fromAmount}
-                  onChange={(e) => setFromAmount(e.target.value)}
-                  placeholder="0.0"
-                  className="flex-1 bg-transparent text-2xl font-bold outline-none min-w-0"
-                />
-                <select
-                  value={fromToken}
-                  onChange={(e) => setFromToken(e.target.value)}
-                  className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
-                >
-                  <option value="native">{chain.nativeCurrency.symbol}</option>
-                  {popularTokens.map(token => (
-                    <option key={token.address} value={token.address}>
-                      {token.symbol}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="text-xs text-slate-500 mt-2">
-                Balance: {fromToken === 'native' ? balance : '0.00'} {getTokenSymbol(fromToken)}
-              </div>
-            </div>
-
-            {/* Swap Arrow */}
-            <div className="flex justify-center -my-2 relative z-10">
-              <motion.button
-                whileTap={{ scale: 0.9, rotate: 180 }}
-                className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full border-4 border-slate-900"
-                onClick={() => {
-                  // Swap tokens
-                  const temp = fromToken;
-                  setFromToken(toToken || 'native');
-                  setToToken(temp);
-                  setFromAmount(toAmount);
-                }}
-              >
-                <ArrowDown className="w-5 h-5" />
-              </motion.button>
-            </div>
-
-            {/* To Token */}
-            <div className="glass-card mb-4">
-              <div className="text-xs text-slate-400 mb-2">Naar</div>
-              <div className="flex items-center gap-3">
-                <input
-                  type="text"
-                  value={toAmount}
-                  readOnly
-                  placeholder="0.0"
-                  className="flex-1 bg-transparent text-2xl font-bold outline-none text-emerald-400 min-w-0"
-                />
-                <select
-                  value={toToken}
-                  onChange={(e) => setToToken(e.target.value)}
-                  className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
-                >
-                  <option value="">Token</option>
-                  {popularTokens.map(token => (
-                    <option key={token.address} value={token.address}>
-                      {token.symbol}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Exchange Rate Info */}
-            {quote && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="glass-card mb-4 text-sm"
-              >
-                <div className="flex justify-between mb-2">
-                  <span className="text-slate-400">Koers:</span>
-                  <span className="font-medium">
-                    1 {getTokenSymbol(fromToken)} = {getExchangeRate()} {getTokenSymbol(toToken)}
-                  </span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-slate-400">Geschatte gas:</span>
-                  <span className="font-medium">{(parseInt(quote.estimatedGas) / 1000).toFixed(0)}k</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400 flex items-center gap-1">
-                    <Zap className="w-3 h-3" />
-                    Powered by:
-                  </span>
-                  <span className="font-medium text-primary-400">Live prices</span>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Loading State */}
-            {isLoading && (
-              <div className="flex items-center justify-center gap-2 text-primary-400 mb-4">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">Ophalen van quote...</span>
-              </div>
-            )}
-
-            {/* Error */}
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 mb-4 flex items-start gap-2"
-              >
-                <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-rose-300">{error}</p>
-              </motion.div>
-            )}
-
-            {/* Info */}
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mb-4">
-              <p className="text-xs text-blue-300">
-                <Zap className="w-3 h-3 inline mr-1" />
-                Arc berekent swap prijzen op basis van live marktdata. Direct swappen is momenteel in onderhoud.
-              </p>
-            </div>
-
-            {/* Swap Button */}
-            <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={handleSwap}
-              disabled={!quote || isLoading || !fromAmount || !toToken}
-              className="w-full py-4 bg-gradient-to-r from-primary-500 to-purple-500 rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        {/* Modal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          className="relative w-full max-w-md glass-card p-6 pointer-events-auto max-h-[90vh] overflow-y-auto"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Zap className="w-6 h-6 text-primary-500" />
+              Swap
+            </h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/10 rounded-full transition-colors"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Swappen...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-5 h-5" />
-                  Swap nu
-                </>
-              )}
-            </motion.button>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
-            {/* Disclaimer */}
-            <p className="text-xs text-slate-500 text-center mt-4">
-              Controleer altijd de details voor je swapped. Slippage: 1%
+          {/* Success Message */}
+          {success && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-4 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-3"
+            >
+              <CheckCircle className="w-5 h-5 text-emerald-400" />
+              <p className="text-sm text-emerald-300">Swap succesvol!</p>
+            </motion.div>
+          )}
+
+          {/* From Token */}
+          <div className="glass-card mb-2">
+            <div className="text-xs text-slate-400 mb-2">Van</div>
+            <div className="flex items-center gap-3">
+              <input
+                type="number"
+                value={fromAmount}
+                onChange={(e) => setFromAmount(e.target.value)}
+                placeholder="0.0"
+                className="flex-1 bg-transparent text-2xl font-bold outline-none min-w-0"
+                disabled={isSwapping}
+              />
+              <select
+                value={fromToken}
+                onChange={(e) => setFromToken(e.target.value)}
+                className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
+                disabled={isSwapping}
+              >
+                <option value="native">{chain.nativeCurrency.symbol}</option>
+                {popularTokens.map(token => (
+                  <option key={token.address} value={token.address}>
+                    {token.symbol}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="text-xs text-slate-500 mt-2">
+              Balance: {balance} {chain.nativeCurrency.symbol}
+            </div>
+          </div>
+
+          {/* Swap Arrow */}
+          <div className="flex justify-center -my-2 relative z-10">
+            <button
+              onClick={() => {
+                // Swap tokens
+                const temp = fromToken;
+                setFromToken(toToken === '' ? 'native' : toToken);
+                setToToken(temp === 'native' ? (popularTokens[0]?.address || '') : temp);
+              }}
+              className="p-3 glass-card hover:bg-white/10 rounded-full transition-colors"
+              disabled={isSwapping}
+            >
+              <ArrowDown className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* To Token */}
+          <div className="glass-card mb-4">
+            <div className="text-xs text-slate-400 mb-2">Naar</div>
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={toAmount}
+                readOnly
+                placeholder="0.0"
+                className="flex-1 bg-transparent text-2xl font-bold outline-none text-emerald-400 min-w-0"
+              />
+              <select
+                value={toToken}
+                onChange={(e) => setToToken(e.target.value)}
+                className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
+                disabled={isSwapping}
+              >
+                <option value="">Token</option>
+                {popularTokens.map(token => (
+                  <option key={token.address} value={token.address}>
+                    {token.symbol}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Exchange Rate Info */}
+          {quote && !error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass-card mb-4 text-sm"
+            >
+              <div className="flex justify-between mb-2">
+                <span className="text-slate-400">Koers:</span>
+                <span className="font-medium">
+                  1 {getTokenSymbol(fromToken)} = {getExchangeRate()} {getTokenSymbol(toToken)}
+                </span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-slate-400">Geschatte gas:</span>
+                <span className="font-medium">{(parseInt(quote.estimatedGas || '180000') / 1000).toFixed(0)}k</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400 flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  Powered by:
+                </span>
+                <span className={`font-medium ${getProviderColor()}`}>
+                  {getProviderLabel()}
+                </span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Loading State */}
+          {isLoadingQuote && (
+            <div className="flex items-center justify-center gap-2 text-primary-400 mb-4">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span className="text-sm">Ophalen van quote...</span>
+            </div>
+          )}
+
+          {/* Error */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 mb-4 flex items-start gap-2"
+            >
+              <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-rose-300">{error}</p>
+            </motion.div>
+          )}
+
+          {/* Info */}
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mb-4">
+            <p className="text-xs text-blue-300">
+              <Zap className="w-3 h-3 inline mr-1" />
+              {swapProvider === 'uniswap' && 'Uniswap V3: Direct on-chain routing, geen API key nodig ✅'}
+              {swapProvider === '1inch' && '1inch: Beste rates door 100+ DEXes te vergelijken 🚀'}
+              {swapProvider === 'price-estimate' && 'Price estimate: Voeg 1inch API key toe voor echte swaps'}
             </p>
-          </motion.div>
-        </div>
-      )}
+          </div>
+
+          {/* Swap Button */}
+          <motion.button
+            whileTap={{ scale: canSwap() ? 0.98 : 1 }}
+            onClick={handleSwap}
+            disabled={!canSwap()}
+            className="w-full py-4 bg-gradient-to-r from-primary-500 to-purple-500 rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isSwapping ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Swappen...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-5 h-5" />
+                {canSwap() ? 'Swap nu' : 'Niet beschikbaar'}
+              </>
+            )}
+          </motion.button>
+
+          {/* Additional Info */}
+          <p className="text-xs text-slate-500 mt-3 text-center">
+            Controleer altijd de details voor je swapped. Slippage: {swapProvider === 'uniswap' ? '0.5%' : '1%'}
+          </p>
+        </motion.div>
+      </div>
     </AnimatePresence>
   );
 }

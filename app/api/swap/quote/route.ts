@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 
-// CoinGecko proxy for price data
+// Multi-source swap quote aggregator
+// Priority: 1inch API (if key available) → CoinGecko price estimate
+
+const ONEINCH_API_KEY = process.env.ONEINCH_API_KEY;
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3';
 
 // Token address to CoinGecko ID mapping
@@ -27,6 +30,45 @@ export async function GET(request: Request) {
     );
   }
 
+  // Try 1inch API first (if key available)
+  if (ONEINCH_API_KEY) {
+    try {
+      const url = `https://api.1inch.dev/swap/v6.0/${chainId}/quote?src=${src}&dst=${dst}&amount=${amount}`;
+      
+      console.log('Trying 1inch API...');
+
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${ONEINCH_API_KEY}`,
+          'Accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ 1inch success!');
+        
+        return NextResponse.json({
+          toTokenAmount: data.dstAmount || data.toTokenAmount || data.toAmount,
+          fromTokenAmount: amount,
+          estimatedGas: data.estimatedGas || data.gas || '180000',
+          protocols: data.protocols || [['1inch']],
+          source: '1inch',
+        }, {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+          },
+        });
+      } else {
+        console.log('1inch failed:', response.status);
+      }
+    } catch (error) {
+      console.log('1inch error, falling back to price estimate');
+    }
+  }
+
+  // Fallback to CoinGecko price-based estimate
   try {
     // Get CoinGecko IDs for both tokens
     const srcId = TOKEN_TO_COINGECKO[src];
@@ -94,7 +136,8 @@ export async function GET(request: Request) {
       toTokenAmount: outputWithFee.toString(),
       fromTokenAmount: amount,
       estimatedGas: '180000',
-      protocols: [['Price-based estimate']],
+      protocols: [['CoinGecko estimate']],
+      source: 'coingecko',
     }, {
       headers: {
         'Access-Control-Allow-Origin': '*',
