@@ -19,101 +19,53 @@ export interface Theme {
 }
 
 export const THEMES: Record<string, Theme> = {
-  blaze: {
-    id: 'blaze',
-    name: '🔥 Blaze',
-    description: 'Set your finances on fire',
+  fire: {
+    id: 'fire',
+    name: '🔥 Blaze Fire',
+    description: 'Vurige energie en kracht',
     colors: {
-      primary: '#f97316',      // Orange
-      primaryDark: '#c2410c',  // Dark Orange
-      secondary: '#ef4444',    // Red
-      accent: '#f59e0b',       // Amber
-      background: '#020617',   // Slate 950
-      surface: '#1e293b',      // Slate 800
-      text: '#f8fafc',         // Slate 50
-      textSecondary: '#94a3b8', // Slate 400
+      primary: '#ff6b35',      // Vurig oranje
+      primaryDark: '#d63447',  // Diep rood
+      secondary: '#ff5722',    // Levendig oranje
+      accent: '#ffd23f',       // Gouden geel
+      background: '#0a0908',   // Bijna zwart met warme tint
+      surface: '#1f1715',      // Warm donkerbruin
+      text: '#fff8f0',         // Warm wit
+      textSecondary: '#d4a574', // Warm beige
     },
-    gradient: 'linear-gradient(135deg, #f97316 0%, #ef4444 50%, #f59e0b 100%)',
+    gradient: 'linear-gradient(135deg, #ff6b35 0%, #ff5722 33%, #d63447 66%, #ffd23f 100%)',
+  },
+  electric: {
+    id: 'electric',
+    name: '⚡ Blaze Electric',
+    description: 'Elektrische snelheid en innovatie',
+    colors: {
+      primary: '#00ffff',      // Neon cyan
+      primaryDark: '#00d4ff',  // Electric blauw
+      secondary: '#b224ef',    // Electric paars
+      accent: '#7df9ff',       // Licht electric blauw
+      background: '#050510',   // Diep zwart met blauwe tint
+      surface: '#0d1117',      // Donker grijs-blauw
+      text: '#e4f4ff',         // Koel wit
+      textSecondary: '#8b9dc3', // Koel grijs-blauw
+    },
+    gradient: 'linear-gradient(135deg, #00ffff 0%, #00d4ff 33%, #b224ef 66%, #7df9ff 100%)',
   },
   ocean: {
     id: 'ocean',
-    name: '🌊 Ocean',
-    description: 'Deep blue waters',
+    name: '🌊 Blaze Ocean',
+    description: 'Diepe kalmte en diepgang',
     colors: {
-      primary: '#06b6d4',      // Cyan
-      primaryDark: '#0891b2',  // Cyan 600
-      secondary: '#3b82f6',    // Blue
-      accent: '#8b5cf6',       // Purple
-      background: '#020617',
-      surface: '#1e293b',
-      text: '#f8fafc',
-      textSecondary: '#94a3b8',
+      primary: '#0ea5e9',      // Oceaan blauw
+      primaryDark: '#0369a1',  // Diep oceaan
+      secondary: '#06b6d4',    // Turquoise
+      accent: '#22d3ee',       // Licht cyan
+      background: '#020817',   // Diep oceaan zwart
+      surface: '#0f172a',      // Donker blauw-grijs
+      text: '#f0f9ff',         // Oceaan wit
+      textSecondary: '#7dd3fc', // Licht blauw
     },
-    gradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)',
-  },
-  midnight: {
-    id: 'midnight',
-    name: '🌙 Midnight',
-    description: 'Dark elegance',
-    colors: {
-      primary: '#8b5cf6',      // Purple
-      primaryDark: '#7c3aed',  // Purple 600
-      secondary: '#a78bfa',    // Purple 400
-      accent: '#c4b5fd',       // Purple 300
-      background: '#0f172a',   // Slate 900
-      surface: '#1e293b',
-      text: '#f8fafc',
-      textSecondary: '#94a3b8',
-    },
-    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 50%, #c4b5fd 100%)',
-  },
-  emerald: {
-    id: 'emerald',
-    name: '💎 Emerald',
-    description: 'Fresh and vibrant',
-    colors: {
-      primary: '#10b981',      // Emerald 500
-      primaryDark: '#059669',  // Emerald 600
-      secondary: '#14b8a6',    // Teal 500
-      accent: '#22c55e',       // Green 500
-      background: '#020617',
-      surface: '#1e293b',
-      text: '#f8fafc',
-      textSecondary: '#94a3b8',
-    },
-    gradient: 'linear-gradient(135deg, #10b981 0%, #14b8a6 50%, #22c55e 100%)',
-  },
-  sunset: {
-    id: 'sunset',
-    name: '🌅 Sunset',
-    description: 'Warm and vibrant',
-    colors: {
-      primary: '#f59e0b',      // Amber
-      primaryDark: '#d97706',  // Amber 600
-      secondary: '#f97316',    // Orange
-      accent: '#fb923c',       // Orange 400
-      background: '#020617',
-      surface: '#1e293b',
-      text: '#f8fafc',
-      textSecondary: '#94a3b8',
-    },
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #fb923c 100%)',
-  },
-  rose: {
-    id: 'rose',
-    name: '🌹 Rose',
-    description: 'Elegant pink tones',
-    colors: {
-      primary: '#ec4899',      // Pink 500
-      primaryDark: '#db2777',  // Pink 600
-      secondary: '#f43f5e',    // Rose 500
-      accent: '#fb7185',       // Rose 400
-      background: '#020617',
-      surface: '#1e293b',
-      text: '#f8fafc',
-      textSecondary: '#94a3b8',
-    },
-    gradient: 'linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #fb7185 100%)',
+    gradient: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 33%, #0369a1 66%, #22d3ee 100%)',
   },
 };
 
