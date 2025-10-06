@@ -28,7 +28,7 @@ export class SwapService {
 
   constructor(private chainId: number) {}
 
-  // Get swap quote (using public API endpoint)
+  // Get swap quote (via Next.js API route to bypass CORS)
   async getQuote(
     fromToken: string, // Token address or '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' for native
     toToken: string,
@@ -41,25 +41,22 @@ export class SwapService {
         return null;
       }
 
-      // Use public API endpoint (v5.2 is more stable)
-      const url = `https://api.1inch.dev/swap/v5.2/${chain}/quote`;
+      // Use Next.js API route to bypass CORS
       const params = new URLSearchParams({
+        chainId: chain.toString(),
         src: fromToken,
         dst: toToken,
         amount: amount,
       });
 
-      console.log('Fetching 1inch quote:', `${url}?${params.toString()}`);
+      const url = `/api/swap/quote?${params.toString()}`;
+      console.log('Fetching 1inch quote via proxy:', url);
 
-      const response = await fetch(`${url}?${params.toString()}`, {
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
+      const response = await fetch(url);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('1inch API error:', response.status, errorText);
+        const errorData = await response.json();
+        console.error('1inch API error:', response.status, errorData);
         return null;
       }
 
@@ -80,7 +77,7 @@ export class SwapService {
     }
   }
 
-  // Get swap transaction data (for executing the swap)
+  // Get swap transaction data (via Next.js API route to bypass CORS)
   async getSwapTransaction(
     fromToken: string,
     toToken: string,
@@ -94,28 +91,24 @@ export class SwapService {
         throw new Error('Chain not supported');
       }
 
-      // Use v5.2 for better stability
-      const url = `https://api.1inch.dev/swap/v5.2/${chain}/swap`;
+      // Use Next.js API route to bypass CORS
       const params = new URLSearchParams({
+        chainId: chain.toString(),
         src: fromToken,
         dst: toToken,
         amount: amount,
         from: fromAddress,
         slippage: slippage.toString(),
-        disableEstimate: 'true',
       });
 
-      console.log('Fetching 1inch swap tx:', `${url}?${params.toString()}`);
+      const url = `/api/swap/transaction?${params.toString()}`;
+      console.log('Fetching 1inch swap tx via proxy:', url);
 
-      const response = await fetch(`${url}?${params.toString()}`, {
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
+      const response = await fetch(url);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('1inch swap API error:', response.status, errorText);
+        const errorData = await response.json();
+        console.error('1inch swap API error:', response.status, errorData);
         throw new Error(`1inch API error: ${response.status}`);
       }
 
