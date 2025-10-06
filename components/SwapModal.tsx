@@ -78,66 +78,8 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
   };
 
   const handleSwap = async () => {
-    if (!address || !quote) return;
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const fromAddress = fromToken === 'native' 
-        ? SwapService.getNativeTokenAddress()
-        : fromToken;
-
-      const amountInWei = ethers.parseEther(fromAmount).toString();
-
-      // Get swap transaction data
-      const txData = await swapService.getSwapTransaction(
-        fromAddress,
-        toToken,
-        amountInWei,
-        address,
-        1 // 1% slippage
-      );
-
-      // Execute swap
-      const blockchain = new BlockchainService(currentChain as any);
-      const wallet = useWalletStore.getState().wallet;
-      
-      if (!wallet) {
-        throw new Error('Wallet not available');
-      }
-
-      // Send transaction
-      const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
-      const signer = wallet.connect(provider);
-
-      const tx = await signer.sendTransaction({
-        to: txData.to,
-        data: txData.data,
-        value: txData.value || '0',
-        gasLimit: txData.gas || '300000',
-      });
-
-      console.log('Swap transaction:', tx.hash);
-      
-      // Wait for confirmation
-      await tx.wait();
-
-      // Reset form
-      setFromAmount('');
-      setToAmount('');
-      setQuote(null);
-      
-      // Show success
-      alert(`Swap succesvol! Transaction: ${tx.hash}`);
-      onClose();
-
-    } catch (err: any) {
-      console.error('Swap error:', err);
-      setError(err.message || 'Swap mislukt');
-    } finally {
-      setIsLoading(false);
-    }
+    // Direct swapping temporarily disabled - show price quotes only
+    setError('Direct swappen is momenteel in onderhoud. Gebruik Uniswap.app of PancakeSwap voor nu. Quotes blijven beschikbaar voor prijsinformatie.');
   };
 
   const getTokenSymbol = (address: string): string => {
