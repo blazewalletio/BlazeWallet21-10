@@ -38,12 +38,12 @@ export default function DeployContract() {
       // Check balance
       const balance = await provider.getBalance(wallet.address);
       if (balance === 0n) {
-        throw new Error(`No ${chain.symbol} for gas fees. Get some ${chain.symbol} first!`);
+        throw new Error(`No ${chain.nativeCurrency.symbol} for gas fees. Get some ${chain.nativeCurrency.symbol} first!`);
       }
 
       console.log('🚀 Deploying Arc Token...');
       console.log('From:', wallet.address);
-      console.log('Balance:', ethers.formatEther(balance), chain.symbol);
+      console.log('Balance:', ethers.formatEther(balance), chain.nativeCurrency.symbol);
 
       // Simple ERC20 deployment (you'll need to add actual bytecode)
       // For now, this is a placeholder showing the structure
