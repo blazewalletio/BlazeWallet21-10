@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-// 1inch API proxy for swap transactions
-const ONEINCH_API_URL = 'https://api.1inch.dev/swap/v5.2';
+// 1inch API proxy using public endpoints (no API key needed)
+const ONEINCH_API_URL = 'https://api.1inch.io/v5.0';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -21,7 +21,8 @@ export async function GET(request: Request) {
   }
 
   try {
-    const url = `${ONEINCH_API_URL}/${chainId}/swap?src=${src}&dst=${dst}&amount=${amount}&from=${from}&slippage=${slippage}&disableEstimate=true`;
+    // Use public API endpoint (v5.0 via .io domain - no auth needed)
+    const url = `${ONEINCH_API_URL}/${chainId}/swap?fromTokenAddress=${src}&toTokenAddress=${dst}&amount=${amount}&fromAddress=${from}&slippage=${slippage}&disableEstimate=true`;
     
     console.log('Proxying 1inch swap transaction:', url);
 
