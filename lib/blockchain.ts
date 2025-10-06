@@ -108,22 +108,15 @@ export class BlockchainService {
       const config = apiConfig[chainId];
       const apiKey = getApiKey(chainId);
 
-      // Try block explorer API first (if config exists and API key available)
-      if (config && apiKey) {
+      // Try block explorer API via server proxy (if config exists)
+      if (config) {
         try {
-          // Build API URL
-          let apiUrl: string;
-          if (config.v2) {
-            // Etherscan V2 format (requires API key)
-            apiUrl = `${config.url}?chainid=${chainId}&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
-          } else {
-            // V1 format for other chains
-            apiUrl = `${config.url}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${apiKey}`;
-          }
-
+          // Use Next.js API route to avoid CORS issues
+          const proxyUrl = `/api/transactions?chainId=${chainId}&address=${address}&limit=${limit}`;
+          
           console.log(`🔍 Trying block explorer API for chain ${chainId}...`);
 
-          const response = await fetch(apiUrl);
+          const response = await fetch(proxyUrl);
           
           if (response.ok) {
             const data = await response.json();
