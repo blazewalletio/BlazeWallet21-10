@@ -1,0 +1,41 @@
+{
+  "name": "Arc - Your Financial Arc",
+  "short_name": "Arc",
+  "description": "Bend money. Lightning fast crypto wallet with Quick Pay.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#8b5cf6",
+  "orientation": "portrait",
+  "categories": ["finance", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Quick Pay",
+      "short_name": "Pay",
+      "description": "Instant payment met Lightning Network",
+      "url": "/?action=quickpay",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Receive",
+      "short_name": "Receive",
+      "description": "Ontvang crypto",
+      "url": "/?action=receive",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

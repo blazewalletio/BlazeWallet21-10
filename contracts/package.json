@@ -1,0 +1,20 @@
+{
+  "name": "arc-token-contracts",
+  "version": "1.0.0",
+  "description": "Arc Token smart contracts",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:bsc": "hardhat run scripts/deploy-bootstrap.js --network bsc",
+    "deploy:testnet": "hardhat run scripts/deploy-bootstrap.js --network bscTestnet",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network mainnet",
+    "verify": "hardhat verify --network"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^16.6.1",
+    "hardhat": "^2.19.0"
+  }
+}
