@@ -78,11 +78,54 @@ export class BlockchainService {
     }
   }
 
-  // Get transaction history
+  // Get transaction history from block explorer APIs
   async getTransactionHistory(address: string, limit: number = 10): Promise<any[]> {
     try {
-      // In productie zou je een indexer zoals Etherscan API gebruiken
-      return [];
+      const chainId = await this.provider.getNetwork().then(n => Number(n.chainId));
+      
+      // API endpoints for different chains
+      const apiConfig: Record<number, { url: string; key: string }> = {
+        1: { url: 'https://api.etherscan.io/api', key: 'YourEtherscanAPIKey' }, // Ethereum
+        56: { url: 'https://api.bscscan.com/api', key: 'YourBscScanAPIKey' }, // BSC
+        97: { url: 'https://api-testnet.bscscan.com/api', key: 'YourBscScanAPIKey' }, // BSC Testnet
+        137: { url: 'https://api.polygonscan.com/api', key: 'YourPolygonScanAPIKey' }, // Polygon
+        42161: { url: 'https://api.arbiscan.io/api', key: 'YourArbiscanAPIKey' }, // Arbitrum
+        11155111: { url: 'https://api-sepolia.etherscan.io/api', key: 'YourEtherscanAPIKey' }, // Sepolia
+      };
+
+      const config = apiConfig[chainId];
+      if (!config) {
+        console.warn(`No API config for chain ${chainId}`);
+        return [];
+      }
+
+      // Fetch transactions (works without API key for basic usage, but rate limited)
+      const response = await fetch(
+        `${config.url}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc`
+      );
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.status !== '1') {
+        return [];
+      }
+
+      // Format transactions
+      return data.result.map((tx: any) => ({
+        hash: tx.hash,
+        from: tx.from,
+        to: tx.to,
+        value: ethers.formatEther(tx.value),
+        timestamp: parseInt(tx.timeStamp) * 1000,
+        isError: tx.isError === '1',
+        gasUsed: tx.gasUsed,
+        gasPrice: tx.gasPrice,
+        blockNumber: tx.blockNumber,
+      }));
     } catch (error) {
       console.error('Error fetching transaction history:', error);
       return [];

@@ -24,6 +24,7 @@ import DebugPanel from './DebugPanel';
 import AnimatedNumber from './AnimatedNumber';
 import QuickPayModal from './QuickPayModal';
 import FounderDeploy from './FounderDeploy';
+import TransactionHistory from './TransactionHistory';
 
 export default function Dashboard() {
   const { 
@@ -55,6 +56,10 @@ export default function Dashboard() {
 
   const fetchData = async (force = false) => {
     if (!address) return;
+    
+    // Prevent multiple simultaneous refreshes
+    if (isRefreshing) return;
+    
     setIsRefreshing(true);
     
     try {
@@ -115,14 +120,15 @@ export default function Dashboard() {
       
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      // ALWAYS stop refresh spinner, even if there's an error
+      setIsRefreshing(false);
     }
-    
-    setIsRefreshing(false);
   };
 
   useEffect(() => {
     fetchData(true); // Force refresh on mount
-    const interval = setInterval(() => fetchData(true), 15000); // Update every 15s instead of 30s
+    const interval = setInterval(() => fetchData(true), 30000); // Update every 30 seconds
     return () => clearInterval(interval);
   }, [address, currentChain]);
 
@@ -425,6 +431,9 @@ export default function Dashboard() {
               )}
             </div>
           </motion.div>
+
+          {/* Transaction History */}
+          <TransactionHistory />
         </div>
       </div>
 
