@@ -2,38 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '@/lib/theme-store';
-import { getDefaultTheme } from '@/lib/themes';
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { currentTheme } = useThemeStore();
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const currentTheme = useThemeStore((state) => state.currentTheme);
 
-  // Wait for hydration before accessing theme store
+  // Only render after mount to avoid hydration mismatch
   useEffect(() => {
-    setIsHydrated(true);
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!isHydrated) return;
-
-    // Use default theme if currentTheme is not yet loaded
-    const theme = currentTheme || getDefaultTheme();
+    if (!mounted || !currentTheme) return;
     
-    // Apply theme CSS variables on mount and when theme changes
+    // Apply theme CSS variables
     const root = document.documentElement;
-    root.style.setProperty('--theme-bg-primary', theme.background.primary);
-    root.style.setProperty('--theme-bg-secondary', theme.background.secondary);
-    root.style.setProperty('--theme-accent-primary', theme.accent.primary);
-    root.style.setProperty('--theme-accent-secondary', theme.accent.secondary);
-    root.style.setProperty('--theme-text-primary', theme.text.primary);
-    root.style.setProperty('--theme-text-secondary', theme.text.secondary);
-    root.style.setProperty('--theme-card-bg', theme.card.background);
-    root.style.setProperty('--theme-card-border', theme.card.border);
+    root.style.setProperty('--theme-bg-primary', currentTheme.background.primary);
+    root.style.setProperty('--theme-bg-secondary', currentTheme.background.secondary);
+    root.style.setProperty('--theme-accent-primary', currentTheme.accent.primary);
+    root.style.setProperty('--theme-accent-secondary', currentTheme.accent.secondary);
+    root.style.setProperty('--theme-text-primary', currentTheme.text.primary);
+    root.style.setProperty('--theme-text-secondary', currentTheme.text.secondary);
+    root.style.setProperty('--theme-card-bg', currentTheme.card.background);
+    root.style.setProperty('--theme-card-border', currentTheme.card.border);
     
     // Add theme ID as class for conditional styling
     root.classList.remove('theme-hot-pink', 'theme-elegant', 'theme-neon');
-    root.classList.add(`theme-${theme.id}`);
-  }, [currentTheme, isHydrated]);
+    root.classList.add(`theme-${currentTheme.id}`);
+  }, [currentTheme, mounted]);
 
+  // Render children immediately, theme will apply after mount
   return <>{children}</>;
 }
