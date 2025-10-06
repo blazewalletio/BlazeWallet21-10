@@ -106,21 +106,50 @@ export class PortfolioHistory {
     timeframe: string
   ): number[] {
     const data: number[] = [];
-    const volatility = timeframe === '1D' ? 0.02 : timeframe === '1W' ? 0.05 : 0.08;
     
-    // Start met lagere waarde en work up naar current value
-    const startValue = currentValue * (0.9 + Math.random() * 0.1);
+    // Veel lagere volatiliteit voor realistischer gedrag
+    const volatility = timeframe === '1D' ? 0.008 : timeframe === '1W' ? 0.015 : 0.025;
+    
+    // Start waarde (iets lager of hoger dan current)
+    const trendDirection = Math.random() > 0.5 ? 1 : -1;
+    const startValue = currentValue * (1 - (trendDirection * 0.03 * Math.random()));
+    
+    // Gebruik sine wave voor smoothere beweging
+    let prevValue = startValue;
     
     for (let i = 0; i < points; i++) {
       const progress = i / (points - 1);
-      // Smooth transition naar current value
-      const baseValue = startValue + (currentValue - startValue) * progress;
-      // Voeg kleine random variatie toe
-      const variation = baseValue * volatility * (Math.random() - 0.5);
-      data.push(Math.max(0, baseValue + variation));
+      
+      // Smooth trend naar current value
+      const trend = startValue + (currentValue - startValue) * progress;
+      
+      // Voeg subtiele sine wave toe voor natuurlijke beweging
+      const waveFrequency = 2 + Math.random() * 2;
+      const wave = Math.sin((i / points) * Math.PI * waveFrequency) * currentValue * volatility;
+      
+      // Momentum effect - volg vorige waarde een beetje
+      const momentum = prevValue * 0.3;
+      const target = trend * 0.7;
+      
+      let value = momentum + target + wave;
+      
+      // Smooth via moving average
+      if (i > 0) {
+        value = (value + prevValue) / 2;
+      }
+      
+      prevValue = value;
+      data.push(Math.max(0, value));
     }
     
-    // Zorg dat laatste waarde exact de current value is
+    // Smooth laatste deel naar current value
+    const smoothPoints = Math.min(5, Math.floor(points / 5));
+    for (let i = points - smoothPoints; i < points; i++) {
+      const smoothProgress = (i - (points - smoothPoints)) / smoothPoints;
+      data[i] = data[i] * (1 - smoothProgress) + currentValue * smoothProgress;
+    }
+    
+    // Zorg dat laatste waarde exact current value is
     data[data.length - 1] = currentValue;
     
     return data;
