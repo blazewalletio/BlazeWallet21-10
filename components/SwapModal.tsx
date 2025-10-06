@@ -73,16 +73,16 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         amountInWei
       );
 
-      if (quoteData && quoteData.toTokenAmount && quoteData.toTokenAmount !== '0') {
-        console.log('✅ Server quote success:', quoteData.source);
+      if (quoteData && (quoteData as any).toTokenAmount && (quoteData as any).toTokenAmount !== '0') {
+        console.log('✅ Server quote success:', (quoteData as any).source);
         setQuote(quoteData);
         
         // Format output amount based on token decimals
         const decimals = toToken === '0xdAC17F958D2ee523a2206206994597C13D831ec7' ? 6 : 18;
-        const formatted = ethers.formatUnits(quoteData.toTokenAmount, decimals);
+        const formatted = ethers.formatUnits((quoteData as any).toTokenAmount, decimals);
         setToAmount(formatted);
         
-        setSwapProvider(quoteData.source === '1inch' ? '1inch' : 'price-estimate');
+        setSwapProvider((quoteData as any).source === '1inch' ? '1inch' : 'price-estimate');
       } else {
         setError('Geen quote beschikbaar voor dit token pair');
       }
