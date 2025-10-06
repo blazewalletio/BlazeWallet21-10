@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, CreditCard, Banknote, ShieldCheck, Zap, ExternalLink } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { CHAINS } from '@/lib/chains';
-import { RampService } from '@/lib/ramp-service';
+import { MoonPayService } from '@/lib/moonpay-service';
 import { useState } from 'react';
 
 interface BuyModalProps {
@@ -15,28 +15,20 @@ interface BuyModalProps {
 export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
   const { address, currentChain } = useWalletStore();
   const chain = CHAINS[currentChain];
-  const [selectedAsset, setSelectedAsset] = useState<string>('');
+  const supportedAssets = MoonPayService.getSupportedAssets(chain.id);
 
-  const supportedAssets = RampService.getSupportedAssets(chain.id);
-
-  const handleBuy = (asset?: string) => {
+  const handleBuy = (currencyCode?: string) => {
     if (!address) return;
 
-    RampService.openWidget({
-      hostAppName: 'Arc Wallet',
-      hostLogoUrl: 'https://arcwallet.vercel.app/icon-512.png',
-      userAddress: address,
-      swapAsset: asset || selectedAsset || undefined,
+    MoonPayService.openWidget({
+      walletAddress: address,
+      currencyCode: currencyCode,
+      baseCurrencyCode: 'eur', // Default to EUR for Dutch market
+      // apiKey: process.env.NEXT_PUBLIC_MOONPAY_API_KEY, // Add when you have partner account
     });
 
-    // Close modal after opening Ramp
+    // Close modal after opening MoonPay
     setTimeout(() => onClose(), 500);
-  };
-
-  // Get asset display name
-  const getAssetName = (asset: string): string => {
-    const parts = asset.split('_');
-    return parts[0]; // e.g., 'USDT_ETHEREUM' -> 'USDT'
   };
 
   return (
@@ -95,24 +87,27 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             <div className="mb-6">
               <h3 className="text-sm font-semibold text-slate-400 mb-3">Populaire crypto</h3>
               <div className="grid grid-cols-2 gap-3">
-                {supportedAssets.slice(0, 6).map((asset) => (
-                  <motion.button
-                    key={asset}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleBuy(asset)}
-                    className="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-xl transition-colors text-left"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-lg font-bold">
-                        {getAssetName(asset).charAt(0)}
+                {supportedAssets.slice(0, 6).map((currencyCode) => {
+                  const displayName = MoonPayService.getDisplayName(currencyCode);
+                  return (
+                    <motion.button
+                      key={currencyCode}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleBuy(currencyCode)}
+                      className="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-xl transition-colors text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-lg font-bold">
+                          {displayName.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="font-semibold">{displayName}</p>
+                          <p className="text-xs text-slate-400">Kopen</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold">{getAssetName(asset)}</p>
-                        <p className="text-xs text-slate-400">Kopen</p>
-                      </div>
-                    </div>
-                  </motion.button>
-                ))}
+                    </motion.button>
+                  );
+                })}
               </div>
             </div>
 
@@ -142,10 +137,10 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
               <div className="flex gap-3">
                 <ShieldCheck className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm">
-                  <p className="text-blue-300 font-medium mb-1">Powered by Ramp Network</p>
+                  <p className="text-blue-300 font-medium mb-1">Powered by MoonPay</p>
                   <p className="text-slate-400 text-xs">
-                    Veilige en betrouwbare on-ramp service. Crypto wordt direct naar je Arc wallet gestuurd.
-                    Fees: ~1-2% per transactie.
+                    Wereldwijd vertrouwde fiat-naar-crypto service. Crypto wordt direct naar je Arc wallet gestuurd.
+                    Fees: ~4.5% per transactie.
                   </p>
                 </div>
               </div>
@@ -164,7 +159,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
 
             {/* Disclaimer */}
             <p className="text-xs text-slate-500 text-center mt-4">
-              Door te klikken ga je naar Ramp Network. Arc Wallet slaat geen betalingsgegevens op.
+              Door te klikken ga je naar MoonPay. Arc Wallet slaat geen betalingsgegevens op.
             </p>
           </motion.div>
         </div>
