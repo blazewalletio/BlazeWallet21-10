@@ -234,10 +234,21 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   )}
                 </div>
 
+                {/* Theme Selector */}
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Thema
+                  </h3>
+                  <div className="glass-card">
+                    <ThemeSelector />
+                  </div>
+                </div>
+
                 {/* App Info */}
                 <div className="text-center text-sm text-slate-400 pb-8">
-                  <div className="mb-2 font-semibold text-lg bg-gradient-primary bg-clip-text text-transparent">Arc v2.0</div>
-                  <div className="text-xs">Bend money</div>
+                  <div className="mb-2 font-semibold text-lg bg-gradient-primary bg-clip-text text-transparent">BLAZE v2.0</div>
+                  <div className="text-xs">Set your finances on fire</div>
                 </div>
               </div>
             </div>
