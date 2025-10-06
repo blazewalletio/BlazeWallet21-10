@@ -201,12 +201,12 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                   value={fromAmount}
                   onChange={(e) => setFromAmount(e.target.value)}
                   placeholder="0.0"
-                  className="flex-1 bg-transparent text-2xl font-bold outline-none"
+                  className="flex-1 bg-transparent text-2xl font-bold outline-none min-w-0"
                 />
                 <select
                   value={fromToken}
                   onChange={(e) => setFromToken(e.target.value)}
-                  className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none"
+                  className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
                 >
                   <option value="native">{chain.nativeCurrency.symbol}</option>
                   {popularTokens.map(token => (
@@ -247,14 +247,14 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                   value={toAmount}
                   readOnly
                   placeholder="0.0"
-                  className="flex-1 bg-transparent text-2xl font-bold outline-none text-emerald-400"
+                  className="flex-1 bg-transparent text-2xl font-bold outline-none text-emerald-400 min-w-0"
                 />
                 <select
                   value={toToken}
                   onChange={(e) => setToToken(e.target.value)}
-                  className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none"
+                  className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
                 >
-                  <option value="">Selecteer token</option>
+                  <option value="">Token</option>
                   {popularTokens.map(token => (
                     <option key={token.address} value={token.address}>
                       {token.symbol}
