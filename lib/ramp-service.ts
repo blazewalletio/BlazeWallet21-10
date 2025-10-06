@@ -1,9 +1,11 @@
-// Ramp Network integration for fiat on-ramp
+// Ramp Network integration for fiat on-ramp using official SDK
 // Docs: https://docs.ramp.network/
+
+import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
 
 export interface RampConfig {
   hostAppName: string;
-  hostLogoUrl: string;
+  hostLogoUrl?: string;
   swapAsset?: string; // e.g., 'ETH', 'USDT_ETHEREUM'
   userAddress: string;
   hostApiKey?: string; // Optional: for revenue share
@@ -11,7 +13,6 @@ export interface RampConfig {
 
 export class RampService {
   private static readonly RAMP_HOST_APP_NAME = 'Arc Wallet';
-  private static readonly RAMP_WIDGET_URL = 'https://buy.ramp.network';
 
   // Get supported assets by chain
   static getSupportedAssets(chainId: number): string[] {
@@ -21,48 +22,36 @@ export class RampService {
       56: ['BNB_BSC', 'USDT_BSC', 'BUSD_BSC'], // BSC
       42161: ['ETH_ARBITRUM', 'USDT_ARBITRUM'], // Arbitrum
       8453: ['ETH_BASE'], // Base
+      11155111: ['ETH'], // Sepolia (testnet)
     };
 
     return assetMap[chainId] || [];
   }
 
-  // Open Ramp widget
+  // Open Ramp widget using official SDK
   static openWidget(config: RampConfig) {
-    const params = new URLSearchParams({
+    new RampInstantSDK({
       hostAppName: config.hostAppName,
+      hostLogoUrl: config.hostLogoUrl || 'https://arcwallet.vercel.app/icon-512.png',
       userAddress: config.userAddress,
-      ...(config.swapAsset && { swapAsset: config.swapAsset }),
-      ...(config.hostLogoUrl && { hostLogoUrl: config.hostLogoUrl }),
-      // Customize appearance
-      variant: 'auto', // auto, mobile, desktop
-      // Optional: Add revenue share
+      swapAsset: config.swapAsset,
+      variant: 'auto', // Automatically adapts to mobile/desktop
+      // Optional: Add revenue share API key
       ...(config.hostApiKey && { hostApiKey: config.hostApiKey }),
-    });
-
-    const url = `${this.RAMP_WIDGET_URL}?${params.toString()}`;
-    
-    // Open in new window for better UX
-    const width = 420;
-    const height = 750;
-    const left = (window.screen.width - width) / 2;
-    const top = (window.screen.height - height) / 2;
-    
-    window.open(
-      url,
-      'ramp',
-      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-    );
-  }
-
-  // Alternative: Embed widget in iframe (for modal)
-  static getEmbedUrl(config: RampConfig): string {
-    const params = new URLSearchParams({
-      hostAppName: config.hostAppName,
-      userAddress: config.userAddress,
-      ...(config.swapAsset && { swapAsset: config.swapAsset }),
-      variant: 'embedded-mobile',
-    });
-
-    return `${this.RAMP_WIDGET_URL}?${params.toString()}`;
+    })
+      .on('*', (event) => {
+        // Log all events for debugging
+        console.log('Ramp event:', event);
+      })
+      .on('WIDGET_CLOSE', () => {
+        console.log('Ramp widget closed');
+      })
+      .on('PURCHASE_SUCCESSFUL', (event) => {
+        console.log('Purchase successful!', event);
+      })
+      .on('PURCHASE_FAILED', (event) => {
+        console.error('Purchase failed:', event);
+      })
+      .show();
   }
 }
