@@ -1,26 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { getPortfolioHistory } from '@/lib/portfolio-history';
 
 interface PortfolioChartProps {
-  data?: number[];
-  timeframe?: '1D' | '1W' | '1M' | '1Y';
+  currentValue: number;
+  address: string;
+  timeframe?: '1D' | '1W' | '1M' | '1Y' | 'ALL';
 }
 
-export default function PortfolioChart({ data, timeframe = '1D' }: PortfolioChartProps) {
-  const [selectedTimeframe, setSelectedTimeframe] = useState(timeframe);
+export default function PortfolioChart({ currentValue, address, timeframe = '1D' }: PortfolioChartProps) {
+  const [selectedTimeframe, setSelectedTimeframe] = useState<'1D' | '1W' | '1M' | '1Y' | 'ALL'>(timeframe);
+  const [chartData, setChartData] = useState<number[]>([]);
 
-  // Mock data - in productie zou dit echte historische data zijn
-  const mockData = Array.from({ length: 24 }, (_, i) => 
-    1000 + Math.random() * 200 + i * 10
-  );
+  useEffect(() => {
+    // Haal echte portfolio history data op van server
+    const loadData = async () => {
+      const history = getPortfolioHistory(address);
+      const data = await history.getDataForTimeframe(selectedTimeframe, currentValue);
+      setChartData(data);
+    };
+    
+    loadData();
+  }, [selectedTimeframe, currentValue, address]);
 
-  const chartData = data || mockData;
-  const maxValue = Math.max(...chartData);
-  const minValue = Math.min(...chartData);
+  const maxValue = chartData.length > 0 ? Math.max(...chartData) : currentValue;
+  const minValue = chartData.length > 0 ? Math.min(...chartData) : currentValue;
 
-  const timeframes = ['1D', '1W', '1M', '1Y', 'ALL'];
+  const timeframes: Array<'1D' | '1W' | '1M' | '1Y' | 'ALL'> = ['1D', '1W', '1M', '1Y', 'ALL'];
 
   return (
     <div className="glass-card">
@@ -32,7 +40,7 @@ export default function PortfolioChart({ data, timeframe = '1D' }: PortfolioChar
             <motion.button
               key={tf}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setSelectedTimeframe(tf as any)}
+              onClick={() => setSelectedTimeframe(tf)}
               className={`px-3 py-1 rounded-lg text-sm font-semibold transition-all ${
                 selectedTimeframe === tf
                   ? 'bg-primary-500 text-white'

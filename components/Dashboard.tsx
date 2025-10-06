@@ -25,6 +25,7 @@ import AnimatedNumber from './AnimatedNumber';
 import QuickPayModal from './QuickPayModal';
 import FounderDeploy from './FounderDeploy';
 import TransactionHistory from './TransactionHistory';
+import { getPortfolioHistory } from '@/lib/portfolio-history';
 
 export default function Dashboard() {
   const { 
@@ -247,18 +248,9 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Mini Chart Placeholder */}
-              <div className="h-20 flex items-end gap-1">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${20 + Math.random() * 80}%` }}
-                    transition={{ delay: i * 0.05, duration: 0.5 }}
-                    className={`flex-1 rounded-t ${isPositiveChange ? 'bg-emerald-500/30' : 'bg-rose-500/30'}`}
-                  />
-                ))}
-              </div>
+              {/* Real-time Portfolio Chart */}
+              <div className="h-20 flex items-end gap-0.5">
+                <PortfolioChart currentValue={totalValueUSD} address={address || ''} timeframe="1D" />
             </div>
           </motion.div>
 
