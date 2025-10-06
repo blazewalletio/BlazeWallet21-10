@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
 import { useWalletStore } from '@/lib/wallet-store';
+import { CHAINS } from '@/lib/chains';
 import { Rocket, CheckCircle2, AlertCircle, ExternalLink, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DeployContract() {
   const { wallet, currentChain } = useWalletStore();
+  const chain = CHAINS[currentChain];
   const [deploying, setDeploying] = useState(false);
   const [deployed, setDeployed] = useState('');
   const [error, setError] = useState('');
@@ -30,18 +32,18 @@ export default function DeployContract() {
 
     try {
       // Create provider and signer
-      const provider = new ethers.JsonRpcProvider(currentChain.rpcUrl);
+      const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
       const signer = new ethers.Wallet(wallet.privateKey, provider);
 
       // Check balance
       const balance = await provider.getBalance(wallet.address);
       if (balance === 0n) {
-        throw new Error(`No ${currentChain.symbol} for gas fees. Get some ${currentChain.symbol} first!`);
+        throw new Error(`No ${chain.symbol} for gas fees. Get some ${chain.symbol} first!`);
       }
 
       console.log('🚀 Deploying Arc Token...');
       console.log('From:', wallet.address);
-      console.log('Balance:', ethers.formatEther(balance), currentChain.symbol);
+      console.log('Balance:', ethers.formatEther(balance), chain.symbol);
 
       // Simple ERC20 deployment (you'll need to add actual bytecode)
       // For now, this is a placeholder showing the structure
