@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowUpRight, ArrowDownLeft, RefreshCw, Settings, 
   TrendingUp, Eye, EyeOff, Plus, Zap, ChevronRight,
-  Repeat, Wallet as WalletIcon, TrendingDown, PieChart, Rocket
+  Repeat, Wallet as WalletIcon, TrendingDown, PieChart, Rocket, CreditCard
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { BlockchainService } from '@/lib/blockchain';
@@ -16,6 +16,7 @@ import { Token } from '@/lib/types';
 import SendModal from './SendModal';
 import ReceiveModal from './ReceiveModal';
 import SwapModal from './SwapModal';
+import BuyModal from './BuyModal';
 import ChainSelector from './ChainSelector';
 import TokenSelector from './TokenSelector';
 import PortfolioChart from './PortfolioChart';
@@ -42,6 +43,7 @@ export default function Dashboard() {
   const [showSendModal, setShowSendModal] = useState(false);
   const [showReceiveModal, setShowReceiveModal] = useState(false);
   const [showSwapModal, setShowSwapModal] = useState(false);
+  const [showBuyModal, setShowBuyModal] = useState(false);
   const [showChainSelector, setShowChainSelector] = useState(false);
   const [showTokenSelector, setShowTokenSelector] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -381,6 +383,20 @@ export default function Dashboard() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => setShowBuyModal(true)}
+              className="glass-card card-hover p-4 text-center"
+            >
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
+                <CreditCard className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-sm font-semibold">Koop</div>
+            </motion.button>
+
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setShowSendModal(true)}
               className="glass-card card-hover p-4 text-center"
             >
@@ -393,7 +409,7 @@ export default function Dashboard() {
             <motion.button
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15 }}
+              transition={{ delay: 0.2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowReceiveModal(true)}
               className="glass-card card-hover p-4 text-center"
@@ -407,7 +423,7 @@ export default function Dashboard() {
             <motion.button
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.25 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowSwapModal(true)}
               className="glass-card card-hover p-4 text-center"
@@ -417,21 +433,20 @@ export default function Dashboard() {
               </div>
               <div className="text-sm font-semibold">Swap</div>
             </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.25 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowTokenSelector(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
-                <Plus className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold">Token</div>
-            </motion.button>
           </div>
+
+          {/* Add Tokens Button */}
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowTokenSelector(true)}
+            className="w-full glass-card card-hover p-3 flex items-center justify-center gap-2 mt-3"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="text-sm font-semibold">Tokens toevoegen</span>
+          </motion.button>
 
           {/* Native Currency */}
           <motion.div
@@ -528,6 +543,7 @@ export default function Dashboard() {
       </div>
 
       {/* Modals */}
+      <BuyModal isOpen={showBuyModal} onClose={() => setShowBuyModal(false)} />
       <SendModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} />
       <ReceiveModal isOpen={showReceiveModal} onClose={() => setShowReceiveModal(false)} />
       <SwapModal isOpen={showSwapModal} onClose={() => setShowSwapModal(false)} />
