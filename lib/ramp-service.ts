@@ -1,7 +1,5 @@
-// Ramp Network integration for fiat on-ramp using official SDK
+// Ramp Network integration for fiat on-ramp
 // Docs: https://docs.ramp.network/
-
-import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
 
 export interface RampConfig {
   hostAppName: string;
@@ -13,6 +11,7 @@ export interface RampConfig {
 
 export class RampService {
   private static readonly RAMP_HOST_APP_NAME = 'Arc Wallet';
+  private static readonly RAMP_WIDGET_URL = 'https://app.ramp.network';
 
   // Get supported assets by chain
   static getSupportedAssets(chainId: number): string[] {
@@ -28,21 +27,20 @@ export class RampService {
     return assetMap[chainId] || [];
   }
 
-  // Open Ramp widget using official SDK
+  // Open Ramp widget - works without registration!
   static openWidget(config: RampConfig) {
-    const widget = new RampInstantSDK({
-      hostAppName: config.hostAppName,
-      hostLogoUrl: config.hostLogoUrl || 'https://arcwallet.vercel.app/icon-512.png',
+    const params = new URLSearchParams({
       userAddress: config.userAddress,
-      swapAsset: config.swapAsset,
-      variant: 'auto', // Automatically adapts to mobile/desktop
-      // Optional: Add revenue share API key
+      ...(config.swapAsset && { swapAsset: config.swapAsset }),
+      // Add hostAppName for branding (works even without registration)
+      hostAppName: config.hostAppName,
+      // Optional: Add API key if you have one (for revenue share)
       ...(config.hostApiKey && { hostApiKey: config.hostApiKey }),
     });
 
-    // Show the widget
-    widget.show();
+    const url = `${this.RAMP_WIDGET_URL}?${params.toString()}`;
     
-    return widget;
+    // Open in new tab - most reliable method
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 }
