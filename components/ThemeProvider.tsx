@@ -12,6 +12,11 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     const theme = getTheme();
     console.log('📦 Got theme from store:', theme.name);
     applyTheme(theme);
+    
+    // Set theme data attribute for CSS effects
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+    }
   }, [currentTheme, getTheme]);
 
   console.log('🎨 ThemeProvider render, current theme:', currentTheme);

@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 :root {
-  /* Default theme variables (Blaze Fire) */
-  --color-primary: #ff6b35;
-  --color-primary-dark: #d63447;
-  --color-secondary: #ff5722;
-  --color-accent: #ffd23f;
-  --color-background: #0a0908;
-  --color-surface: #1f1715;
-  --color-text: #fff8f0;
-  --color-text-secondary: #d4a574;
-  --gradient-primary: linear-gradient(135deg, #ff6b35 0%, #ff5722 33%, #d63447 66%, #ffd23f 100%);
+  /* Default theme variables (Standard) */
+  --color-primary: #8b5cf6;
+  --color-primary-dark: #6d28d9;
+  --color-secondary: #a78bfa;
+  --color-accent: #c4b5fd;
+  --color-background: #0a0a0f;
+  --color-surface: #16161d;
+  --color-text: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #a78bfa 100%);
 }
 
 @layer base {
@@ -31,10 +31,29 @@
     background-color: var(--color-surface) !important;
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(var(--color-primary), 0.15);
   }
 
   .glass-card {
     @apply glass rounded-2xl p-6 shadow-xl;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0%, 100% { left: -100%; }
+    50% { left: 100%; }
   }
 
   /* Scrollbar styling */

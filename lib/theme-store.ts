@@ -19,53 +19,69 @@ export interface Theme {
 }
 
 export const THEMES: Record<string, Theme> = {
+  standard: {
+    id: 'standard',
+    name: '💎 Standard',
+    description: 'Professional excellence',
+    colors: {
+      primary: '#8b5cf6',      // Premium paars
+      primaryDark: '#6d28d9',  // Diep paars
+      secondary: '#a78bfa',    // Licht paars
+      accent: '#c4b5fd',       // Subtle accent
+      background: '#0a0a0f',   // Rijk zwart
+      surface: '#16161d',      // Premium donkergrijs
+      text: '#f8fafc',         // Helder wit
+      textSecondary: '#94a3b8', // Professional grijs
+    },
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #a78bfa 100%)',
+  },
   fire: {
     id: 'fire',
     name: '🔥 Blaze Fire',
-    description: 'Vurige energie en kracht',
+    description: 'Inferno unleashed',
     colors: {
-      primary: '#ff6b35',      // Vurig oranje
-      primaryDark: '#d63447',  // Diep rood
-      secondary: '#ff5722',    // Levendig oranje
-      accent: '#ffd23f',       // Gouden geel
-      background: '#0a0908',   // Bijna zwart met warme tint
-      surface: '#1f1715',      // Warm donkerbruin
-      text: '#fff8f0',         // Warm wit
-      textSecondary: '#d4a574', // Warm beige
+      primary: '#ff3c00',      // Intense flame oranje
+      primaryDark: '#d01212',  // Lava rood
+      secondary: '#ff6b00',    // Burning oranje
+      accent: '#ffdd00',       // White-hot geel
+      background: '#0f0400',   // Charcoal zwart met ember glow
+      surface: '#1a0d00',      // Smoldering bruin-zwart
+      text: '#fff5e6',         // Ember wit
+      textSecondary: '#ff9966', // Warm flame glow
     },
-    gradient: 'linear-gradient(135deg, #ff6b35 0%, #ff5722 33%, #d63447 66%, #ffd23f 100%)',
+    gradient: 'linear-gradient(135deg, #ff3c00 0%, #d01212 25%, #ff6b00 50%, #d01212 75%, #ffdd00 100%)',
   },
   electric: {
     id: 'electric',
     name: '⚡ Blaze Electric',
-    description: 'Elektrische snelheid en innovatie',
+    description: 'Pure voltage',
     colors: {
       primary: '#00ffff',      // Neon cyan
-      primaryDark: '#00d4ff',  // Electric blauw
-      secondary: '#b224ef',    // Electric paars
-      accent: '#7df9ff',       // Licht electric blauw
-      background: '#050510',   // Diep zwart met blauwe tint
-      surface: '#0d1117',      // Donker grijs-blauw
-      text: '#e4f4ff',         // Koel wit
-      textSecondary: '#8b9dc3', // Koel grijs-blauw
+      primaryDark: '#0099ff',  // Electric blauw
+      secondary: '#ff00ff',    // Neon magenta
+      accent: '#00ff99',       // Electric groen
+      background: '#000008',   // Void zwart met electric tint
+      surface: '#0a0a14',      // Deep tech zwart
+      text: '#e0f7ff',         // Neon wit
+      textSecondary: '#66d9ff', // Electric blue glow
     },
-    gradient: 'linear-gradient(135deg, #00ffff 0%, #00d4ff 33%, #b224ef 66%, #7df9ff 100%)',
+    gradient: 'linear-gradient(135deg, #00ffff 0%, #0099ff 20%, #ff00ff 40%, #00ff99 60%, #00ffff 80%, #ff00ff 100%)',
   },
   ocean: {
     id: 'ocean',
     name: '🌊 Blaze Ocean',
-    description: 'Diepe kalmte en diepgang',
+    description: 'Abyssal depths',
     colors: {
-      primary: '#0ea5e9',      // Oceaan blauw
-      primaryDark: '#0369a1',  // Diep oceaan
-      secondary: '#06b6d4',    // Turquoise
-      accent: '#22d3ee',       // Licht cyan
-      background: '#020817',   // Diep oceaan zwart
-      surface: '#0f172a',      // Donker blauw-grijs
-      text: '#f0f9ff',         // Oceaan wit
-      textSecondary: '#7dd3fc', // Licht blauw
+      primary: '#00d4ff',      // Crystal water cyan
+      primaryDark: '#0066cc',  // Deep ocean blauw
+      secondary: '#00ffcc',    // Tropical turquoise
+      accent: '#66ffff',       // Surf foam cyan
+      background: '#000a12',   // Mariana trench zwart
+      surface: '#001a2e',      // Deep water navy
+      text: '#e6f7ff',         // Sea foam wit
+      textSecondary: '#4dd4ff', // Aqua glow
     },
-    gradient: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 33%, #0369a1 66%, #22d3ee 100%)',
+    gradient: 'linear-gradient(135deg, #00d4ff 0%, #0066cc 30%, #00ffcc 60%, #0066cc 80%, #66ffff 100%)',
   },
 };
 
@@ -78,7 +94,7 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set, get) => ({
-      currentTheme: 'fire', // Default theme
+      currentTheme: 'standard', // Default theme
       
       setTheme: (themeId: string) => {
         console.log('🔧 setTheme called with:', themeId);
@@ -93,7 +109,7 @@ export const useThemeStore = create<ThemeStore>()(
       },
       
           getTheme: () => {
-            return THEMES[get().currentTheme] || THEMES.fire;
+            return THEMES[get().currentTheme] || THEMES.standard;
           },
     }),
     {
