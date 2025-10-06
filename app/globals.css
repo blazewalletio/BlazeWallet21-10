@@ -2,58 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Default theme variables (Standard) */
-  --color-primary: #8b5cf6;
-  --color-primary-dark: #6d28d9;
-  --color-secondary: #a78bfa;
-  --color-accent: #c4b5fd;
-  --color-background: #0a0a0f;
-  --color-surface: #16161d;
-  --color-text: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #a78bfa 100%);
-}
-
 @layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+  }
+
   * {
     @apply border-slate-800;
   }
 
   body {
-    background-color: var(--color-background) !important;
-    color: var(--color-text) !important;
+    @apply bg-slate-950 text-slate-50;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   /* Glassmorphism utilities */
   .glass {
-    background-color: var(--color-surface) !important;
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 40px rgba(var(--color-primary), 0.15);
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
   }
 
   .glass-card {
     @apply glass rounded-2xl p-6 shadow-xl;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .glass-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    animation: shimmer 3s infinite;
-  }
-  
-  @keyframes shimmer {
-    0%, 100% { left: -100%; }
-    50% { left: 100%; }
   }
 
   /* Scrollbar styling */
@@ -76,28 +46,15 @@
 
   /* Smooth transitions */
   * {
-    @apply transition-colors duration-300;
+    @apply transition-colors duration-200;
   }
-  
-  /* Force theme colors on Tailwind classes */
-  .bg-slate-950 { background-color: var(--color-background) !important; }
-  .bg-slate-900 { background-color: var(--color-background) !important; }
-  .bg-slate-800 { background-color: var(--color-surface) !important; }
-  .text-slate-50 { color: var(--color-text) !important; }
-  .text-slate-400 { color: var(--color-text-secondary) !important; }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 text-white rounded-xl font-semibold;
-    background: var(--gradient-primary);
-    @apply hover:shadow-lg hover:scale-105;
+    @apply px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold;
+    @apply hover:shadow-lg hover:shadow-violet-500/50 hover:scale-105;
     @apply active:scale-95 transition-all duration-200;
-    box-shadow: 0 10px 25px -5px rgba(var(--color-primary), 0.3);
-  }
-  
-  .btn-primary:hover {
-    box-shadow: 0 20px 40px -10px rgba(var(--color-primary), 0.5);
   }
 
   .btn-secondary {
@@ -108,23 +65,14 @@
 
   .input-field {
     @apply w-full glass-card px-4 py-3 text-slate-100 placeholder-slate-500;
-    @apply focus:outline-none transition-all duration-200;
-    border: 2px solid transparent;
-  }
-  
-  .input-field:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.1);
+    @apply focus:outline-none focus:ring-2 focus:ring-violet-500/50;
+    @apply transition-all duration-200;
   }
 
   .card-hover {
     @apply transform transition-all duration-300;
     @apply hover:scale-[1.02] hover:-translate-y-1;
-    @apply hover:shadow-2xl;
-  }
-  
-  .card-hover:hover {
-    box-shadow: 0 25px 50px -12px rgba(var(--color-primary), 0.25);
+    @apply hover:shadow-2xl hover:shadow-violet-500/20;
   }
 }
 
