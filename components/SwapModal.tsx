@@ -73,6 +73,11 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         amountInWei
       );
 
+      // Debug: Log full response
+      console.log('Full quote response:', JSON.stringify(quoteData, null, 2));
+      console.log('toTokenAmount:', (quoteData as any)?.toTokenAmount);
+      console.log('source:', (quoteData as any)?.source);
+      
       if (quoteData && (quoteData as any).toTokenAmount && (quoteData as any).toTokenAmount !== '0') {
         console.log('✅ Server quote success:', (quoteData as any).source);
         setQuote(quoteData);
@@ -84,6 +89,11 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         
         setSwapProvider((quoteData as any).source === '1inch' ? '1inch' : 'price-estimate');
       } else {
+        console.error('Quote check failed:', {
+          hasQuoteData: !!quoteData,
+          toTokenAmount: (quoteData as any)?.toTokenAmount,
+          isZero: (quoteData as any)?.toTokenAmount === '0'
+        });
         setError('Geen quote beschikbaar voor dit token pair');
       }
     } catch (err: any) {
