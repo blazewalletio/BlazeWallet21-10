@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowDown, Zap, AlertCircle, Loader2, RefreshCw, CheckCircle } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { CHAINS, POPULAR_TOKENS } from '@/lib/chains';
-import { UniswapService } from '@/lib/uniswap-service';
 import { SwapService } from '@/lib/swap-service';
 import { ethers } from 'ethers';
+
+// Lazy load Uniswap to avoid build issues
+let UniswapService: any = null;
 
 interface SwapModalProps {
   isOpen: boolean;
@@ -66,8 +68,18 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         ? '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
         : fromToken;
 
+      // Lazy load Uniswap service (client-side only)
+      if (!UniswapService && typeof window !== 'undefined') {
+        try {
+          const module = await import('@/lib/uniswap-service');
+          UniswapService = module.UniswapService;
+        } catch (err) {
+          console.log('Uniswap SDK not available');
+        }
+      }
+
       // Try Uniswap first (if supported on chain)
-      if (UniswapService.isSupported(chain.id)) {
+      if (UniswapService && UniswapService.isSupported(chain.id)) {
         try {
           console.log('Trying Uniswap routing...');
           const uniswapService = new UniswapService(chain.id, chain.rpcUrl);
@@ -144,8 +156,14 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
       let txHash: string;
 
+      // Load Uniswap if needed
+      if (!UniswapService && typeof window !== 'undefined') {
+        const module = await import('@/lib/uniswap-service');
+        UniswapService = module.UniswapService;
+      }
+
       // Execute swap based on provider
-      if (swapProvider === 'uniswap' && quote.route) {
+      if (swapProvider === 'uniswap' && quote.route && UniswapService) {
         console.log('Executing Uniswap swap...');
         const uniswapService = new UniswapService(chain.id, chain.rpcUrl);
         
