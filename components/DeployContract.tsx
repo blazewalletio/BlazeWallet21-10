@@ -90,7 +90,7 @@ export default function DeployContract() {
           <div className="mb-6 p-4 bg-slate-900/50 rounded-xl">
             <div className="text-sm text-slate-400 mb-1">Deploying from:</div>
             <div className="font-mono text-sm">{wallet.address}</div>
-            <div className="text-sm text-slate-400 mt-2">Network: {currentChain.name}</div>
+            <div className="text-sm text-slate-400 mt-2">Network: {chain.name}</div>
           </div>
         )}
 
@@ -109,7 +109,7 @@ export default function DeployContract() {
             ) : (
               <>
                 <Rocket className="w-5 h-5" />
-                Deploy Token to {currentChain.name}
+                Deploy Token to {chain.name}
               </>
             )}
           </button>
@@ -122,7 +122,7 @@ export default function DeployContract() {
             <div className="mb-4 p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
               <h3 className="text-xl font-semibold text-emerald-400 mb-2">Successfully Deployed!</h3>
-              <p className="text-slate-400 text-sm mb-4">Your Arc Token is now live on {currentChain.name}</p>
+              <p className="text-slate-400 text-sm mb-4">Your Arc Token is now live on {chain.name}</p>
               
               <div className="p-3 bg-slate-900/50 rounded-lg">
                 <div className="text-xs text-slate-400 mb-1">Contract Address:</div>
@@ -147,7 +147,7 @@ export default function DeployContract() {
                   )}
                 </button>
                 <a
-                  href={`${currentChain.explorer}/address/${deployed}`}
+                  href={`${chain.explorerUrl}/address/${deployed}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg flex items-center justify-center gap-2 transition-colors"
