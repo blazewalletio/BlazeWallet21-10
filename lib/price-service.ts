@@ -1,65 +1,33 @@
-// Live crypto price service using CoinGecko API
+// Live crypto price service using Next.js API route (avoids CORS!)
 export class PriceService {
-  private cache: Map<string, { price: number; timestamp: number }> = new Map();
+  private cache: Map<string, { price: number; change24h: number; timestamp: number }> = new Map();
   private cacheDuration = 60000; // 1 minute cache
-  private apiUrl = 'https://api.coingecko.com/api/v3';
-
-  // Symbol to CoinGecko ID mapping
-  private symbolToId: Record<string, string> = {
-    ETH: 'ethereum',
-    MATIC: 'matic-network',
-    BNB: 'binancecoin',
-    USDT: 'tether',
-    USDC: 'usd-coin',
-    BUSD: 'binance-usd',
-    WBTC: 'wrapped-bitcoin',
-    LINK: 'chainlink',
-    ARB: 'arbitrum',
-    BASE: 'base',
-  };
+  private apiUrl = '/api/prices'; // Use our API route instead of direct CoinGecko
 
   async getPrice(symbol: string): Promise<number> {
+    // Check cache first
     const cached = this.cache.get(symbol);
-    const now = Date.now();
-
-    // Return cached price if still valid
-    if (cached && now - cached.timestamp < this.cacheDuration) {
+    if (cached && Date.now() - cached.timestamp < this.cacheDuration) {
       return cached.price;
     }
 
     try {
-      // Get CoinGecko ID from symbol
-      const coinId = this.symbolToId[symbol.toUpperCase()];
+      const response = await fetch(`${this.apiUrl}?symbols=${symbol}`);
       
-      if (!coinId) {
-        console.warn(`No CoinGecko ID for symbol: ${symbol}`);
-        return 0;
-      }
-
-      // Fetch live price from CoinGecko (free, no API key needed)
-      const response = await fetch(
-        `${this.apiUrl}/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true`,
-        {
-          headers: {
-            'Accept': 'application/json',
-          },
-        }
-      );
-
       if (!response.ok) {
-        throw new Error(`CoinGecko API error: ${response.status}`);
+        throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
-      const price = data[coinId]?.usd || 0;
+      const price = data[symbol]?.price || 0;
+      const change24h = data[symbol]?.change24h || 0;
 
-      // Cache the result
-      this.cache.set(symbol, { price, timestamp: now });
-      
+      // Update cache
+      this.cache.set(symbol, { price, change24h, timestamp: Date.now() });
+
       return price;
     } catch (error) {
       console.error(`Error fetching price for ${symbol}:`, error);
-      
       // Return cached price if available, otherwise 0
       return cached?.price || 0;
     }
@@ -67,48 +35,29 @@ export class PriceService {
 
   async getMultiplePrices(symbols: string[]): Promise<Record<string, number>> {
     try {
-      // Get all CoinGecko IDs
-      const coinIds = symbols
-        .map(s => this.symbolToId[s.toUpperCase()])
-        .filter(Boolean);
-
-      if (coinIds.length === 0) {
-        return {};
-      }
-
-      // Fetch all prices in one request (more efficient)
-      const response = await fetch(
-        `${this.apiUrl}/simple/price?ids=${coinIds.join(',')}&vs_currencies=usd&include_24hr_change=true`,
-        {
-          headers: {
-            'Accept': 'application/json',
-          },
-        }
-      );
-
+      const response = await fetch(`${this.apiUrl}?symbols=${symbols.join(',')}`);
+      
       if (!response.ok) {
-        throw new Error(`CoinGecko API error: ${response.status}`);
+        throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
       const now = Date.now();
 
-      // Map back to symbols and cache
       const result: Record<string, number> = {};
       symbols.forEach(symbol => {
-        const coinId = this.symbolToId[symbol.toUpperCase()];
-        if (coinId && data[coinId]) {
-          const price = data[coinId].usd;
+        if (data[symbol]) {
+          const price = data[symbol].price;
+          const change24h = data[symbol].change24h;
           result[symbol] = price;
-          this.cache.set(symbol, { price, timestamp: now });
+          this.cache.set(symbol, { price, change24h, timestamp: now });
         }
       });
 
       return result;
     } catch (error) {
       console.error('Error fetching multiple prices:', error);
-      
-      // Fallback to individual cached prices
+      // Return cached prices
       const result: Record<string, number> = {};
       symbols.forEach(symbol => {
         const cached = this.cache.get(symbol);
@@ -121,31 +70,30 @@ export class PriceService {
   }
 
   async get24hChange(symbol: string): Promise<number> {
+    // Check cache first
+    const cached = this.cache.get(symbol);
+    if (cached && Date.now() - cached.timestamp < this.cacheDuration) {
+      return cached.change24h;
+    }
+
     try {
-      const coinId = this.symbolToId[symbol.toUpperCase()];
+      const response = await fetch(`${this.apiUrl}?symbols=${symbol}`);
       
-      if (!coinId) {
-        return 0;
-      }
-
-      const response = await fetch(
-        `${this.apiUrl}/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true`,
-        {
-          headers: {
-            'Accept': 'application/json',
-          },
-        }
-      );
-
       if (!response.ok) {
-        throw new Error(`CoinGecko API error: ${response.status}`);
+        throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
-      return data[coinId]?.usd_24h_change || 0;
+      const price = data[symbol]?.price || 0;
+      const change24h = data[symbol]?.change24h || 0;
+
+      // Update cache
+      this.cache.set(symbol, { price, change24h, timestamp: Date.now() });
+
+      return change24h;
     } catch (error) {
       console.error(`Error fetching 24h change for ${symbol}:`, error);
-      return 0;
+      return cached?.change24h || 0;
     }
   }
 }
