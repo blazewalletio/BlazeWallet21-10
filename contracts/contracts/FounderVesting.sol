@@ -7,9 +7,9 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title FounderVesting
- * @dev Vesting contract for Blaze Token founder allocation (V4 Enhanced)
+ * @dev Vesting contract for Arc Token founder allocation (V4 Enhanced)
  * 
- * Allocation: 150M BLAZE (15% of total supply)
+ * Allocation: 150M ARC (15% of total supply)
  * Schedule: 6-month cliff, then 42-month linear vesting (4 years total)
  * 
  * This represents 60% of founder's total allocation (250M)
@@ -17,10 +17,10 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  */
 contract FounderVesting is Ownable, ReentrancyGuard {
     
-    IERC20 public immutable blazeToken;
+    IERC20 public immutable arcToken;
     address public immutable founder;
     
-    uint256 public constant TOTAL_ALLOCATION = 150_000_000 * 10**18; // 150M BLAZE
+    uint256 public constant TOTAL_ALLOCATION = 150_000_000 * 10**18; // 150M ARC
     uint256 public constant CLIFF_DURATION = 180 days; // 6 months
     uint256 public constant VESTING_DURATION = 1460 days; // 4 years total
     uint256 public immutable vestingStart;
@@ -33,13 +33,13 @@ contract FounderVesting is Ownable, ReentrancyGuard {
     event VestingStarted(uint256 startTime, address indexed founder);
     
     constructor(
-        address _blazeToken,
+        address _arcToken,
         address _founder
     ) Ownable(msg.sender) {
-        require(_blazeToken != address(0), "Invalid token address");
+        require(_arcToken != address(0), "Invalid token address");
         require(_founder != address(0), "Invalid founder address");
         
-        blazeToken = IERC20(_blazeToken);
+        arcToken = IERC20(_arcToken);
         founder = _founder;
         
         vestingStart = block.timestamp;
@@ -83,7 +83,7 @@ contract FounderVesting is Ownable, ReentrancyGuard {
         require(amount > 0, "No tokens to release");
         
         released += amount;
-        require(blazeToken.transfer(founder, amount), "Transfer failed");
+        require(arcToken.transfer(founder, amount), "Transfer failed");
         
         emit TokensReleased(amount, block.timestamp);
     }
@@ -144,7 +144,7 @@ contract FounderVesting is Ownable, ReentrancyGuard {
      * @dev Emergency function to recover accidentally sent tokens (not ARC)
      */
     function recoverToken(address token, uint256 amount) external onlyOwner {
-        require(token != address(blazeToken), "Cannot recover BLAZE tokens");
+        require(token != address(arcToken), "Cannot recover ARC tokens");
         require(IERC20(token).transfer(owner(), amount), "Recovery failed");
     }
 }

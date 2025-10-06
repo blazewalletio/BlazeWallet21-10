@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  console.log("🔥 BLAZE Token - Bootstrap Launch ($500 Budget)\n");
+  console.log("🔥 Blaze Token - Bootstrap Launch ($500 Budget)\n");
   console.log("=" .repeat(60));
 
   const [deployer] = await hre.ethers.getSigners();
@@ -15,7 +15,7 @@ async function main() {
     console.log("   Recommended: 0.5+ BNB (~$300)\n");
   }
 
-  console.log("🚀 Deploying simplified BLAZE Token for bootstrap...\n");
+  console.log("🚀 Deploying simplified Blaze Token for bootstrap...\n");
 
   // For bootstrap: Send everything to deployer initially
   // Then manually distribute after deployment
@@ -33,7 +33,7 @@ async function main() {
   await blazeToken.waitForDeployment();
   const tokenAddress = await blazeToken.getAddress();
   
-  console.log("✅ BLAZE Token deployed to:", tokenAddress);
+  console.log("✅ Blaze Token deployed to:", tokenAddress);
   console.log("");
 
   const totalSupply = await blazeToken.totalSupply();

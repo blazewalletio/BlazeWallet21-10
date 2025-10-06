@@ -1,11 +1,11 @@
 {
-  "name": "BLAZE - Lightning Fast Crypto",
-  "short_name": "BLAZE",
-  "description": "Set your finances on fire. Lightning fast crypto wallet with Quick Pay.",
+  "name": "Blaze - Lightning Fast Crypto",
+  "short_name": "Blaze",
+  "description": "The fastest crypto wallet on earth. Buy, swap, send instantly.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",
-  "theme_color": "#f97316",
+  "theme_color": "#8b5cf6",
   "orientation": "portrait",
   "categories": ["finance", "utilities"],
   "shortcuts": [

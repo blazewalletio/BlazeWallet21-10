@@ -82,16 +82,16 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 className="inline-block"
               >
                 <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center mb-6">
-                  <BlazeLogo size={48} animate={false} />
-                </div>
-              </motion.div>
+                <BlazeLogo size={48} />
+              </div>
+            </motion.div>
 
-              <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 tracking-tight">
-                BLAZE
-              </h1>
-              <p className="text-slate-400 text-lg mb-2">
-                Your financial arc
-              </p>
+            <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 tracking-tight">
+              Blaze
+            </h1>
+            <p className="text-slate-400 text-lg mb-2">
+              Lightning fast crypto
+            </p>
               <div className="flex gap-4 justify-center text-sm text-slate-500 mb-8">
                 <span className="flex items-center gap-1">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" />

@@ -85,7 +85,7 @@ export default function SplashScreen() {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2 tracking-tight"
         >
-          Arc
+          Blaze
         </motion.h1>
 
         {/* Subtitle Animation */}
@@ -95,7 +95,7 @@ export default function SplashScreen() {
           transition={{ delay: 0.6, duration: 0.6 }}
           className="text-slate-400 text-lg"
         >
-          Your financial arc
+          Lightning fast crypto
         </motion.p>
 
         {/* Loading Dots */}

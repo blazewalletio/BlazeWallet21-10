@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Shield, Key, Trash2, Download, 
-  Eye, EyeOff, Copy, Check, Bell, Moon, Sun, Palette 
+  Eye, EyeOff, Copy, Check, Bell, Moon, Sun 
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 
@@ -233,10 +233,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   )}
                 </div>
 
-          {/* App Info */}
+                {/* App Info */}
                 <div className="text-center text-sm text-slate-400 pb-8">
-                  <div className="mb-2 font-semibold text-lg bg-gradient-primary bg-clip-text text-transparent">BLAZE v2.0</div>
-                  <div className="text-xs">Set your finances on fire</div>
+                  <div className="mb-2 font-semibold text-lg bg-gradient-primary bg-clip-text text-transparent">Blaze v2.0</div>
+                  <div className="text-xs">Lightning fast crypto</div>
                 </div>
               </div>
             </div>

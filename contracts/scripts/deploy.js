@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  console.log("🔥 Deploying BLAZE Token - V4 Enhanced\n");
+  console.log("🌈 Deploying Arc Token - V4 Enhanced\n");
   console.log("=" .repeat(60));
 
   // Get deployer account
@@ -33,11 +33,11 @@ async function main() {
   console.log("Liquidity:      ", wallets.liquidity);
   console.log("");
 
-  console.log("🚀 Step 1: Deploying BLAZE Token Contract...\n");
+  console.log("🚀 Step 1: Deploying Arc Token Contract...\n");
 
   // Deploy token
-  const BlazeToken = await hre.ethers.getContractFactory("BlazeToken");
-  const blazeToken = await BlazeToken.deploy(
+  const ArcToken = await hre.ethers.getContractFactory("ArcToken");
+  const arcToken = await ArcToken.deploy(
     wallets.publicSale,
     wallets.founder,
     wallets.community,
@@ -47,9 +47,9 @@ async function main() {
     wallets.liquidity
   );
 
-  await blazeToken.waitForDeployment();
-  const tokenAddress = await blazeToken.getAddress();
-  console.log("✅ BLAZE Token deployed to:", tokenAddress);
+  await arcToken.waitForDeployment();
+  const tokenAddress = await arcToken.getAddress();
+  console.log("✅ Arc Token deployed to:", tokenAddress);
   console.log("");
 
   console.log("🔒 Step 2: Deploying Founder Vesting Contract...\n");
@@ -67,10 +67,10 @@ async function main() {
   console.log("");
 
   // Display token info
-  const name = await blazeToken.name();
-  const symbol = await blazeToken.symbol();
-  const totalSupply = await blazeToken.totalSupply();
-  const decimals = await blazeToken.decimals();
+  const name = await arcToken.name();
+  const symbol = await arcToken.symbol();
+  const totalSupply = await arcToken.totalSupply();
+  const decimals = await arcToken.decimals();
 
   console.log("=" .repeat(60));
   console.log("📊 TOKEN INFORMATION");
@@ -82,13 +82,13 @@ async function main() {
   console.log("");
 
   // Display distribution
-  const publicSaleBalance = await blazeToken.balanceOf(wallets.publicSale);
-  const liquidityBalance = await blazeToken.balanceOf(wallets.liquidity);
-  const founderBalance = await blazeToken.balanceOf(wallets.founder);
-  const communityBalance = await blazeToken.balanceOf(wallets.community);
-  const treasuryBalance = await blazeToken.balanceOf(wallets.treasury);
-  const teamBalance = await blazeToken.balanceOf(wallets.team);
-  const strategicBalance = await blazeToken.balanceOf(wallets.strategic);
+  const publicSaleBalance = await arcToken.balanceOf(wallets.publicSale);
+  const liquidityBalance = await arcToken.balanceOf(wallets.liquidity);
+  const founderBalance = await arcToken.balanceOf(wallets.founder);
+  const communityBalance = await arcToken.balanceOf(wallets.community);
+  const treasuryBalance = await arcToken.balanceOf(wallets.treasury);
+  const teamBalance = await arcToken.balanceOf(wallets.team);
+  const strategicBalance = await arcToken.balanceOf(wallets.strategic);
 
   console.log("=" .repeat(60));
   console.log("💰 TOKEN DISTRIBUTION (V4 Enhanced)");

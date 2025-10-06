@@ -570,7 +570,7 @@ export default function Dashboard() {
               className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl pointer-events-auto"
             >
               <div className="sticky top-0 z-10 bg-slate-900 border-b border-slate-700/50 px-6 py-4 flex justify-between items-center">
-                <h2 className="text-xl font-bold">🌈 Deploy Arc Token</h2>
+                <h2 className="text-xl font-bold">🔥 Deploy Blaze Token</h2>
                 <button
                   onClick={() => setShowFounderDeploy(false)}
                   className="text-slate-400 hover:text-white transition-colors"

@@ -52,8 +52,8 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold;
-    @apply hover:shadow-lg hover:shadow-violet-500/50 hover:scale-105;
+    @apply px-6 py-3 bg-gradient-primary text-white rounded-xl font-semibold;
+    @apply hover:shadow-lg hover:shadow-primary-500/50 hover:scale-105;
     @apply active:scale-95 transition-all duration-200;
   }
 
@@ -65,14 +65,14 @@
 
   .input-field {
     @apply w-full glass-card px-4 py-3 text-slate-100 placeholder-slate-500;
-    @apply focus:outline-none focus:ring-2 focus:ring-violet-500/50;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500/50;
     @apply transition-all duration-200;
   }
 
   .card-hover {
     @apply transform transition-all duration-300;
     @apply hover:scale-[1.02] hover:-translate-y-1;
-    @apply hover:shadow-2xl hover:shadow-violet-500/20;
+    @apply hover:shadow-2xl hover:shadow-primary-500/20;
   }
 }
 

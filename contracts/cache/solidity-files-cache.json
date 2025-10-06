@@ -381,8 +381,8 @@
       ]
     },
     "/Users/rickschlimback/Desktop/Crypto wallet app/contracts/contracts/FounderVesting.sol": {
-      "lastModificationDate": 1759780027098,
-      "contentHash": "dafbaced68cfaaab97e9e43245f3ac2e",
+      "lastModificationDate": 1759784011510,
+      "contentHash": "192e8aed40a99c055f695cf88d1fd4d9",
       "sourceName": "contracts/FounderVesting.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -421,8 +421,8 @@
       ]
     },
     "/Users/rickschlimback/Desktop/Crypto wallet app/contracts/contracts/BlazeToken.sol": {
-      "lastModificationDate": 1759779934011,
-      "contentHash": "f49e582087daae4b37288baa331d03f6",
+      "lastModificationDate": 1759784185349,
+      "contentHash": "bfacfe542aaada98ba627545cf8c5d78",
       "sourceName": "contracts/BlazeToken.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -460,6 +460,48 @@
       ],
       "artifacts": [
         "BlazeToken"
+      ]
+    },
+    "/Users/rickschlimback/Desktop/Crypto wallet app/contracts/contracts/ArcToken.sol": {
+      "lastModificationDate": 1759784016549,
+      "contentHash": "8ffbedc24ae5b8d07778db4884994589",
+      "sourceName": "contracts/ArcToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ArcToken"
       ]
     }
   }

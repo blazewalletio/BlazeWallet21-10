@@ -38,7 +38,7 @@ export default function FounderDeploy() {
         <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-6">
           <AlertCircle className="w-12 h-12 text-rose-400 mb-3" />
           <h3 className="text-lg font-semibold mb-2">No Wallet Found</h3>
-          <p className="text-slate-400">Create or import a wallet first to deploy BLAZE Token.</p>
+          <p className="text-slate-400">Create or import a wallet first to deploy Blaze Token.</p>
         </div>
       </div>
     );
@@ -48,8 +48,8 @@ export default function FounderDeploy() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">🔥 Deploy BLAZE Token</h1>
-        <p className="text-slate-400">Deploy the official BLAZE Token from your wallet</p>
+        <h1 className="text-3xl font-bold mb-2">🔥 Deploy Blaze Token</h1>
+        <p className="text-slate-400">Deploy the official Blaze Token from your wallet</p>
       </div>
 
       {/* Wallet Info */}
@@ -80,7 +80,7 @@ export default function FounderDeploy() {
               <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5" />
               <div>
                 <div className="font-medium">Wallet Created</div>
-                <div className="text-sm text-slate-400">Your Arc wallet is ready</div>
+                <div className="text-sm text-slate-400">Your Blaze wallet is ready</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -115,7 +115,7 @@ export default function FounderDeploy() {
         <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-6">
           <h3 className="font-semibold mb-3">🚀 Ready to Deploy!</h3>
           <p className="text-sm text-slate-300 mb-4">
-            Click below to get your deployment command. Run it in your terminal to deploy BLAZE Token.
+            Click below to get your deployment command. Run it in your terminal to deploy Blaze Token.
           </p>
           
           <button
@@ -187,7 +187,7 @@ export default function FounderDeploy() {
         <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6">
           <div className="text-center mb-6">
             <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold mb-2">🎉 BLAZE Token Deployed!</h3>
+            <h3 className="text-2xl font-bold mb-2">🎉 Blaze Token Deployed!</h3>
             <p className="text-slate-400">Your token is now live on {chain.name}</p>
           </div>
 

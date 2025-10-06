@@ -2,13 +2,13 @@
 
 import { motion } from 'framer-motion';
 
-interface BlazeLogoProps {
+interface ArcLogoProps {
   size?: number;
   animate?: boolean;
   className?: string;
 }
 
-export default function BlazeLogo({ size = 48, animate = true, className = '' }: BlazeLogoProps) {
+export default function ArcLogo({ size = 48, animate = true, className = '' }: ArcLogoProps) {
   const pathVariants = {
     hidden: {
       pathLength: 0,
@@ -38,10 +38,10 @@ export default function BlazeLogo({ size = 48, animate = true, className = '' }:
       className={className}
     >
       <defs>
-        <linearGradient id="blazeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f97316" />
-          <stop offset="50%" stopColor="#fb923c" />
-          <stop offset="100%" stopColor="#fbbf24" />
+        <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#8b5cf6" />
+          <stop offset="50%" stopColor="#a78bfa" />
+          <stop offset="100%" stopColor="#06b6d4" />
         </linearGradient>
         <filter id="glow">
           <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -52,10 +52,10 @@ export default function BlazeLogo({ size = 48, animate = true, className = '' }:
         </filter>
       </defs>
       
-      {/* Main Flame */}
+      {/* Main Arc */}
       <motion.path
-        d="M 50 20 L 50 75 M 35 40 L 50 60 M 65 40 L 50 60 M 40 55 L 50 70 M 60 55 L 50 70"
-        stroke="url(#blazeGradient)"
+        d="M 20 80 Q 50 20, 80 80"
+        stroke="url(#arcGradient)"
         strokeWidth="6"
         strokeLinecap="round"
         fill="none"
@@ -65,10 +65,10 @@ export default function BlazeLogo({ size = 48, animate = true, className = '' }:
         animate={animate ? "visible" : undefined}
       />
       
-      {/* Secondary Flame (subtle) */}
+      {/* Secondary Arc (subtle) */}
       <motion.path
-        d="M 50 25 L 50 70"
-        stroke="url(#blazeGradient)"
+        d="M 25 75 Q 50 25, 75 75"
+        stroke="url(#arcGradient)"
         strokeWidth="3"
         strokeLinecap="round"
         fill="none"
@@ -83,7 +83,7 @@ export default function BlazeLogo({ size = 48, animate = true, className = '' }:
 }
 
 // Simple static version for small icons
-export function BlazeIcon({ size = 24, className = '' }: { size?: number; className?: string }) {
+export function ArcIcon({ size = 24, className = '' }: { size?: number; className?: string }) {
   return (
     <svg
       width={size}
@@ -94,14 +94,14 @@ export function BlazeIcon({ size = 24, className = '' }: { size?: number; classN
       className={className}
     >
       <defs>
-        <linearGradient id="blazeGradientStatic" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f97316" />
-          <stop offset="100%" stopColor="#fbbf24" />
+        <linearGradient id="arcGradientStatic" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#8b5cf6" />
+          <stop offset="100%" stopColor="#06b6d4" />
         </linearGradient>
       </defs>
       <path
-        d="M 50 20 L 50 75 M 35 40 L 50 60 M 65 40 L 50 60"
-        stroke="url(#blazeGradientStatic)"
+        d="M 20 80 Q 50 20, 80 80"
+        stroke="url(#arcGradientStatic)"
         strokeWidth="8"
         strokeLinecap="round"
         fill="none"
