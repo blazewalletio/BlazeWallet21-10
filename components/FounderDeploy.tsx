@@ -6,7 +6,7 @@ import { useWalletStore } from '@/lib/wallet-store';
 import { CHAINS } from '@/lib/chains';
 
 export default function FounderDeploy() {
-  const { wallet, currentChain } = useWalletStore();
+  const { wallet, currentChain, balance } = useWalletStore();
   const chain = CHAINS[currentChain];
   const [step, setStep] = useState<'ready' | 'deploying' | 'success'>('ready');
   const [tokenAddress, setTokenAddress] = useState('');
@@ -66,7 +66,7 @@ export default function FounderDeploy() {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-slate-400">Balance:</span>
-            <span>{wallet.balance} {chain.nativeCurrency.symbol}</span>
+            <span>{balance} {chain.nativeCurrency.symbol}</span>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function FounderDeploy() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              {parseFloat(wallet.balance) > 0 ? (
+              {parseFloat(balance) > 0 ? (
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5" />
               ) : (
                 <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5" />
@@ -99,8 +99,8 @@ export default function FounderDeploy() {
               <div>
                 <div className="font-medium">Gas Fees Available</div>
                 <div className="text-sm text-slate-400">
-                  {parseFloat(wallet.balance) > 0 
-                    ? `${wallet.balance} ${chain.nativeCurrency.symbol} available`
+                  {parseFloat(balance) > 0 
+                    ? `${balance} ${chain.nativeCurrency.symbol} available`
                     : `Need ${chain.nativeCurrency.symbol} for gas fees`
                   }
                 </div>
@@ -120,7 +120,7 @@ export default function FounderDeploy() {
           
           <button
             onClick={handleDeploy}
-            disabled={parseFloat(wallet.balance) === 0}
+            disabled={parseFloat(balance) === 0}
             className="w-full py-3 bg-gradient-primary rounded-xl font-semibold disabled:opacity-50 hover:opacity-90 transition-opacity"
           >
             <Rocket className="w-5 h-5 inline mr-2" />
