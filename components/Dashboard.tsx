@@ -197,7 +197,7 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card relative overflow-hidden card-3d pulse-glow"
+            className="glass-card relative overflow-hidden card-3d subtle-shimmer"
           >
             <div className="absolute inset-0 bg-gradient-primary opacity-10 animate-gradient" />
             <div className="relative z-10">
@@ -487,7 +487,7 @@ export default function Dashboard() {
         transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setShowQuickPay(true)}
-        className="fixed bottom-20 right-4 z-40 w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full shadow-2xl flex items-center justify-center pulse-glow"
+        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full shadow-2xl flex items-center justify-center subtle-glow hover:scale-110 transition-transform duration-300"
         title="Quick Pay"
       >
         <Zap className="w-8 h-8 text-white" />
