@@ -503,6 +503,48 @@
       "artifacts": [
         "ArcToken"
       ]
+    },
+    "/Users/rickschlimback/Desktop/Crypto wallet app/contracts/contracts/BlazeTokenV3.sol": {
+      "lastModificationDate": 1759852263330,
+      "contentHash": "2ff4440d0f250701d1290b8834f4fe3f",
+      "sourceName": "contracts/BlazeTokenV3.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "BlazeTokenV3"
+      ]
     }
   }
 }
