@@ -1,7 +1,5 @@
 'use client';
-
-import { motion } from 'framer-motion';
-import BlazeLogo from './BlazeLogo';
+import BlazeLogo from './BlazeLogo';import { motion } from 'framer-motion';
 
 export default function SplashScreen() {
   return (

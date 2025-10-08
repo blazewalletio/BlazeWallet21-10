@@ -1,5 +1,5 @@
 'use client';
-
+import BlazeLogo from './BlazeLogo';
 import { useState } from 'react';
 import { Rocket, AlertCircle, CheckCircle2, Copy, ExternalLink } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
@@ -48,7 +48,7 @@ export default function FounderDeploy() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">🔥 Deploy Blaze Token</h1>
+        <h1 className="text-3xl font-bold mb-2"><BlazeLogo size={20} variant="icon" /> Deploy Blaze Token</h1>
         <p className="text-slate-400">Deploy the official Blaze Token from your wallet</p>
       </div>
 
