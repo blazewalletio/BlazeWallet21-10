@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const presaleAddress = "0xf1898f9d831e3bEbC137e006914205810cD09935";
+  const presaleAddress = "0x8321C862B49C4Ad9132e55c3B24Cb72772B30fdd";
   
   console.log("\n🚀 STARTING PRESALE...\n");
   

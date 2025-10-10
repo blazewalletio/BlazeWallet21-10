@@ -22,13 +22,13 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  */
 contract BlazePresale is Ownable, ReentrancyGuard {
     
-    // Presale Parameters
-    uint256 public constant HARD_CAP = 500000 * 10**18; // $500k in wei equivalent
-    uint256 public constant SOFT_CAP = 100000 * 10**18; // $100k minimum
-    uint256 public constant MIN_CONTRIBUTION = 100 * 10**18; // $100
-    uint256 public constant MAX_CONTRIBUTION = 10000 * 10**18; // $10,000
+    // Presale Parameters (assuming BNB = $600)
+    uint256 public constant HARD_CAP = 833333333333333333333; // ~833.33 BNB = $500k
+    uint256 public constant SOFT_CAP = 166666666666666666666; // ~166.67 BNB = $100k
+    uint256 public constant MIN_CONTRIBUTION = 16666666666666666; // ~0.0167 BNB = $10 (lowered for easier testing)
+    uint256 public constant MAX_CONTRIBUTION = 16666666666666666666; // ~16.67 BNB = $10,000
     uint256 public constant TOKENS_FOR_SALE = 120_000_000 * 10**18; // 120M BLAZE
-    uint256 public constant TOKEN_PRICE = 417 * 10**13; // $0.00417 per token
+    uint256 public constant TOKEN_PRICE = 417 * 10**13; // $0.00417 per token = 0.00000695 BNB per token (at $600/BNB)
     
     // Presale State
     bool public presaleActive;

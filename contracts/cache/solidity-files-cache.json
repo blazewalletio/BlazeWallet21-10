@@ -589,8 +589,8 @@
       ]
     },
     "/Users/rickschlimback/Desktop/Crypto wallet app/contracts/contracts/BlazePresale.sol": {
-      "lastModificationDate": 1760113158950,
-      "contentHash": "877222bf5ca9d012f3081cc98e4b326d",
+      "lastModificationDate": 1760119788406,
+      "contentHash": "beb3f69fc2807f6d52a8d636f9943a4b",
       "sourceName": "contracts/BlazePresale.sol",
       "solcConfig": {
         "version": "0.8.20",
