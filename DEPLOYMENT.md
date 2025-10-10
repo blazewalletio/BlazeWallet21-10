@@ -248,6 +248,3 @@ Questions about deployment?
 **Bend money with Arc!** 🌈
 
 Deployment success! 🚀
-
-
-

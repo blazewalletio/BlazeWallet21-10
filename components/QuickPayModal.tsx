@@ -390,4 +390,3 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
     </AnimatePresence>
   );
 }
-

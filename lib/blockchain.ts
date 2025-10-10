@@ -189,6 +189,3 @@ export class BlockchainService {
     }
   }
 }
-
-
-

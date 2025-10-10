@@ -32,4 +32,3 @@ export const PRESALE_CONSTANTS = {
   tokensForSale: 120000000, // 120M BLAZE
 };
 
-

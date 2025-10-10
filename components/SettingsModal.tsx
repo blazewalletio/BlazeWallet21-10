@@ -7,7 +7,6 @@ import {
   Eye, EyeOff, Copy, Check, Bell, Moon, Sun 
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
-import Image from 'next/image';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -56,18 +55,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <div className="glass-card h-full overflow-y-auto">
               <div className="sticky top-0 glass backdrop-blur-xl pb-4 mb-6">
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                      <Image
-                        src="/blaze-logo-official.png"
-                        alt="Blaze"
-                        width={20}
-                        height={20}
-                        className="object-contain"
-                      />
-                    </div>
-                    <h2 className="text-2xl font-bold">Instellingen</h2>
-                  </div>
+                  <h2 className="text-2xl font-bold">Instellingen</h2>
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={onClose}
@@ -258,4 +246,3 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     </AnimatePresence>
   );
 }
-

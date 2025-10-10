@@ -5,7 +5,6 @@ import { useWalletStore } from '@/lib/wallet-store';
 import Onboarding from '@/components/Onboarding';
 import Dashboard from '@/components/Dashboard';
 import SplashScreen from '@/components/SplashScreen';
-import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function Home() {
   const [hasWallet, setHasWallet] = useState<boolean | null>(null);
@@ -44,8 +43,13 @@ export default function Home() {
   // Loading state
   if (hasWallet === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <LoadingSpinner size="lg" text="Wallet laden..." showText={true} />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-primary rounded-2xl flex items-center justify-center animate-pulse">
+            <span className="text-3xl">💎</span>
+          </div>
+          <div className="text-slate-400">CryptoVault laden...</div>
+        </div>
       </div>
     );
   }
@@ -61,4 +65,3 @@ export default function Home() {
     </>
   );
 }
-

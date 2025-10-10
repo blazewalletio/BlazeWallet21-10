@@ -180,6 +180,3 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     }
   },
 }));
-
-
-

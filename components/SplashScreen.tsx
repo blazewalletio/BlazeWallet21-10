@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import BlazeLogo from './BlazeLogo';
-import Image from 'next/image';
 
 export default function SplashScreen() {
   return (
@@ -74,13 +73,7 @@ export default function SplashScreen() {
             
             {/* Main Icon */}
             <div className="relative w-24 h-24 mx-auto bg-gradient-primary rounded-3xl flex items-center justify-center shadow-2xl">
-              <Image
-                src="/blaze-logo-official.png"
-                alt="Blaze"
-                width={56}
-                height={56}
-                className="object-contain"
-              />
+              <BlazeLogo size={56} animate={true} />
             </div>
           </div>
         </motion.div>
@@ -102,7 +95,7 @@ export default function SplashScreen() {
           transition={{ delay: 0.6, duration: 0.6 }}
           className="text-slate-400 text-lg"
         >
-          Lightning fast crypto wallet
+          Lightning fast crypto
         </motion.p>
 
         {/* Loading Dots */}
@@ -133,4 +126,3 @@ export default function SplashScreen() {
     </motion.div>
   );
 }
-
