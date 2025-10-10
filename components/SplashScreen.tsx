@@ -95,7 +95,7 @@ export default function SplashScreen() {
           transition={{ delay: 0.6, duration: 0.6 }}
           className="text-slate-400 text-lg"
         >
-          Lightning fast crypto
+          Lightning fast crypto wallet
         </motion.p>
 
         {/* Loading Dots */}
