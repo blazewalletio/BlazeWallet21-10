@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useWalletStore } from '@/lib/wallet-store';
 import Onboarding from '@/components/Onboarding';
 import Dashboard from '@/components/Dashboard';
@@ -43,12 +44,36 @@ export default function Home() {
   // Loading state
   if (hasWallet === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-primary rounded-2xl flex items-center justify-center animate-pulse">
-            <span className="text-3xl">💎</span>
+          <div className="relative mb-6">
+            <motion.div
+              animate={{
+                rotate: [0, 360],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                rotate: {
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                },
+                scale: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
+              className="w-20 h-20 mx-auto"
+            >
+              <img 
+                src="/blazelogooff.png" 
+                alt="Blaze" 
+                className="w-full h-full object-contain drop-shadow-2xl"
+              />
+            </motion.div>
           </div>
-          <div className="text-slate-400">CryptoVault laden...</div>
+          <div className="text-slate-400 text-lg">BlazeWallet laden...</div>
         </div>
       </div>
     );
@@ -65,3 +90,4 @@ export default function Home() {
     </>
   );
 }
+
