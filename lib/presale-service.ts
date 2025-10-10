@@ -179,11 +179,21 @@ export class PresaleService {
         presaleAddress: this.presaleContract.target
       });
       
-      // Call the contribute() function with value
-      // Use getFunction to ensure we're calling the right function
-      const contributeFn = this.presaleContract.getFunction('contribute');
-      const tx = await contributeFn({
+      // Encode the function call
+      const iface = new ethers.Interface(PRESALE_ABI);
+      const data = iface.encodeFunctionData('contribute', []);
+      
+      console.log('📝 Transaction data:', {
+        to: this.presaleContract.target,
+        value: valueInWei.toString(),
+        data: data
+      });
+      
+      // Send the transaction with encoded data
+      const tx = await this.wallet.sendTransaction({
+        to: this.presaleContract.target,
         value: valueInWei,
+        data: data,
         gasLimit: 300000, // Set gas limit to avoid estimation issues
       });
       
@@ -191,6 +201,9 @@ export class PresaleService {
       
       // Wait for confirmation
       const receipt = await tx.wait();
+      if (!receipt) {
+        throw new Error('Transaction receipt is null');
+      }
       console.log('Transaction confirmed:', receipt.hash);
       
       return receipt.hash;
