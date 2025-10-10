@@ -204,6 +204,19 @@ export default function Dashboard() {
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
+                {/* Blaze Logo */}
+                <div className="flex items-center gap-2 mr-4">
+                  <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center overflow-hidden">
+                    <img 
+                      src="/blaze-logo-real.png" 
+                      alt="Blaze" 
+                      className="w-6 h-6 object-contain"
+                    />
+                  </div>
+                  <span className="text-lg font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                    Blaze
+                  </span>
+                </div>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowChainSelector(true)}

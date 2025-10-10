@@ -72,8 +72,12 @@ export default function SplashScreen() {
             />
             
             {/* Main Icon */}
-            <div className="relative w-24 h-24 mx-auto bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl">
-              <BlazeLogo size={56} animate={true} />
+            <div className="relative w-24 h-24 mx-auto bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl overflow-hidden">
+              <img 
+                src="/blaze-logo-real.png" 
+                alt="Blaze Logo" 
+                className="w-16 h-16 object-contain"
+              />
             </div>
           </div>
         </motion.div>

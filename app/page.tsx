@@ -57,8 +57,12 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl blur-2xl animate-pulse" />
             
             {/* Main Icon */}
-            <div className="relative w-20 h-20 mx-auto bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl">
-              <div className="text-4xl">🔥</div>
+            <div className="relative w-20 h-20 mx-auto bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl overflow-hidden">
+              <img 
+                src="/blaze-logo-real.png" 
+                alt="Blaze Logo" 
+                className="w-12 h-12 object-contain"
+              />
             </div>
           </div>
 

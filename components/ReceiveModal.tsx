@@ -88,7 +88,16 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
             >
               <div className="glass-card max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Crypto ontvangen</h2>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center overflow-hidden">
+                    <img 
+                      src="/blaze-logo-real.png" 
+                      alt="Blaze" 
+                      className="w-5 h-5 object-contain"
+                    />
+                  </div>
+                  <h2 className="text-2xl font-bold">Crypto ontvangen</h2>
+                </div>
                 <button
                   onClick={onClose}
                   className="glass p-2 rounded-lg hover:bg-gray-50"

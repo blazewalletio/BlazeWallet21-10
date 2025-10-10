@@ -101,8 +101,12 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
               {/* Header */}
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center">
-                    <Zap className="w-6 h-6 text-white" />
+                  <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center overflow-hidden">
+                    <img 
+                      src="/blaze-logo-real.png" 
+                      alt="Blaze" 
+                      className="w-6 h-6 object-contain"
+                    />
                   </div>
                   <h2 className="text-2xl font-bold">Quick Pay</h2>
                 </div>
