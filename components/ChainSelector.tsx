@@ -29,7 +29,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           />
           
           <motion.div
@@ -45,7 +45,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="glass p-2 rounded-lg hover:bg-white/10"
+                  className="glass p-2 rounded-lg hover:bg-gray-50"
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
@@ -57,7 +57,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
                     key={key}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleSelectChain(key)}
-                    className={`w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-all ${
+                    className={`w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-gray-50 transition-all ${
                       currentChain === key ? 'ring-2 ring-primary-500' : ''
                     }`}
                   >
@@ -99,7 +99,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
               </div>
 
               <div className="mt-6 glass-card bg-blue-500/10 border-blue-500/20">
-                <p className="text-blue-200 text-sm">
+                <p className="text-blue-700 text-sm">
                   💡 Tip: Gebruik Polygon of Base voor goedkope transacties!
                 </p>
               </div>

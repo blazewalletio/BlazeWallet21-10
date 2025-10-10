@@ -45,13 +45,13 @@ export default function PremiumBadge({ isPremium, tokenBalance = 0, threshold = 
       ) : (
         // Progress to Premium
         <div className="relative group">
-          <div className="bg-white border-2 border-gray-900 rounded-full p-2 border-2 border-orange-500/50">
+          <div className="bg-gray-50 rounded-full p-2 border-2 border-orange-500/50">
             <Crown className="w-5 h-5 text-orange-400" />
           </div>
           
           {/* Tooltip */}
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-            <div className="bg-white border-2 border-gray-900 border border-gray-900 rounded-lg p-3 whitespace-nowrap shadow-hard">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 whitespace-nowrap shadow-xl">
               <div className="text-sm font-semibold mb-1">Premium Progress</div>
               <div className="text-xs text-gray-600 mb-2">
                 {tokenBalance.toLocaleString()} / {threshold.toLocaleString()} BLAZE
@@ -118,7 +118,7 @@ export function PremiumCard({ isPremium, onUpgrade }: { isPremium: boolean; onUp
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6 hover:border-orange-500/50 transition-colors"
+      className="bg-gray-50/50 border border-gray-200 rounded-xl p-6 hover:border-orange-500/50 transition-colors"
     >
       <div className="flex items-center gap-3 mb-4">
         <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center">

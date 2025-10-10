@@ -76,7 +76,7 @@ export default function DebugPanel() {
         <div className="space-y-3 text-sm">
           {/* Current Network */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-gray-600 text-xs mb-1">Netwerk</div>
+            <div className="text-slate-400 text-xs mb-1">Netwerk</div>
             <div className="flex items-center gap-2">
               <div 
                 className="w-6 h-6 rounded-full flex items-center justify-center text-sm"
@@ -86,14 +86,14 @@ export default function DebugPanel() {
               </div>
               <div>
                 <div className="font-semibold">{chain.name}</div>
-                <div className="text-xs text-gray-600">Chain ID: {chain.id}</div>
+                <div className="text-xs text-slate-400">Chain ID: {chain.id}</div>
               </div>
             </div>
           </div>
 
           {/* Wallet Address */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-gray-600 text-xs mb-1">Jouw adres</div>
+            <div className="text-slate-400 text-xs mb-1">Jouw adres</div>
             <div className="font-mono text-xs break-all mb-2">{address}</div>
             <div className="flex gap-2">
               <button
@@ -117,7 +117,7 @@ export default function DebugPanel() {
 
           {/* Current Balance */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-gray-600 text-xs mb-1">Balance in app</div>
+            <div className="text-slate-400 text-xs mb-1">Balance in app</div>
             <div className="text-xl font-bold">
               {balance} {chain.nativeCurrency.symbol}
             </div>
@@ -125,7 +125,7 @@ export default function DebugPanel() {
 
           {/* Manual Check */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-gray-600 text-xs mb-2">Manual blockchain check</div>
+            <div className="text-slate-400 text-xs mb-2">Manual blockchain check</div>
             <button
               onClick={checkBalanceManually}
               disabled={isChecking}
@@ -135,7 +135,7 @@ export default function DebugPanel() {
             </button>
             {manualBalance && (
               <div className="text-xs">
-                <div className="text-gray-600">Result:</div>
+                <div className="text-slate-400">Result:</div>
                 <div className="font-mono font-bold text-primary-400">
                   {manualBalance} {!manualBalance.includes('Error') && chain.nativeCurrency.symbol}
                 </div>
@@ -145,16 +145,16 @@ export default function DebugPanel() {
 
           {/* RPC Endpoint */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-gray-600 text-xs mb-1">RPC Endpoint</div>
-            <div className="font-mono text-xs break-all text-gray-700">
+            <div className="text-slate-400 text-xs mb-1">RPC Endpoint</div>
+            <div className="font-mono text-xs break-all text-slate-300">
               {chain.rpcUrl}
             </div>
           </div>
 
           {/* Troubleshooting */}
           <div className="glass-card bg-blue-500/10 border-blue-500/20 p-3">
-            <div className="font-semibold text-blue-200 text-xs mb-2">💡 Troubleshooting</div>
-            <ul className="text-xs text-blue-200 space-y-1">
+            <div className="font-semibold text-blue-700 text-xs mb-2">💡 Troubleshooting</div>
+            <ul className="text-xs text-blue-700 space-y-1">
               <li>• Balance 0? Check if you're on the right network</li>
               <li>• Click "Check Balance Now" to force refresh</li>
               <li>• Click "Explorer" to see on blockchain</li>
@@ -164,8 +164,8 @@ export default function DebugPanel() {
 
           {/* Quick Network Switch */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-gray-600 text-xs mb-2">Stuurde je naar verkeerd netwerk?</div>
-            <div className="text-xs text-gray-700 mb-2">
+            <div className="text-slate-400 text-xs mb-2">Stuurde je naar verkeerd netwerk?</div>
+            <div className="text-xs text-slate-300 mb-2">
               Click je adres bovenaan om van netwerk te switchen
             </div>
           </div>

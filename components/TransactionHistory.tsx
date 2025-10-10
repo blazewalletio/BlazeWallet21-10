@@ -76,7 +76,7 @@ export default function TransactionHistory() {
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse">
-              <div className="h-16 bg-white border-2 border-gray-900 rounded-xl"></div>
+              <div className="h-16 bg-gray-50/50 rounded-xl"></div>
             </div>
           ))}
         </div>

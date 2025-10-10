@@ -37,7 +37,7 @@ export default function ReferralDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
+          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-3 mb-2">
             <Users className="w-5 h-5 text-blue-400" />
@@ -50,7 +50,7 @@ export default function ReferralDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
+          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-3 mb-2">
             <Gift className="w-5 h-5 text-green-400" />
@@ -68,7 +68,7 @@ export default function ReferralDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
+          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-3 mb-2">
             <Gift className="w-5 h-5 text-orange-400" />
@@ -91,7 +91,7 @@ export default function ReferralDashboard() {
             type="text"
             value={referralLink}
             readOnly
-            className="flex-1 px-4 py-3 bg-slate-900 border border-gray-900 rounded-lg text-sm font-mono"
+            className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm font-mono"
           />
           <button
             onClick={copyReferralLink}
@@ -140,7 +140,7 @@ export default function ReferralDashboard() {
       </div>
 
       {/* Recent Referrals */}
-      <div className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6">
+      <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6">
         <h3 className="font-semibold mb-4">Recent Referrals</h3>
         <div className="space-y-3">
           {[
@@ -150,7 +150,7 @@ export default function ReferralDashboard() {
           ].map((referral, index) => (
             <div
               key={index}
-              className="flex items-center justify-between py-3 border-b border-gray-900 last:border-0"
+              className="flex items-center justify-between py-3 border-b border-gray-200 last:border-0"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center">

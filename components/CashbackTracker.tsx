@@ -53,7 +53,7 @@ export default function CashbackTracker() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
+          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-2 text-blue-400 mb-2">
             <TrendingUp className="w-5 h-5" />
@@ -69,7 +69,7 @@ export default function CashbackTracker() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
+          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-2 text-orange-400 mb-2">
             <Zap className="w-5 h-5" />
@@ -85,7 +85,7 @@ export default function CashbackTracker() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
+          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-2 text-purple-400 mb-2">
             <TrendingUp className="w-5 h-5" />
@@ -133,13 +133,13 @@ export default function CashbackTracker() {
       </div>
 
       {/* Recent Cashback */}
-      <div className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6">
+      <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6">
         <h3 className="font-semibold mb-4">Recent Cashback</h3>
         <div className="space-y-3">
           {recentCashback.map((item, index) => (
             <div
               key={index}
-              className="flex items-center justify-between py-3 border-b border-gray-900 last:border-0"
+              className="flex items-center justify-between py-3 border-b border-gray-200 last:border-0"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">

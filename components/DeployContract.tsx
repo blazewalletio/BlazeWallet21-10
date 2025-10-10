@@ -73,7 +73,7 @@ export default function DeployContract() {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-white border-2 border-gray-900 backdrop-blur-sm rounded-2xl p-6 border border-gray-900/50">
+      <div className="bg-gray-50/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
@@ -87,7 +87,7 @@ export default function DeployContract() {
 
         {/* Wallet Info */}
         {wallet && (
-          <div className="mb-6 p-4 bg-gray-50 border-2 border-gray-900 rounded-xl">
+          <div className="mb-6 p-4 bg-white/50 rounded-xl">
             <div className="text-sm text-gray-600 mb-1">Deploying from:</div>
             <div className="font-mono text-sm">{wallet.address}</div>
             <div className="text-sm text-gray-600 mt-2">Network: {chain.name}</div>
@@ -124,7 +124,7 @@ export default function DeployContract() {
               <h3 className="text-xl font-semibold text-emerald-400 mb-2">Successfully Deployed!</h3>
               <p className="text-gray-600 text-sm mb-4">Your Arc Token is now live on {chain.name}</p>
               
-              <div className="p-3 bg-gray-50 border-2 border-gray-900 rounded-lg">
+              <div className="p-3 bg-white/50 rounded-lg">
                 <div className="text-xs text-gray-600 mb-1">Contract Address:</div>
                 <div className="font-mono text-sm break-all">{deployed}</div>
               </div>
@@ -189,7 +189,7 @@ export default function DeployContract() {
         </AnimatePresence>
 
         {/* Info */}
-        <div className="mt-6 p-4 bg-gray-50 border-2 border-gray-900 rounded-xl">
+        <div className="mt-6 p-4 bg-white/50 rounded-xl">
           <h4 className="font-semibold mb-2">ℹ️ How it works</h4>
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• Uses your Arc wallet private key</li>

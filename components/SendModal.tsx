@@ -107,7 +107,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           />
           
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
@@ -123,7 +123,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                 <h2 className="text-2xl font-bold">Crypto versturen</h2>
                 <button
                   onClick={handleClose}
-                  className="glass p-2 rounded-lg hover:bg-white/10"
+                  className="glass p-2 rounded-lg hover:bg-gray-50"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -164,7 +164,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                       />
                       <button
                         onClick={handleMaxAmount}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-400 hover:text-primary-300 text-sm font-semibold"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-600 hover:text-primary-700 text-sm font-semibold"
                       >
                         MAX
                       </button>
@@ -188,7 +188,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                           className={`glass p-3 rounded-lg text-center transition-all ${
                             selectedGas === speed
                               ? 'bg-primary-500/20 border-primary-500/50'
-                              : 'hover:bg-white/10'
+                              : 'hover:bg-gray-50'
                           }`}
                         >
                           <div className="text-xs text-gray-600 capitalize mb-1">
@@ -204,7 +204,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
 
                   {error && (
                     <div className="glass-card bg-rose-500/10 border-rose-500/20">
-                      <p className="text-rose-200 text-sm">{error}</p>
+                      <p className="text-rose-700 text-sm">{error}</p>
                     </div>
                   )}
 
@@ -247,7 +247,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
 
                   {error && (
                     <div className="glass-card bg-rose-500/10 border-rose-500/20">
-                      <p className="text-rose-200 text-sm">{error}</p>
+                      <p className="text-rose-700 text-sm">{error}</p>
                     </div>
                   )}
 
@@ -297,7 +297,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                       href={`https://etherscan.io/tx/${txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary-400 hover:text-primary-300 text-sm font-mono block mb-6 break-all"
+                      className="text-primary-600 hover:text-primary-700 text-sm font-mono block mb-6 break-all"
                     >
                       {txHash.slice(0, 20)}...
                     </a>

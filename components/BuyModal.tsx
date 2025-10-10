@@ -61,7 +61,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-50 rounded-full transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -94,7 +94,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                       key={currencyCode}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleBuy(currencyCode)}
-                      className="p-4 bg-white border-2 border-gray-900 hover:bg-white border-2 border-gray-900 rounded-xl transition-colors text-left"
+                      className="p-4 bg-gray-50/50 hover:bg-gray-50 rounded-xl transition-colors text-left"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-lg font-bold">
@@ -115,18 +115,18 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             <div className="mb-6">
               <h3 className="text-sm font-semibold text-gray-600 mb-3">Betaalmethodes</h3>
               <div className="flex flex-wrap gap-2">
-                <div className="px-3 py-2 bg-white border-2 border-gray-900 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-gray-50/50 rounded-lg text-sm">
                   <Banknote className="w-4 h-4 inline mr-1" />
                   iDEAL
                 </div>
-                <div className="px-3 py-2 bg-white border-2 border-gray-900 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-gray-50/50 rounded-lg text-sm">
                   <CreditCard className="w-4 h-4 inline mr-1" />
                   Creditcard
                 </div>
-                <div className="px-3 py-2 bg-white border-2 border-gray-900 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-gray-50/50 rounded-lg text-sm">
                   Bank
                 </div>
-                <div className="px-3 py-2 bg-white border-2 border-gray-900 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-gray-50/50 rounded-lg text-sm">
                   SEPA
                 </div>
               </div>

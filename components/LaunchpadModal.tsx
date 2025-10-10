@@ -110,7 +110,7 @@ export default function LaunchpadModal({ isOpen, onClose }: LaunchpadModalProps)
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
           />
           
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
@@ -119,10 +119,10 @@ export default function LaunchpadModal({ isOpen, onClose }: LaunchpadModalProps)
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl border border-gray-900/50 pointer-events-auto"
+              className="w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200/50 pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-slate-900/95 backdrop-blur-xl border-b border-gray-900/50 px-6 py-4 flex justify-between items-center">
+              <div className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 px-6 py-4 flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-bold flex items-center gap-2">
                     <Rocket className="w-6 h-6 text-orange-400" />
@@ -172,10 +172,10 @@ export default function LaunchpadModal({ isOpen, onClose }: LaunchpadModalProps)
                             onClick={() => project.status === 'live' && setSelectedProject(project)}
                             className={`border rounded-xl p-6 transition-all ${
                               project.status === 'live'
-                                ? 'bg-white border-2 border-gray-900 border-gray-900 cursor-pointer hover:border-orange-500'
+                                ? 'bg-gray-50/50 border-gray-200 cursor-pointer hover:border-orange-500'
                                 : project.status === 'upcoming'
                                 ? 'bg-blue-500/5 border-blue-500/20'
-                                : 'bg-white border-2 border-gray-900/30 border-gray-900/50 opacity-60'
+                                : 'bg-gray-50/30 border-gray-200/50 opacity-60'
                             }`}
                           >
                             {/* Project Header */}
@@ -231,7 +231,7 @@ export default function LaunchpadModal({ isOpen, onClose }: LaunchpadModalProps)
                             </div>
 
                             {/* Footer */}
-                            <div className="pt-4 border-t border-gray-900">
+                            <div className="pt-4 border-t border-gray-200">
                               <div className="flex justify-between text-sm">
                                 <span className="text-gray-600">Token Price</span>
                                 <span className="font-semibold">${project.tokenPrice}</span>
@@ -253,7 +253,7 @@ export default function LaunchpadModal({ isOpen, onClose }: LaunchpadModalProps)
                     </button>
 
                     {/* Project Info */}
-                    <div className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6">
+                    <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6">
                       <div className="flex items-start gap-4 mb-6">
                         <div className="text-6xl">{selectedProject.logo}</div>
                         <div className="flex-1">
@@ -273,7 +273,7 @@ export default function LaunchpadModal({ isOpen, onClose }: LaunchpadModalProps)
                       </div>
 
                       {/* Investment Form */}
-                      <div className="bg-gray-50 border-2 border-gray-900 rounded-xl p-6 border border-gray-900">
+                      <div className="bg-white/50 rounded-xl p-6 border border-gray-200">
                         <h3 className="font-semibold mb-4">Invest Now</h3>
                         
                         <div className="space-y-4">
@@ -284,7 +284,7 @@ export default function LaunchpadModal({ isOpen, onClose }: LaunchpadModalProps)
                               value={investAmount}
                               onChange={(e) => setInvestAmount(e.target.value)}
                               placeholder={`Min: $${selectedProject.minAllocation} - Max: $${selectedProject.maxAllocation}`}
-                              className="w-full px-4 py-3 bg-white border-2 border-gray-900 rounded-xl border border-gray-900 focus:border-orange-500 focus:outline-none"
+                              className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-orange-500 focus:outline-none"
                             />
                           </div>
 

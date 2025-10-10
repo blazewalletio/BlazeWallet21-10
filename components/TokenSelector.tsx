@@ -38,7 +38,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           />
           
           <motion.div
@@ -54,7 +54,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="glass p-2 rounded-lg hover:bg-white/10"
+                  className="glass p-2 rounded-lg hover:bg-gray-50"
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
@@ -80,7 +80,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
                     key={token.address}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleAddToken(token)}
-                    className="w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10"
+                    className="w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-gray-50"
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-600 rounded-full flex items-center justify-center text-lg">
@@ -105,7 +105,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
 
               {/* Custom Token Address */}
               <div className="glass-card bg-blue-500/10 border-blue-500/20">
-                <p className="text-blue-200 text-xs mb-2">Custom token contract adres:</p>
+                <p className="text-blue-700 text-xs mb-2">Custom token contract adres:</p>
                 <input
                   type="text"
                   value={customAddress}

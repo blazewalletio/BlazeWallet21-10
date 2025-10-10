@@ -31,8 +31,8 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
         width: 300,
         margin: 2,
         color: {
-          dark: '#FFFFFF',
-          light: '#00000000',
+          dark: '#000000',
+          light: '#FFFFFF',
         },
       });
       setQrCode(qr);
@@ -75,7 +75,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           />
           
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
@@ -91,7 +91,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                 <h2 className="text-2xl font-bold">Crypto ontvangen</h2>
                 <button
                   onClick={onClose}
-                  className="glass p-2 rounded-lg hover:bg-white/10"
+                  className="glass p-2 rounded-lg hover:bg-gray-50"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -131,7 +131,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                   <label className="text-sm text-gray-600 mb-2 block">
                     Jouw Ethereum adres
                   </label>
-                  <div className="glass-card bg-gray-50 border-2 border-gray-900">
+                  <div className="glass-card bg-white/50">
                     <div className="font-mono text-sm break-all text-gray-700">
                       {address}
                     </div>

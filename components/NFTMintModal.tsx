@@ -80,7 +80,7 @@ export default function NFTMintModal({ isOpen, onClose }: NFTMintModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
           />
           
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
@@ -89,10 +89,10 @@ export default function NFTMintModal({ isOpen, onClose }: NFTMintModalProps) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl border border-gray-900/50 pointer-events-auto"
+              className="w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200/50 pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-slate-900/95 backdrop-blur-xl border-b border-gray-900/50 px-6 py-4 flex justify-between items-center">
+              <div className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 px-6 py-4 flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-bold flex items-center gap-2">
                     <Palette className="w-6 h-6 text-purple-400" />
@@ -141,7 +141,7 @@ export default function NFTMintModal({ isOpen, onClose }: NFTMintModalProps) {
                         className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all ${
                           isSelected
                             ? 'border-purple-500 bg-purple-500/10'
-                            : 'border-gray-900 bg-white border-2 border-gray-900 hover:border-slate-600'
+                            : 'border-gray-200 bg-gray-50/50 hover:border-slate-600'
                         }`}
                       >
                         {/* Rarity Badge */}
@@ -193,7 +193,7 @@ export default function NFTMintModal({ isOpen, onClose }: NFTMintModalProps) {
                           </div>
 
                           {/* Price */}
-                          <div className="flex items-center justify-between pt-4 border-t border-gray-900">
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                             <div>
                               <div className="text-2xl font-bold">{skin.price} ETH</div>
                               <div className="text-sm text-gray-600">

@@ -53,7 +53,7 @@ export default function FounderDeploy() {
       </div>
 
       {/* Wallet Info */}
-      <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900/50">
+      <div className="bg-gray-50/50 rounded-xl p-6 border border-gray-200/50">
         <h3 className="font-semibold mb-3">Deployment Wallet</h3>
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
@@ -73,7 +73,7 @@ export default function FounderDeploy() {
 
       {/* Step Indicator */}
       {step === 'ready' && (
-        <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900/50">
+        <div className="bg-gray-50/50 rounded-xl p-6 border border-gray-200/50">
           <h3 className="font-semibold mb-4">📋 Pre-Deployment Checklist</h3>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
@@ -131,13 +131,13 @@ export default function FounderDeploy() {
 
       {/* Deploying State */}
       {step === 'deploying' && (
-        <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900/50">
+        <div className="bg-gray-50/50 rounded-xl p-6 border border-gray-200/50">
           <h3 className="font-semibold mb-4">📦 Deployment Instructions</h3>
           
           <div className="space-y-4">
             <div>
               <div className="text-sm text-gray-600 mb-2">Step 1: Export your private key</div>
-              <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-3 font-mono text-sm">
+              <div className="bg-white/50 rounded-lg p-3 font-mono text-sm">
                 Private Key: {wallet.privateKey.slice(0, 20)}...
                 <button
                   onClick={() => copyToClipboard(wallet.privateKey)}
@@ -150,7 +150,7 @@ export default function FounderDeploy() {
 
             <div>
               <div className="text-sm text-gray-600 mb-2">Step 2: Create .env file</div>
-              <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-3 font-mono text-sm overflow-x-auto">
+              <div className="bg-white/50 rounded-lg p-3 font-mono text-sm overflow-x-auto">
                 cd contracts<br/>
                 echo "PRIVATE_KEY={wallet.privateKey}" &gt; .env
               </div>
@@ -158,7 +158,7 @@ export default function FounderDeploy() {
 
             <div>
               <div className="text-sm text-gray-600 mb-2">Step 3: Deploy to {chain.name}</div>
-              <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-3 font-mono text-sm">
+              <div className="bg-white/50 rounded-lg p-3 font-mono text-sm">
                 npm run deploy:{chain.id === 97 ? 'testnet' : 'bsc'}
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function FounderDeploy() {
             <p className="text-gray-600">Your token is now live on {chain.name}</p>
           </div>
 
-          <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-4 mb-4">
+          <div className="bg-white/50 rounded-lg p-4 mb-4">
             <div className="text-sm text-gray-600 mb-2">Contract Address:</div>
             <div className="flex items-center justify-between">
               <div className="font-mono text-sm">{tokenAddress || '(paste from terminal)'}</div>

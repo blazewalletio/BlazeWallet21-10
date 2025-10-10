@@ -189,14 +189,14 @@ export default function Dashboard() {
     <>
       <div className="min-h-screen pb-24">
         {/* Header with Network Selector */}
-          <div className="sticky top-0 z-30 backdrop-blur-xl bg-white border-b-2 border-gray-900 shadow-hard">
+        <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/95 border-b border-gray-200 shadow-sm">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowChainSelector(true)}
-                  className="flex items-center gap-2 glass-card px-4 py-2 rounded-lg hover:bg-gray-50"
+                  className="flex items-center gap-2 glass-card px-4 py-2 rounded-xl hover:bg-gray-50"
                 >
                   <div 
                     className="w-8 h-8 rounded-full flex items-center justify-center text-lg"
@@ -216,7 +216,7 @@ export default function Dashboard() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowFounderDeploy(true)}
-                  className="px-3 py-2 rounded-lg flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-hard font-bold border-2 border-primary-900"
+                  className="px-3 py-2 rounded-xl flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-soft"
                   title="Deploy Blaze Token"
                 >
                   <Rocket className="w-5 h-5" />
@@ -226,14 +226,14 @@ export default function Dashboard() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => fetchData(true)}
                   disabled={isRefreshing}
-                  className="glass-card p-3 rounded-lg hover:bg-gray-50"
+                  className="glass-card p-3 rounded-xl hover:bg-gray-50"
                 >
                   <RefreshCw className={`w-5 h-5 text-gray-700 ${isRefreshing ? 'animate-spin' : ''}`} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowSettings(true)}
-                  className="glass-card p-3 rounded-lg hover:bg-gray-50"
+                  className="glass-card p-3 rounded-xl hover:bg-gray-50"
                 >
                   <Settings className="w-5 h-5 text-gray-700" />
                 </motion.button>
@@ -247,7 +247,7 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card relative overflow-hidden card-3d subtle-shimmer font-bold"
+            className="glass-card relative overflow-hidden card-3d subtle-shimmer"
           >
             <div className="absolute inset-0 bg-gradient-primary opacity-5 animate-gradient" />
             <div className="relative z-10">
@@ -355,10 +355,10 @@ export default function Dashboard() {
                     key={range.label}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedTimeRange(range.hours)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border-2 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       selectedTimeRange === range.hours
-                        ? 'bg-primary-600 text-white shadow-hard border-primary-900'
-                        : 'bg-white text-black hover:bg-gray-50 border-gray-900'
+                        ? 'bg-primary-600 text-white shadow-soft'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     {range.label}
@@ -381,7 +381,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
                 <CreditCard className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-bold text-black">Koop</div>
+              <div className="text-sm font-semibold text-gray-900">Koop</div>
             </motion.button>
 
             <motion.button
@@ -395,7 +395,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-2">
                 <ArrowUpRight className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-bold text-black">Stuur</div>
+              <div className="text-sm font-semibold text-gray-900">Stuur</div>
             </motion.button>
 
             <motion.button
@@ -409,7 +409,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2">
                 <ArrowDownLeft className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-bold text-black">Ontvang</div>
+              <div className="text-sm font-semibold text-gray-900">Ontvang</div>
             </motion.button>
 
             <motion.button
@@ -423,7 +423,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2">
                 <Repeat className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-bold text-black">Swap</div>
+              <div className="text-sm font-semibold text-gray-900">Swap</div>
             </motion.button>
           </div>
 
@@ -465,7 +465,7 @@ export default function Dashboard() {
                   <Lock className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Staking</div>
-                <div className="text-xs text-gray-600">Earn up to 25% APY</div>
+                <div className="text-xs text-slate-400">Earn up to 25% APY</div>
               </motion.button>
 
               {/* Cashback */}
@@ -478,7 +478,7 @@ export default function Dashboard() {
                   <Gift className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Cashback</div>
-                <div className="text-xs text-gray-600">2% on all transactions</div>
+                <div className="text-xs text-slate-400">2% on all transactions</div>
               </motion.button>
 
               {/* Governance */}
@@ -491,7 +491,7 @@ export default function Dashboard() {
                   <Vote className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Governance</div>
-                <div className="text-xs text-gray-600">Vote on proposals</div>
+                <div className="text-xs text-slate-400">Vote on proposals</div>
               </motion.button>
 
               {/* Launchpad */}
@@ -504,7 +504,7 @@ export default function Dashboard() {
                   <Rocket className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Launchpad</div>
-                <div className="text-xs text-gray-600">Early access to IDOs</div>
+                <div className="text-xs text-slate-400">Early access to IDOs</div>
               </motion.button>
 
               {/* Referrals */}
@@ -517,7 +517,7 @@ export default function Dashboard() {
                   <Users className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Referrals</div>
-                <div className="text-xs text-gray-600">Earn 50 BLAZE/referral</div>
+                <div className="text-xs text-slate-400">Earn 50 BLAZE/referral</div>
               </motion.button>
 
               {/* NFT Collection */}
@@ -530,7 +530,7 @@ export default function Dashboard() {
                   <Palette className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">NFT Skins</div>
-                <div className="text-xs text-gray-600">Exclusive wallet themes</div>
+                <div className="text-xs text-slate-400">Exclusive wallet themes</div>
               </motion.button>
             </div>
           </motion.div>
@@ -561,7 +561,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <div className="font-semibold">{chain.nativeCurrency.name}</div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-slate-400">
                       {parseFloat(balance).toFixed(4)} {chain.nativeCurrency.symbol}
                     </div>
                   </div>
@@ -594,7 +594,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <div className="font-semibold">{token.name}</div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-slate-400">
                           {parseFloat(token.balance || '0').toFixed(4)} {token.symbol}
                         </div>
                       </div>
@@ -610,7 +610,7 @@ export default function Dashboard() {
               </AnimatePresence>
 
               {tokens.length === 0 && (
-                <div className="text-center py-8 text-gray-600">
+                <div className="text-center py-8 text-slate-400">
                   <div className="text-3xl mb-2">🪙</div>
                   <p className="text-sm">Nog geen tokens</p>
                   <button
@@ -652,14 +652,14 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-slate-950 overflow-y-auto"
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
           >
             <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowReferrals(false)}
-                className="mb-4 text-gray-600 hover:text-white"
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
-                ← Back to Dashboard
+                ← Terug naar Dashboard
               </button>
               <ReferralDashboard />
             </div>
@@ -673,14 +673,14 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-slate-950 overflow-y-auto"
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
           >
             <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowCashback(false)}
-                className="mb-4 text-gray-600 hover:text-white"
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
-                ← Back to Dashboard
+                ← Terug naar Dashboard
               </button>
               <CashbackTracker />
             </div>
@@ -703,13 +703,13 @@ export default function Dashboard() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl pointer-events-auto"
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl pointer-events-auto border border-gray-200 shadow-soft-xl"
             >
-              <div className="sticky top-0 z-10 bg-slate-900 border-b border-gray-900/50 px-6 py-4 flex justify-between items-center">
-                <h2 className="text-xl font-bold">🔥 Deploy Blaze Token</h2>
+              <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-t-2xl">
+                <h2 className="text-xl font-bold text-gray-900">🔥 Deploy Blaze Token</h2>
                 <button
                   onClick={() => setShowFounderDeploy(false)}
-                  className="text-gray-600 hover:text-white transition-colors"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   ✕
                 </button>
@@ -729,7 +729,7 @@ export default function Dashboard() {
         transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setShowQuickPay(true)}
-        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full shadow-hard-xl flex items-center justify-center hover:scale-110 transition-transform duration-300 border-4 border-amber-900"
+        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full shadow-2xl flex items-center justify-center subtle-glow hover:scale-110 transition-transform duration-300"
         title="Quick Pay"
       >
         <Zap className="w-8 h-8 text-white" />

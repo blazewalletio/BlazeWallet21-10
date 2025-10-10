@@ -42,7 +42,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           />
           
           <motion.div
@@ -59,7 +59,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={onClose}
-                    className="glass p-2 rounded-lg hover:bg-white/10"
+                    className="glass p-2 rounded-lg hover:bg-gray-50"
                   >
                     <X className="w-5 h-5" />
                   </motion.button>
@@ -92,7 +92,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       <motion.button
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setShowMnemonic(!showMnemonic)}
-                        className="text-primary-400 text-sm flex items-center gap-1"
+                        className="text-primary-600 text-sm flex items-center gap-1"
                       >
                         {showMnemonic ? (
                           <>
@@ -211,7 +211,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       animate={{ opacity: 1 }}
                       className="glass-card bg-rose-500/10 border-rose-500/20"
                     >
-                      <p className="text-rose-200 text-sm mb-3">
+                      <p className="text-rose-700 text-sm mb-3">
                         Weet je het zeker? Deze actie kan niet ongedaan worden gemaakt.
                         Zorg dat je je recovery phrase hebt!
                       </p>

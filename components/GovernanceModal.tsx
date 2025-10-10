@@ -93,7 +93,7 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
           />
           
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
@@ -102,10 +102,10 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl border border-gray-900/50 pointer-events-auto"
+              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200/50 pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-slate-900/95 backdrop-blur-xl border-b border-gray-900/50 px-6 py-4">
+              <div className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 px-6 py-4">
                 <div className="flex justify-between items-center mb-4">
                   <div>
                     <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -131,7 +131,7 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
                     className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
                       activeTab === 'vote'
                         ? 'bg-purple-500 text-white'
-                        : 'bg-white border-2 border-gray-900 text-gray-600 hover:text-white'
+                        : 'bg-gray-50 text-gray-600 hover:text-white'
                     }`}
                   >
                     Vote on Proposals
@@ -141,7 +141,7 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
                     className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
                       activeTab === 'create'
                         ? 'bg-purple-500 text-white'
-                        : 'bg-white border-2 border-gray-900 text-gray-600 hover:text-white'
+                        : 'bg-gray-50 text-gray-600 hover:text-white'
                     }`}
                   >
                     <Plus className="w-4 h-4 inline mr-1" />
@@ -166,7 +166,7 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
                           animate={{ opacity: 1, y: 0 }}
                           className={`border rounded-xl p-6 ${
                             proposal.status === 'active'
-                              ? 'bg-white border-2 border-gray-900 border-gray-900'
+                              ? 'bg-gray-50/50 border-gray-200'
                               : proposal.status === 'passed'
                               ? 'bg-green-500/10 border-green-500/30'
                               : 'bg-red-500/10 border-red-500/30'
@@ -227,7 +227,7 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center justify-between pt-4 border-t border-gray-900">
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                             <div className="flex items-center gap-2 text-sm text-gray-600">
                               <Clock className="w-4 h-4" />
                               {getTimeRemaining(proposal.endTime)}
@@ -274,7 +274,7 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
                         value={newProposal.title}
                         onChange={(e) => setNewProposal({ ...newProposal, title: e.target.value })}
                         placeholder="e.g., Add support for new blockchain"
-                        className="w-full px-4 py-3 bg-white border-2 border-gray-900 rounded-xl border border-gray-900 focus:border-purple-500 focus:outline-none"
+                        className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-purple-500 focus:outline-none"
                       />
                     </div>
 
@@ -285,7 +285,7 @@ export default function GovernanceModal({ isOpen, onClose }: GovernanceModalProp
                         onChange={(e) => setNewProposal({ ...newProposal, description: e.target.value })}
                         placeholder="Provide details about your proposal..."
                         rows={6}
-                        className="w-full px-4 py-3 bg-white border-2 border-gray-900 rounded-xl border border-gray-900 focus:border-purple-500 focus:outline-none resize-none"
+                        className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-purple-500 focus:outline-none resize-none"
                       />
                     </div>
 

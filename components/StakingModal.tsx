@@ -75,7 +75,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
           />
           
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
@@ -84,10 +84,10 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl border border-gray-900/50 pointer-events-auto"
+              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200/50 pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-slate-900/95 backdrop-blur-xl border-b border-gray-900/50 px-6 py-4 flex justify-between items-center">
+              <div className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 px-6 py-4 flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-bold flex items-center gap-2">
                     <Lock className="w-6 h-6 text-orange-400" />
@@ -125,7 +125,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                             relative p-6 rounded-xl border-2 text-left transition-all
                             ${isSelected 
                               ? 'border-orange-500 bg-orange-500/10' 
-                              : 'border-gray-900 bg-white border-2 border-gray-900 hover:border-slate-600'
+                              : 'border-gray-200 bg-gray-50/50 hover:border-slate-600'
                             }
                           `}
                         >
@@ -146,7 +146,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                           </div>
                           
                           {plan.lockDays > 0 && (
-                            <div className="mt-4 pt-4 border-t border-gray-900">
+                            <div className="mt-4 pt-4 border-t border-gray-200">
                               <div className="text-sm text-gray-600">
                                 🔒 Locked for {plan.lockDays} days
                               </div>
@@ -169,7 +169,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"
-                      className="w-full px-4 py-4 bg-white border-2 border-gray-900 rounded-xl border border-gray-900 focus:border-orange-500 focus:outline-none text-xl"
+                      className="w-full px-4 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:border-orange-500 focus:outline-none text-xl"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                       <span className="text-gray-600">BLAZE</span>
@@ -231,7 +231,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                 )}
 
                 {/* Benefits */}
-                <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900">
+                <div className="bg-gray-50/50 rounded-xl p-6 border border-gray-200">
                   <h4 className="font-semibold mb-3">Staking Benefits</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div className="flex items-start gap-2">
@@ -265,7 +265,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                 <div className="flex gap-3">
                   <button
                     onClick={onClose}
-                    className="flex-1 py-4 bg-white border-2 border-gray-900 hover:bg-slate-700 rounded-xl font-semibold transition-colors"
+                    className="flex-1 py-4 bg-gray-50 hover:bg-slate-700 rounded-xl font-semibold transition-colors"
                   >
                     Cancel
                   </button>

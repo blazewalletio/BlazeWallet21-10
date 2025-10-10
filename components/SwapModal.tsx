@@ -252,7 +252,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-50 rounded-full transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -310,7 +310,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                 setFromToken(toToken === '' ? 'native' : toToken);
                 setToToken(temp === 'native' ? (popularTokens[0]?.address || '') : temp);
               }}
-              className="p-3 glass-card hover:bg-white/10 rounded-full transition-colors"
+              className="p-3 glass-card hover:bg-gray-50 rounded-full transition-colors"
               disabled={isSwapping}
             >
               <ArrowDown className="w-5 h-5" />
@@ -375,7 +375,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
           {/* Loading State */}
           {isLoadingQuote && (
-            <div className="flex items-center justify-center gap-2 text-primary-400 mb-4">
+            <div className="flex items-center justify-center gap-2 text-primary-600 mb-4">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span className="text-sm">Ophalen van quote...</span>
             </div>
