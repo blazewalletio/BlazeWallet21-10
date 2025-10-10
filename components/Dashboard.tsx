@@ -196,7 +196,7 @@ export default function Dashboard() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowChainSelector(true)}
-                  className="flex items-center gap-2 glass-card px-4 py-2 rounded-xl hover:bg-gray-50"
+                  className="flex items-center gap-2 glass-card px-4 py-2 rounded-md hover:bg-gray-50"
                 >
                   <div 
                     className="w-8 h-8 rounded-full flex items-center justify-center text-lg"
@@ -216,7 +216,7 @@ export default function Dashboard() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowFounderDeploy(true)}
-                  className="px-3 py-2 rounded-xl flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-soft"
+                  className="px-3 py-2 rounded-md flex items-center gap-2 bg-gradient-primary text-white hover:shadow-lg hover:shadow-primary-500/30 font-bold"
                   title="Deploy Blaze Token"
                 >
                   <Rocket className="w-5 h-5" />
@@ -226,14 +226,14 @@ export default function Dashboard() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => fetchData(true)}
                   disabled={isRefreshing}
-                  className="glass-card p-3 rounded-xl hover:bg-gray-50"
+                  className="glass-card p-3 rounded-md hover:bg-gray-50"
                 >
                   <RefreshCw className={`w-5 h-5 text-gray-700 ${isRefreshing ? 'animate-spin' : ''}`} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowSettings(true)}
-                  className="glass-card p-3 rounded-xl hover:bg-gray-50"
+                  className="glass-card p-3 rounded-md hover:bg-gray-50"
                 >
                   <Settings className="w-5 h-5 text-gray-700" />
                 </motion.button>
@@ -247,7 +247,7 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card relative overflow-hidden card-3d subtle-shimmer"
+            className="glass-card-gradient relative overflow-hidden card-3d"
           >
             <div className="absolute inset-0 bg-gradient-primary opacity-5 animate-gradient" />
             <div className="relative z-10">
@@ -257,7 +257,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-3 mb-2">
                     {showBalance ? (
                       <>
-                        <h2 className="text-4xl md:text-5xl font-bold">
+                        <h2 className="text-5xl md:text-6xl font-black tracking-tight">
                           <AnimatedNumber 
                             value={totalValueUSD} 
                             decimals={2} 
@@ -274,7 +274,7 @@ export default function Dashboard() {
                       </>
                     ) : (
                       <>
-                        <h2 className="text-4xl md:text-5xl font-bold">••••••</h2>
+                        <h2 className="text-5xl md:text-6xl font-black tracking-tight">••••••</h2>
                         <motion.button
                           whileTap={{ scale: 0.9 }}
                           onClick={() => setShowBalance(true)}
@@ -355,10 +355,10 @@ export default function Dashboard() {
                     key={range.label}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedTimeRange(range.hours)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${
                       selectedTimeRange === range.hours
-                        ? 'bg-primary-600 text-white shadow-soft'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-gradient-primary text-white shadow-lg shadow-primary-500/30'
+                        : 'bg-white text-gray-900 border-2 border-gray-300 hover:border-primary-500'
                     }`}
                   >
                     {range.label}
@@ -376,12 +376,12 @@ export default function Dashboard() {
               transition={{ delay: 0.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowBuyModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="glass-card card-hover p-4 text-center rounded-lg"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-2 shadow-lg shadow-blue-500/30">
                 <CreditCard className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Koop</div>
+              <div className="text-sm font-bold text-gray-900">Koop</div>
             </motion.button>
 
             <motion.button
@@ -390,12 +390,12 @@ export default function Dashboard() {
               transition={{ delay: 0.15 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowSendModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="glass-card card-hover p-4 text-center rounded-lg"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-lg flex items-center justify-center mb-2 shadow-lg shadow-rose-500/30">
                 <ArrowUpRight className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Stuur</div>
+              <div className="text-sm font-bold text-gray-900">Stuur</div>
             </motion.button>
 
             <motion.button
@@ -404,12 +404,12 @@ export default function Dashboard() {
               transition={{ delay: 0.2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowReceiveModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="glass-card card-hover p-4 text-center rounded-lg"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center mb-2 shadow-lg shadow-emerald-500/30">
                 <ArrowDownLeft className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Ontvang</div>
+              <div className="text-sm font-bold text-gray-900">Ontvang</div>
             </motion.button>
 
             <motion.button
@@ -418,12 +418,12 @@ export default function Dashboard() {
               transition={{ delay: 0.25 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowSwapModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="glass-card card-hover p-4 text-center rounded-lg"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-2 shadow-lg shadow-purple-500/30">
                 <Repeat className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Swap</div>
+              <div className="text-sm font-bold text-gray-900">Swap</div>
             </motion.button>
           </div>
 

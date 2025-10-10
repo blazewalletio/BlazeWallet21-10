@@ -21,11 +21,18 @@
 
   /* Clean card styles */
   .glass {
-    @apply bg-white border border-gray-200;
+    @apply bg-white border border-gray-300;
   }
 
   .glass-card {
-    @apply bg-white rounded-2xl p-6 border border-gray-200 shadow-soft;
+    @apply bg-white rounded-lg p-6 border-2 border-gray-300 shadow-md;
+  }
+  
+  .glass-card-gradient {
+    @apply bg-white rounded-lg p-6 border-2 border-transparent bg-clip-padding shadow-lg;
+    background-image: linear-gradient(white, white), linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
   }
 
   /* Scrollbar styling */
@@ -54,26 +61,26 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-primary-600 text-white rounded-xl font-semibold;
-    @apply hover:bg-primary-700 hover:shadow-soft-lg;
-    @apply active:scale-[0.98] transition-all duration-150;
+    @apply px-6 py-3 bg-gradient-primary text-white rounded-md font-bold;
+    @apply hover:shadow-lg hover:shadow-primary-500/30;
+    @apply active:scale-[0.97] transition-all duration-150;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-gray-100 text-gray-900 rounded-xl font-semibold border border-gray-200;
-    @apply hover:bg-gray-200 hover:shadow-soft;
-    @apply active:scale-[0.98] transition-all duration-150;
+    @apply px-6 py-3 bg-white text-gray-900 rounded-md font-bold border-2 border-gray-900;
+    @apply hover:bg-gray-900 hover:text-white hover:shadow-lg;
+    @apply active:scale-[0.97] transition-all duration-150;
   }
 
   .input-field {
-    @apply w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply w-full bg-white border-2 border-gray-300 rounded-md px-4 py-3 text-gray-900 placeholder-gray-400 font-semibold;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
     @apply transition-all duration-150;
   }
 
   .card-hover {
-    @apply transform transition-all duration-200;
-    @apply hover:shadow-soft-lg hover:-translate-y-0.5;
+    @apply transform transition-all duration-150;
+    @apply hover:shadow-xl hover:-translate-y-1 hover:border-primary-500;
   }
 }
 
