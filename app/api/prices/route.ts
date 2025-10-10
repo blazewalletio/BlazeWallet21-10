@@ -15,6 +15,7 @@ export async function GET(request: Request) {
       ETH: 'ethereum',
       MATIC: 'matic-network',
       BNB: 'binancecoin',
+      TBNB: 'binancecoin', // Testnet BNB uses same price as mainnet BNB
       USDT: 'tether',
       USDC: 'usd-coin',
       BUSD: 'binance-usd',
@@ -61,7 +62,16 @@ export async function GET(request: Request) {
       }
     });
 
-    return NextResponse.json(result);
+    // Also create a simplified format for presale service compatibility
+    const prices: Record<string, number> = {};
+    symbols.forEach(symbol => {
+      const coinId = symbolToId[symbol.toUpperCase()];
+      if (coinId && data[coinId]) {
+        prices[symbol] = data[coinId].usd || 0;
+      }
+    });
+
+    return NextResponse.json({ prices, detailed: result });
 
   } catch (error) {
     console.error('Error fetching prices:', error);
