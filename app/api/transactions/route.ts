@@ -14,29 +14,21 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get API keys from environment
+    // Use Etherscan V2 Multichain API for all supported chains
     const getApiKey = (chain: string): string => {
-      const etherscanKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
-      const bscscanKey = process.env.NEXT_PUBLIC_BSCSCAN_API_KEY;
-      
-      const keys: Record<string, string | undefined> = {
-        '1': etherscanKey,
-        '11155111': etherscanKey,
-        '56': bscscanKey || etherscanKey, // Fallback to Etherscan key
-        '97': bscscanKey || etherscanKey, // Fallback to Etherscan key for testnet
-        '137': process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY,
-      };
-      return keys[chain] || '';
+      return process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY || '';
     };
 
-    // API endpoints for different chains
+    // Etherscan V2 Multichain API - one endpoint for all chains
     const apiConfig: Record<string, { url: string; v2: boolean }> = {
-      '1': { url: 'https://api.etherscan.io/v2/api', v2: true }, // Ethereum V2
-      '56': { url: 'https://api.bscscan.com/api', v2: false }, // BSC
-      '97': { url: 'https://api-testnet.bscscan.com/api', v2: false }, // BSC Testnet
-      '137': { url: 'https://api.polygonscan.com/api', v2: false }, // Polygon
-      '42161': { url: 'https://api.arbiscan.io/api', v2: false }, // Arbitrum
-      '11155111': { url: 'https://api-sepolia.etherscan.io/v2/api', v2: true }, // Sepolia V2
+      '1': { url: 'https://api.etherscan.io/v2/api', v2: true }, // Ethereum Mainnet
+      '11155111': { url: 'https://api.etherscan.io/v2/api', v2: true }, // Sepolia
+      '56': { url: 'https://api.etherscan.io/v2/api', v2: true }, // BSC Mainnet
+      '97': { url: 'https://api.etherscan.io/v2/api', v2: true }, // BSC Testnet
+      '137': { url: 'https://api.etherscan.io/v2/api', v2: true }, // Polygon
+      '42161': { url: 'https://api.etherscan.io/v2/api', v2: true }, // Arbitrum
+      '10': { url: 'https://api.etherscan.io/v2/api', v2: true }, // Optimism
+      '8453': { url: 'https://api.etherscan.io/v2/api', v2: true }, // Base
     };
 
     const config = apiConfig[chainId];
