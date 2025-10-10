@@ -298,14 +298,23 @@ export class PresaleService {
    * TODO: Integrate with Chainlink or CoinGecko API
    */
   private async getBNBPrice(): Promise<number> {
-    // For now, return a mock price
-    // In production, fetch from Chainlink oracle or price API
-    return 600; // $600 per BNB
-    
-    // Example with CoinGecko (implement later):
-    // const response = await fetch('/api/prices?symbols=BNB');
-    // const data = await response.json();
-    // return data.prices.BNB;
+    try {
+      // Fetch real-time BNB price from CoinGecko via our API proxy
+      const response = await fetch('/api/prices?symbols=BNB');
+      if (!response.ok) {
+        console.warn('Failed to fetch BNB price, using fallback');
+        return 600; // Fallback price
+      }
+      
+      const data = await response.json();
+      const bnbPrice = data.prices?.BNB || 600;
+      
+      console.log('💰 Live BNB Price:', bnbPrice);
+      return bnbPrice;
+    } catch (error) {
+      console.error('Error fetching BNB price:', error);
+      return 600; // Fallback to safe estimate
+    }
   }
 
   /**
