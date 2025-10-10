@@ -6,6 +6,7 @@ import { X, Rocket, TrendingUp, Users, Clock, CheckCircle, AlertCircle, Loader2 
 import { useWalletStore } from '@/lib/wallet-store';
 import { PresaleService } from '@/lib/presale-service';
 import { PRESALE_CONSTANTS, CURRENT_PRESALE } from '@/lib/presale-config';
+import { CHAINS } from '@/lib/chains';
 import { ethers } from 'ethers';
 
 interface PresaleModalProps {
@@ -76,89 +77,126 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
       return;
     }
 
-    // Check if wallet has provider
+    // Check if wallet has provider, and create one if needed
     if (!wallet.provider) {
-      console.log('❌ Wallet provider not available');
-      setError('Wallet provider not available. Please reconnect your wallet.');
-      setIsLoading(false);
-      return;
-    }
-
-    console.log('✅ All checks passed, starting to load presale data...');
-    setIsLoading(true);
-    
-    try {
-      console.log('🔍 Creating PresaleService with wallet:', {
-        hasProvider: !!wallet.provider,
-        address: wallet.address,
-        providerType: wallet.provider.constructor.name
-      });
-      
-      const presaleService = new PresaleService(wallet);
-      console.log('🔍 PresaleService created successfully');
-      
-      // Verify correct network
-      const isCorrectNetwork = await presaleService.verifyNetwork();
-      if (!isCorrectNetwork) {
-        setError(`Please switch to ${CURRENT_PRESALE.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet'}`);
+      console.log('🔧 Wallet has no provider, creating one...');
+      try {
+        // Create a provider for the current chain
+        const chainConfig = CHAINS[currentChain];
+        const provider = new ethers.JsonRpcProvider(chainConfig.rpcUrl);
+        
+        // Connect wallet to provider
+        const connectedWallet = wallet.connect(provider);
+        
+        console.log('✅ Provider created and wallet connected');
+        
+        // Update wallet in store
+        useWalletStore.setState({ wallet: connectedWallet });
+        
+        // Use the connected wallet for the presale service
+        console.log('✅ All checks passed, starting to load presale data...');
+        setIsLoading(true);
+        
+        const presaleService = new PresaleService(connectedWallet);
+        console.log('🔍 Creating PresaleService with connected wallet:', {
+          hasProvider: !!connectedWallet.provider,
+          address: connectedWallet.address,
+          providerType: connectedWallet.provider?.constructor.name
+        });
+        
+        // Continue with presale data loading using connected wallet
+        await loadPresaleDataWithService(presaleService);
+        
+      } catch (error) {
+        console.error('❌ Error creating provider:', error);
+        setError('Failed to connect wallet to blockchain');
         setIsLoading(false);
         return;
       }
+    } else {
+      // Wallet already has provider
+      console.log('✅ All checks passed, starting to load presale data...');
+      setIsLoading(true);
       
-      // Load presale info
-      const info = await presaleService.getPresaleInfo();
-      
-      console.log('🔍 Presale info from service:', {
-        raised: info.raised,
-        participants: info.participantCount,
-        timeRemaining: info.timeRemaining,
-        active: info.active,
-        finalized: info.finalized,
-      });
-      
-      // Debug time formatting
-      const days = Math.floor(info.timeRemaining / (24 * 60 * 60 * 1000));
-      const hours = Math.floor((info.timeRemaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-      console.log('⏰ Time formatting debug:', {
-        timeRemainingMs: info.timeRemaining,
-        days,
-        hours,
-        formatted: `${days}d ${hours}h`
-      });
-      
-      setPresaleInfo({
-        ...presaleInfo,
-        totalRaised: info.raised,
-        participants: info.participantCount,
-        timeRemaining: info.timeRemaining,
-        active: info.active,
-        finalized: info.finalized,
-      });
-      
-      // Load user info
-      if (address) {
-        const userInfoData = await presaleService.getUserInfo(address);
-        setUserInfo(userInfoData);
+      try {
+        console.log('🔍 Creating PresaleService with wallet:', {
+          hasProvider: !!wallet.provider,
+          address: wallet.address,
+          providerType: wallet.provider?.constructor.name
+        });
+        
+        const presaleService = new PresaleService(wallet);
+        console.log('🔍 PresaleService created successfully');
+        
+        // Continue with presale data loading
+        await loadPresaleDataWithService(presaleService);
+        
+      } catch (err: any) {
+        console.error('❌ Error loading presale data:', err);
+        console.error('❌ Error details:', {
+          message: err.message,
+          code: err.code,
+          reason: err.reason,
+          stack: err.stack
+        });
+        if (err.message.includes('not configured')) {
+          setError('Presale not deployed yet. Check back soon!');
+        } else {
+          setError(err.message || 'Failed to load presale data');
+        }
+      } finally {
+        setIsLoading(false);
+        console.log('🏁 loadPresaleData completed');
       }
-      
-      setError('');
-    } catch (err: any) {
-      console.error('❌ Error loading presale data:', err);
-      console.error('❌ Error details:', {
-        message: err.message,
-        code: err.code,
-        reason: err.reason,
-        stack: err.stack
-      });
-      if (err.message.includes('not configured')) {
-        setError('Presale not deployed yet. Check back soon!');
-      } else {
-        setError(err.message || 'Failed to load presale data');
-      }
-    } finally {
-      setIsLoading(false);
-      console.log('🏁 loadPresaleData completed');
     }
+  };
+
+  // Helper function to load presale data with a service
+  const loadPresaleDataWithService = async (presaleService: any) => {
+    // Verify correct network
+    const isCorrectNetwork = await presaleService.verifyNetwork();
+    if (!isCorrectNetwork) {
+      setError(`Please switch to ${CURRENT_PRESALE.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet'}`);
+      return;
+    }
+    
+    // Load presale info
+    const info = await presaleService.getPresaleInfo();
+    
+    console.log('🔍 Presale info from service:', {
+      raised: info.raised,
+      participants: info.participantCount,
+      timeRemaining: info.timeRemaining,
+      active: info.active,
+      finalized: info.finalized,
+    });
+    
+    // Debug time formatting
+    const days = Math.floor(info.timeRemaining / (24 * 60 * 60 * 1000));
+    const hours = Math.floor((info.timeRemaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+    console.log('⏰ Time formatting debug:', {
+      timeRemainingMs: info.timeRemaining,
+      days,
+      hours,
+      formatted: `${days}d ${hours}h`
+    });
+    
+    setPresaleInfo({
+      ...presaleInfo,
+      totalRaised: info.raised,
+      participants: info.participantCount,
+      timeRemaining: info.timeRemaining,
+      active: info.active,
+      finalized: info.finalized,
+    });
+    
+    // Load user info
+    if (address) {
+      const userInfoData = await presaleService.getUserInfo(address);
+      setUserInfo(userInfoData);
+    }
+    
+    setError('');
   };
 
   const handleContribute = async () => {
