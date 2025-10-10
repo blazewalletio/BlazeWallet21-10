@@ -14,6 +14,8 @@ interface PresaleModalProps {
 }
 
 export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
+  console.log('🎯 PresaleModal component rendered:', { isOpen });
+  
   const { wallet, address, currentChain } = useWalletStore();
   const [contributionAmount, setContributionAmount] = useState('');
   const [isContributing, setIsContributing] = useState(false);
@@ -49,24 +51,40 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
 
   // Load presale data when modal opens
   useEffect(() => {
+    console.log('🔄 PresaleModal useEffect triggered:', {
+      isOpen,
+      hasWallet: !!wallet,
+      hasAddress: !!address
+    });
+    
     if (isOpen && wallet && address) {
+      console.log('✅ Conditions met, calling loadPresaleData...');
       loadPresaleData();
+    } else {
+      console.log('❌ Conditions not met, not calling loadPresaleData');
     }
   }, [isOpen, wallet, address]);
 
   const loadPresaleData = async () => {
+    console.log('🚀 loadPresaleData called!');
+    console.log('🚀 Wallet exists:', !!wallet);
+    console.log('🚀 Presale address:', CURRENT_PRESALE.presaleAddress);
+    
     if (!wallet || !CURRENT_PRESALE.presaleAddress) {
+      console.log('❌ Missing wallet or presale address');
       setError('Presale not configured. Please deploy contracts first.');
       return;
     }
 
     // Check if wallet has provider
     if (!wallet.provider) {
+      console.log('❌ Wallet provider not available');
       setError('Wallet provider not available. Please reconnect your wallet.');
       setIsLoading(false);
       return;
     }
 
+    console.log('✅ All checks passed, starting to load presale data...');
     setIsLoading(true);
     
     try {
@@ -77,6 +95,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
       });
       
       const presaleService = new PresaleService(wallet);
+      console.log('🔍 PresaleService created successfully');
       
       // Verify correct network
       const isCorrectNetwork = await presaleService.verifyNetwork();
@@ -124,12 +143,21 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
       
       setError('');
     } catch (err: any) {
-      console.error('Error loading presale data:', err);
+      console.error('❌ Error loading presale data:', err);
+      console.error('❌ Error details:', {
+        message: err.message,
+        code: err.code,
+        reason: err.reason,
+        stack: err.stack
+      });
       if (err.message.includes('not configured')) {
         setError('Presale not deployed yet. Check back soon!');
+      } else {
+        setError(err.message || 'Failed to load presale data');
       }
     } finally {
       setIsLoading(false);
+      console.log('🏁 loadPresaleData completed');
     }
   };
 
