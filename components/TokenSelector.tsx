@@ -62,7 +62,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
 
               {/* Search */}
               <div className="relative mb-6">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -74,7 +74,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
 
               {/* Popular Tokens */}
               <div className="space-y-3 overflow-y-auto max-h-[50vh] mb-6">
-                <h3 className="text-sm font-semibold text-slate-400 mb-3">Populaire tokens</h3>
+                <h3 className="text-sm font-semibold text-gray-600 mb-3">Populaire tokens</h3>
                 {filteredTokens.map((token) => (
                   <motion.button
                     key={token.address}
@@ -88,15 +88,15 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
                       </div>
                       <div className="text-left">
                         <div className="font-semibold">{token.symbol}</div>
-                        <div className="text-sm text-slate-400">{token.name}</div>
+                        <div className="text-sm text-gray-600">{token.name}</div>
                       </div>
                     </div>
-                    <Plus className="w-5 h-5 text-slate-400" />
+                    <Plus className="w-5 h-5 text-gray-600" />
                   </motion.button>
                 ))}
 
                 {filteredTokens.length === 0 && (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-gray-600">
                     <div className="text-3xl mb-2">🔍</div>
                     <p className="text-sm">Geen tokens gevonden</p>
                   </div>

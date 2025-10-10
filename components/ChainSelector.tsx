@@ -77,7 +77,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
                             </span>
                           )}
                         </div>
-                        <div className="text-sm text-slate-400">{chain.nativeCurrency.symbol}</div>
+                        <div className="text-sm text-gray-600">{chain.nativeCurrency.symbol}</div>
                       </div>
                     </div>
                     

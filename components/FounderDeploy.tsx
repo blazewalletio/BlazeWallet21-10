@@ -38,7 +38,7 @@ export default function FounderDeploy() {
         <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-6">
           <AlertCircle className="w-12 h-12 text-rose-400 mb-3" />
           <h3 className="text-lg font-semibold mb-2">No Wallet Found</h3>
-          <p className="text-slate-400">Create or import a wallet first to deploy Blaze Token.</p>
+          <p className="text-gray-600">Create or import a wallet first to deploy Blaze Token.</p>
         </div>
       </div>
     );
@@ -49,23 +49,23 @@ export default function FounderDeploy() {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-3xl font-bold mb-2">🔥 Deploy Blaze Token</h1>
-        <p className="text-slate-400">Deploy the official Blaze Token from your wallet</p>
+        <p className="text-gray-600">Deploy the official Blaze Token from your wallet</p>
       </div>
 
       {/* Wallet Info */}
-      <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
+      <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900/50">
         <h3 className="font-semibold mb-3">Deployment Wallet</h3>
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-slate-400">Address:</span>
+            <span className="text-gray-600">Address:</span>
             <span className="font-mono">{wallet.address.slice(0, 10)}...{wallet.address.slice(-8)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-slate-400">Network:</span>
+            <span className="text-gray-600">Network:</span>
             <span>{chain.name}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-slate-400">Balance:</span>
+            <span className="text-gray-600">Balance:</span>
             <span>{balance} {chain.nativeCurrency.symbol}</span>
           </div>
         </div>
@@ -73,21 +73,21 @@ export default function FounderDeploy() {
 
       {/* Step Indicator */}
       {step === 'ready' && (
-        <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
+        <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900/50">
           <h3 className="font-semibold mb-4">📋 Pre-Deployment Checklist</h3>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5" />
               <div>
                 <div className="font-medium">Wallet Created</div>
-                <div className="text-sm text-slate-400">Your Blaze wallet is ready</div>
+                <div className="text-sm text-gray-600">Your Blaze wallet is ready</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5" />
               <div>
                 <div className="font-medium">Network Selected</div>
-                <div className="text-sm text-slate-400">{chain.name} ({chain.id === 97 ? 'Testnet' : 'Mainnet'})</div>
+                <div className="text-sm text-gray-600">{chain.name} ({chain.id === 97 ? 'Testnet' : 'Mainnet'})</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -98,7 +98,7 @@ export default function FounderDeploy() {
               )}
               <div>
                 <div className="font-medium">Gas Fees Available</div>
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-gray-600">
                   {parseFloat(balance) > 0 
                     ? `${balance} ${chain.nativeCurrency.symbol} available`
                     : `Need ${chain.nativeCurrency.symbol} for gas fees`
@@ -114,7 +114,7 @@ export default function FounderDeploy() {
       {step === 'ready' && (
         <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-6">
           <h3 className="font-semibold mb-3">🚀 Ready to Deploy!</h3>
-          <p className="text-sm text-slate-300 mb-4">
+          <p className="text-sm text-gray-700 mb-4">
             Click below to get your deployment command. Run it in your terminal to deploy Blaze Token.
           </p>
           
@@ -131,13 +131,13 @@ export default function FounderDeploy() {
 
       {/* Deploying State */}
       {step === 'deploying' && (
-        <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
+        <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900/50">
           <h3 className="font-semibold mb-4">📦 Deployment Instructions</h3>
           
           <div className="space-y-4">
             <div>
-              <div className="text-sm text-slate-400 mb-2">Step 1: Export your private key</div>
-              <div className="bg-slate-900/50 rounded-lg p-3 font-mono text-sm">
+              <div className="text-sm text-gray-600 mb-2">Step 1: Export your private key</div>
+              <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-3 font-mono text-sm">
                 Private Key: {wallet.privateKey.slice(0, 20)}...
                 <button
                   onClick={() => copyToClipboard(wallet.privateKey)}
@@ -149,16 +149,16 @@ export default function FounderDeploy() {
             </div>
 
             <div>
-              <div className="text-sm text-slate-400 mb-2">Step 2: Create .env file</div>
-              <div className="bg-slate-900/50 rounded-lg p-3 font-mono text-sm overflow-x-auto">
+              <div className="text-sm text-gray-600 mb-2">Step 2: Create .env file</div>
+              <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-3 font-mono text-sm overflow-x-auto">
                 cd contracts<br/>
                 echo "PRIVATE_KEY={wallet.privateKey}" &gt; .env
               </div>
             </div>
 
             <div>
-              <div className="text-sm text-slate-400 mb-2">Step 3: Deploy to {chain.name}</div>
-              <div className="bg-slate-900/50 rounded-lg p-3 font-mono text-sm">
+              <div className="text-sm text-gray-600 mb-2">Step 3: Deploy to {chain.name}</div>
+              <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-3 font-mono text-sm">
                 npm run deploy:{chain.id === 97 ? 'testnet' : 'bsc'}
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function FounderDeploy() {
             <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
               <div className="flex gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                <div className="text-sm text-slate-300">
+                <div className="text-sm text-gray-700">
                   <strong>Important:</strong> Run these commands in your terminal. The deployment will take ~30 seconds and cost ~$5 in gas fees.
                 </div>
               </div>
@@ -188,11 +188,11 @@ export default function FounderDeploy() {
           <div className="text-center mb-6">
             <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto mb-3" />
             <h3 className="text-2xl font-bold mb-2">🎉 Blaze Token Deployed!</h3>
-            <p className="text-slate-400">Your token is now live on {chain.name}</p>
+            <p className="text-gray-600">Your token is now live on {chain.name}</p>
           </div>
 
-          <div className="bg-slate-900/50 rounded-lg p-4 mb-4">
-            <div className="text-sm text-slate-400 mb-2">Contract Address:</div>
+          <div className="bg-gray-50 border-2 border-gray-900 rounded-lg p-4 mb-4">
+            <div className="text-sm text-gray-600 mb-2">Contract Address:</div>
             <div className="flex items-center justify-between">
               <div className="font-mono text-sm">{tokenAddress || '(paste from terminal)'}</div>
               <button
@@ -227,7 +227,7 @@ export default function FounderDeploy() {
 
           <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg">
             <h4 className="font-semibold mb-2">🎯 Next Steps:</h4>
-            <ul className="text-sm text-slate-300 space-y-1">
+            <ul className="text-sm text-gray-700 space-y-1">
               <li>1. Add liquidity on PancakeSwap ($400)</li>
               <li>2. Lock liquidity for 2 years</li>
               <li>3. Post on social media</li>

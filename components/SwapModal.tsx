@@ -208,9 +208,9 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
       case '1inch':
         return 'text-blue-400';
       case 'price-estimate':
-        return 'text-slate-400';
+        return 'text-gray-600';
       default:
-        return 'text-slate-400';
+        return 'text-gray-600';
     }
   };
 
@@ -272,7 +272,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
           {/* From Token */}
           <div className="glass-card mb-2">
-            <div className="text-xs text-slate-400 mb-2">Van</div>
+            <div className="text-xs text-gray-600 mb-2">Van</div>
             <div className="flex items-center gap-3">
               <input
                 type="number"
@@ -319,7 +319,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
           {/* To Token */}
           <div className="glass-card mb-4">
-            <div className="text-xs text-slate-400 mb-2">Naar</div>
+            <div className="text-xs text-gray-600 mb-2">Naar</div>
             <div className="flex items-center gap-3">
               <input
                 type="text"
@@ -352,17 +352,17 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
               className="glass-card mb-4 text-sm"
             >
               <div className="flex justify-between mb-2">
-                <span className="text-slate-400">Koers:</span>
+                <span className="text-gray-600">Koers:</span>
                 <span className="font-medium">
                   1 {getTokenSymbol(fromToken)} = {getExchangeRate()} {getTokenSymbol(toToken)}
                 </span>
               </div>
               <div className="flex justify-between mb-2">
-                <span className="text-slate-400">Geschatte gas:</span>
+                <span className="text-gray-600">Geschatte gas:</span>
                 <span className="font-medium">{(parseInt(quote.estimatedGas || '180000') / 1000).toFixed(0)}k</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400 flex items-center gap-1">
+                <span className="text-gray-600 flex items-center gap-1">
                   <Zap className="w-3 h-3" />
                   Powered by:
                 </span>

@@ -84,22 +84,22 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl border border-slate-700/50 pointer-events-auto"
+              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl border border-gray-900/50 pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-slate-900/95 backdrop-blur-xl border-b border-slate-700/50 px-6 py-4 flex justify-between items-center">
+              <div className="sticky top-0 bg-slate-900/95 backdrop-blur-xl border-b border-gray-900/50 px-6 py-4 flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-bold flex items-center gap-2">
                     <Lock className="w-6 h-6 text-orange-400" />
                     Stake BLAZE
                   </h2>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <p className="text-sm text-gray-600 mt-1">
                     Earn up to 25% APY + unlock premium features
                   </p>
                 </div>
                 <button
                   onClick={onClose}
-                  className="text-slate-400 hover:text-white transition-colors"
+                  className="text-gray-600 hover:text-white transition-colors"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -125,7 +125,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                             relative p-6 rounded-xl border-2 text-left transition-all
                             ${isSelected 
                               ? 'border-orange-500 bg-orange-500/10' 
-                              : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
+                              : 'border-gray-900 bg-white border-2 border-gray-900 hover:border-slate-600'
                             }
                           `}
                         >
@@ -135,19 +135,19 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                           
                           <div className="mb-4">
                             <div className="text-lg font-bold">{plan.name}</div>
-                            <div className="text-sm text-slate-400">{plan.description}</div>
+                            <div className="text-sm text-gray-600">{plan.description}</div>
                           </div>
                           
                           <div className="space-y-1">
                             <div className="text-3xl font-bold text-orange-400">
                               {plan.apy}%
                             </div>
-                            <div className="text-sm text-slate-400">APY</div>
+                            <div className="text-sm text-gray-600">APY</div>
                           </div>
                           
                           {plan.lockDays > 0 && (
-                            <div className="mt-4 pt-4 border-t border-slate-700">
-                              <div className="text-sm text-slate-400">
+                            <div className="mt-4 pt-4 border-t border-gray-900">
+                              <div className="text-sm text-gray-600">
                                 🔒 Locked for {plan.lockDays} days
                               </div>
                             </div>
@@ -169,10 +169,10 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"
-                      className="w-full px-4 py-4 bg-slate-800 rounded-xl border border-slate-700 focus:border-orange-500 focus:outline-none text-xl"
+                      className="w-full px-4 py-4 bg-white border-2 border-gray-900 rounded-xl border border-gray-900 focus:border-orange-500 focus:outline-none text-xl"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                      <span className="text-slate-400">BLAZE</span>
+                      <span className="text-gray-600">BLAZE</span>
                       <button
                         onClick={() => setAmount('10000')}
                         className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-sm hover:bg-orange-500/30 transition-colors"
@@ -181,7 +181,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                       </button>
                     </div>
                   </div>
-                  <div className="mt-2 text-sm text-slate-400">
+                  <div className="mt-2 text-sm text-gray-600">
                     Available: 10,000 BLAZE
                   </div>
                 </div>
@@ -200,13 +200,13 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm text-slate-400 mb-1">Yearly Rewards</div>
+                        <div className="text-sm text-gray-600 mb-1">Yearly Rewards</div>
                         <div className="text-2xl font-bold text-orange-400">
                           +{calculateRewards().toFixed(2)} BLAZE
                         </div>
                       </div>
                       <div>
-                        <div className="text-sm text-slate-400 mb-1">USD Value (est.)</div>
+                        <div className="text-sm text-gray-600 mb-1">USD Value (est.)</div>
                         <div className="text-2xl font-bold text-green-400">
                           ${(calculateRewards() * 0.01).toFixed(2)}
                         </div>
@@ -219,7 +219,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                           <Crown className="w-5 h-5" />
                           <span className="font-semibold">Premium Member Unlocked!</span>
                         </div>
-                        <ul className="mt-2 text-sm text-slate-300 space-y-1">
+                        <ul className="mt-2 text-sm text-gray-700 space-y-1">
                           <li>✨ 0% swap fees (100% discount)</li>
                           <li>🚀 Priority support</li>
                           <li>🎯 Launchpad access (if ≥5k)</li>
@@ -231,32 +231,32 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                 )}
 
                 {/* Benefits */}
-                <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                <div className="bg-white border-2 border-gray-900 rounded-xl p-6 border border-gray-900">
                   <h4 className="font-semibold mb-3">Staking Benefits</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div className="flex items-start gap-2">
                       <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-green-400 text-xs">✓</span>
                       </div>
-                      <span className="text-slate-300">Earn passive income in BLAZE</span>
+                      <span className="text-gray-700">Earn passive income in BLAZE</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-green-400 text-xs">✓</span>
                       </div>
-                      <span className="text-slate-300">Compound rewards automatically</span>
+                      <span className="text-gray-700">Compound rewards automatically</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-green-400 text-xs">✓</span>
                       </div>
-                      <span className="text-slate-300">Vote on governance proposals</span>
+                      <span className="text-gray-700">Vote on governance proposals</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-green-400 text-xs">✓</span>
                       </div>
-                      <span className="text-slate-300">Unlock premium features</span>
+                      <span className="text-gray-700">Unlock premium features</span>
                     </div>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ export default function StakingModal({ isOpen, onClose }: StakingModalProps) {
                 <div className="flex gap-3">
                   <button
                     onClick={onClose}
-                    className="flex-1 py-4 bg-slate-800 hover:bg-slate-700 rounded-xl font-semibold transition-colors"
+                    className="flex-1 py-4 bg-white border-2 border-gray-900 hover:bg-slate-700 rounded-xl font-semibold transition-colors"
                   >
                     Cancel
                   </button>

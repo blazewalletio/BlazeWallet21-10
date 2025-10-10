@@ -93,7 +93,7 @@ export default function SplashScreen() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          className="text-slate-400 text-lg"
+          className="text-gray-600 text-lg"
         >
           Lightning fast crypto
         </motion.p>

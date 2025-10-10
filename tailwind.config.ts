@@ -10,16 +10,16 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50: '#ecfeff',
-          100: '#cffafe',
-          200: '#a5f3fc',
-          300: '#67e8f9',
-          400: '#22d3ee',
-          500: '#06b6d4',
-          600: '#0891b2',
-          700: '#0e7490',
-          800: '#155e75',
-          900: '#164e63',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0284c7',
+          600: '#0369a1',
+          700: '#075985',
+          800: '#0c4a6e',
+          900: '#1e293b',
         },
         accent: {
           50: '#fafafa',
@@ -36,9 +36,8 @@ const config: Config = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-primary': 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
-        'gradient-card': 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(8, 145, 178, 0.05) 100%)',
-        'gradient-border': 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+        'gradient-primary': 'linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%)',
+        'gradient-card': 'linear-gradient(135deg, rgba(3, 105, 161, 0.05) 0%, rgba(12, 74, 110, 0.05) 100%)',
       },
       backdropBlur: {
         xs: '2px',
@@ -58,9 +57,14 @@ const config: Config = {
         },
       },
       boxShadow: {
-        'soft': '0 2px 8px rgba(0, 0, 0, 0.04)',
-        'soft-lg': '0 4px 16px rgba(0, 0, 0, 0.06)',
-        'soft-xl': '0 8px 32px rgba(0, 0, 0, 0.08)',
+        'hard': '0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)',
+        'hard-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
+        'hard-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
+      },
+      fontWeight: {
+        'semibold': '600',
+        'bold': '700',
+        'extrabold': '800',
       },
     },
   },

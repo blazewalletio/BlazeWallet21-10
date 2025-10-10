@@ -27,7 +27,7 @@ export default function ReferralDashboard() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold mb-2">Referral Program</h2>
-        <p className="text-slate-400">
+        <p className="text-gray-600">
           Earn 50 BLAZE per referral + 10% of their transaction fees forever!
         </p>
       </div>
@@ -37,11 +37,11 @@ export default function ReferralDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-800/50 border border-slate-700 rounded-xl p-6"
+          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
         >
           <div className="flex items-center gap-3 mb-2">
             <Users className="w-5 h-5 text-blue-400" />
-            <span className="text-sm text-slate-400">Total Referrals</span>
+            <span className="text-sm text-gray-600">Total Referrals</span>
           </div>
           <div className="text-3xl font-bold">{stats.totalReferrals}</div>
         </motion.div>
@@ -50,16 +50,16 @@ export default function ReferralDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-slate-800/50 border border-slate-700 rounded-xl p-6"
+          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
         >
           <div className="flex items-center gap-3 mb-2">
             <Gift className="w-5 h-5 text-green-400" />
-            <span className="text-sm text-slate-400">Total Earned</span>
+            <span className="text-sm text-gray-600">Total Earned</span>
           </div>
           <div className="text-3xl font-bold text-green-400">
             {stats.totalEarned} BLAZE
           </div>
-          <div className="text-sm text-slate-400 mt-1">
+          <div className="text-sm text-gray-600 mt-1">
             ≈ ${(stats.totalEarned * 0.01).toFixed(2)}
           </div>
         </motion.div>
@@ -68,16 +68,16 @@ export default function ReferralDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-slate-800/50 border border-slate-700 rounded-xl p-6"
+          className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6"
         >
           <div className="flex items-center gap-3 mb-2">
             <Gift className="w-5 h-5 text-orange-400" />
-            <span className="text-sm text-slate-400">Pending</span>
+            <span className="text-sm text-gray-600">Pending</span>
           </div>
           <div className="text-3xl font-bold text-orange-400">
             {stats.pendingRewards} BLAZE
           </div>
-          <div className="text-sm text-slate-400 mt-1">
+          <div className="text-sm text-gray-600 mt-1">
             Claimable now
           </div>
         </motion.div>
@@ -91,7 +91,7 @@ export default function ReferralDashboard() {
             type="text"
             value={referralLink}
             readOnly
-            className="flex-1 px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-sm font-mono"
+            className="flex-1 px-4 py-3 bg-slate-900 border border-gray-900 rounded-lg text-sm font-mono"
           />
           <button
             onClick={copyReferralLink}
@@ -140,7 +140,7 @@ export default function ReferralDashboard() {
       </div>
 
       {/* Recent Referrals */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+      <div className="bg-white border-2 border-gray-900 border border-gray-900 rounded-xl p-6">
         <h3 className="font-semibold mb-4">Recent Referrals</h3>
         <div className="space-y-3">
           {[
@@ -150,7 +150,7 @@ export default function ReferralDashboard() {
           ].map((referral, index) => (
             <div
               key={index}
-              className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0"
+              className="flex items-center justify-between py-3 border-b border-gray-900 last:border-0"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center">
@@ -158,7 +158,7 @@ export default function ReferralDashboard() {
                 </div>
                 <div>
                   <div className="font-mono text-sm">{referral.address}</div>
-                  <div className="text-xs text-slate-400">{referral.date}</div>
+                  <div className="text-xs text-gray-600">{referral.date}</div>
                 </div>
               </div>
               <div className="text-right">

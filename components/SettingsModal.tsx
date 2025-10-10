@@ -69,19 +69,19 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div className="space-y-6">
                 {/* Account Info */}
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-gray-600 mb-3 flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     Account
                   </h3>
                   <div className="glass-card">
-                    <div className="text-sm text-slate-400 mb-1">Wallet adres</div>
+                    <div className="text-sm text-gray-600 mb-1">Wallet adres</div>
                     <div className="font-mono text-sm break-all">{address}</div>
                   </div>
                 </div>
 
                 {/* Recovery Phrase */}
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-gray-600 mb-3 flex items-center gap-2">
                     <Key className="w-4 h-4" />
                     Beveiliging
                   </h3>
@@ -155,17 +155,17 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
                 {/* Preferences */}
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-400 mb-3">
+                  <h3 className="text-sm font-semibold text-gray-600 mb-3">
                     Voorkeuren
                   </h3>
                   
                   <div className="space-y-3">
                     <div className="glass-card flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <Bell className="w-5 h-5 text-slate-400" />
+                        <Bell className="w-5 h-5 text-gray-600" />
                         <div>
                           <div className="font-semibold text-sm">Notificaties</div>
-                          <div className="text-xs text-slate-400">Transactie updates</div>
+                          <div className="text-xs text-gray-600">Transactie updates</div>
                         </div>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -176,10 +176,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
                     <div className="glass-card flex items-center justify-between opacity-50">
                       <div className="flex items-center gap-3">
-                        <Moon className="w-5 h-5 text-slate-400" />
+                        <Moon className="w-5 h-5 text-gray-600" />
                         <div>
                           <div className="font-semibold text-sm">Dark mode</div>
-                          <div className="text-xs text-slate-400">Standaard aan</div>
+                          <div className="text-xs text-gray-600">Standaard aan</div>
                         </div>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -234,7 +234,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </div>
 
                 {/* App Info */}
-                <div className="text-center text-sm text-slate-400 pb-8">
+                <div className="text-center text-sm text-gray-600 pb-8">
                   <div className="mb-2 font-semibold text-lg bg-gradient-primary bg-clip-text text-transparent">Blaze v2.0</div>
                   <div className="text-xs">Lightning fast crypto</div>
                 </div>

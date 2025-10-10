@@ -5,52 +5,46 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
+    --foreground: 0 0% 0%;
   }
 
   * {
-    @apply border-gray-200;
+    @apply border-gray-900;
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-white text-black;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-weight: 500;
   }
 
-  /* Clean card styles */
+  /* Bold card styles */
   .glass {
-    @apply bg-white border border-gray-300;
+    @apply bg-white border-2 border-gray-900;
   }
 
   .glass-card {
-    @apply bg-white rounded-lg p-6 border-2 border-gray-300 shadow-md;
-  }
-  
-  .glass-card-gradient {
-    @apply bg-white rounded-lg p-6 border-2 border-transparent bg-clip-padding shadow-lg;
-    background-image: linear-gradient(white, white), linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
+    @apply bg-white rounded-xl p-6 border-2 border-gray-900 shadow-hard;
   }
 
   /* Scrollbar styling */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-50;
+    @apply bg-gray-100;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
+    @apply bg-gray-900 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400;
+    @apply bg-black;
   }
 
   /* Smooth transitions */
@@ -61,30 +55,30 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-primary text-white rounded-md font-bold;
-    @apply hover:shadow-lg hover:shadow-primary-500/30;
-    @apply active:scale-[0.97] transition-all duration-150;
+    @apply px-6 py-3 bg-primary-600 text-white rounded-lg font-bold border-2 border-primary-900;
+    @apply hover:bg-primary-700 hover:shadow-hard-lg;
+    @apply active:scale-[0.98] transition-all duration-150;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-white text-gray-900 rounded-md font-bold border-2 border-gray-900;
-    @apply hover:bg-gray-900 hover:text-white hover:shadow-lg;
-    @apply active:scale-[0.97] transition-all duration-150;
+    @apply px-6 py-3 bg-white text-black rounded-lg font-bold border-2 border-gray-900;
+    @apply hover:bg-gray-100 hover:shadow-hard;
+    @apply active:scale-[0.98] transition-all duration-150;
   }
 
   .input-field {
-    @apply w-full bg-white border-2 border-gray-300 rounded-md px-4 py-3 text-gray-900 placeholder-gray-400 font-semibold;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+    @apply w-full bg-white border-2 border-gray-900 rounded-lg px-4 py-3 text-black placeholder-gray-500 font-semibold;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-primary-600;
     @apply transition-all duration-150;
   }
 
   .card-hover {
-    @apply transform transition-all duration-150;
-    @apply hover:shadow-xl hover:-translate-y-1 hover:border-primary-500;
+    @apply transform transition-all duration-200;
+    @apply hover:shadow-hard-lg hover:-translate-y-1;
   }
 }
 
-/* Clean animations */
+/* Bold animations */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -100,7 +94,7 @@
 
 /* Loading skeleton */
 .skeleton {
-  @apply animate-pulse bg-gray-200 rounded;
+  @apply animate-pulse bg-gray-300 rounded;
 }
 
 /* Subtle shimmer effect for premium elements */
@@ -123,7 +117,7 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(14, 165, 233, 0.03) 50%,
+    rgba(3, 105, 161, 0.05) 50%,
     transparent 100%
   );
   background-size: 200% 100%;
@@ -132,14 +126,14 @@
   z-index: 1;
 }
 
-/* Clean card effect */
+/* Bold card effect */
 .card-3d {
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .card-3d:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
 }
 
 /* Gradient animation for accents */
@@ -173,12 +167,12 @@
   animation: slide-up-fade 0.4s ease-out forwards;
 }
 
-/* Clean glow for important elements */
+/* Bold glow for important elements */
 .subtle-glow {
-  box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+  box-shadow: 0 0 0 0 rgba(3, 105, 161, 0);
   transition: box-shadow 0.3s ease;
 }
 
 .subtle-glow:hover {
-  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+  box-shadow: 0 0 0 4px rgba(3, 105, 161, 0.2);
 }

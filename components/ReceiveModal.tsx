@@ -99,7 +99,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
 
               <div className="space-y-6">
                 <div className="text-center">
-                  <p className="text-slate-400 mb-6">
+                  <p className="text-gray-600 mb-6">
                     Scan deze QR code of deel je wallet adres
                   </p>
 
@@ -128,11 +128,11 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
 
                 {/* Address */}
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">
+                  <label className="text-sm text-gray-600 mb-2 block">
                     Jouw Ethereum adres
                   </label>
-                  <div className="glass-card bg-slate-900/50">
-                    <div className="font-mono text-sm break-all text-slate-300">
+                  <div className="glass-card bg-gray-50 border-2 border-gray-900">
+                    <div className="font-mono text-sm break-all text-gray-700">
                       {address}
                     </div>
                   </div>
@@ -179,7 +179,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
 
                 {/* Network selector placeholder */}
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">
+                  <label className="text-sm text-gray-600 mb-2 block">
                     Netwerk
                   </label>
                   <div className="glass-card flex items-center gap-3">
@@ -188,7 +188,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                     </div>
                     <div>
                       <div className="font-semibold">Ethereum</div>
-                      <div className="text-xs text-slate-400">Mainnet</div>
+                      <div className="text-xs text-gray-600">Mainnet</div>
                     </div>
                   </div>
                 </div>

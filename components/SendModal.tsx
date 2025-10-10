@@ -132,7 +132,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
               {step === 'input' && (
                 <div className="space-y-6">
                   <div>
-                    <label className="text-sm text-slate-400 mb-2 block">
+                    <label className="text-sm text-gray-600 mb-2 block">
                       Naar adres
                     </label>
                     <input
@@ -146,10 +146,10 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
 
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm text-slate-400">
+                      <label className="text-sm text-gray-600">
                         Bedrag (ETH)
                       </label>
-                      <span className="text-sm text-slate-400">
+                      <span className="text-sm text-gray-600">
                         Beschikbaar: {parseFloat(balance).toFixed(6)} ETH
                       </span>
                     </div>
@@ -170,14 +170,14 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                       </button>
                     </div>
                     {amount && (
-                      <div className="text-sm text-slate-400 mt-2">
+                      <div className="text-sm text-gray-600 mt-2">
                         ≈ ${(parseFloat(amount) * 1700).toFixed(2)}
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="text-sm text-slate-400 mb-3 block">
+                    <label className="text-sm text-gray-600 mb-3 block">
                       Gas snelheid
                     </label>
                     <div className="grid grid-cols-3 gap-3">
@@ -191,7 +191,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                               : 'hover:bg-white/10'
                           }`}
                         >
-                          <div className="text-xs text-slate-400 capitalize mb-1">
+                          <div className="text-xs text-gray-600 capitalize mb-1">
                             {speed === 'slow' ? 'Langzaam' : speed === 'standard' ? 'Normaal' : 'Snel'}
                           </div>
                           <div className="font-semibold text-sm">
@@ -222,20 +222,20 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
               {step === 'confirm' && (
                 <div className="space-y-6">
                   <div className="glass-card bg-primary-500/10 border-primary-500/20">
-                    <div className="text-sm text-slate-400 mb-1">Je stuurt</div>
+                    <div className="text-sm text-gray-600 mb-1">Je stuurt</div>
                     <div className="text-3xl font-bold mb-1">{amount} ETH</div>
-                    <div className="text-sm text-slate-400">
+                    <div className="text-sm text-gray-600">
                       ≈ ${(parseFloat(amount) * 1700).toFixed(2)}
                     </div>
                   </div>
 
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Naar</span>
+                      <span className="text-gray-600">Naar</span>
                       <span className="font-mono">{BlockchainService.formatAddress(toAddress)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Gas fee</span>
+                      <span className="text-gray-600">Gas fee</span>
                       <span>{estimatedFee} ETH</span>
                     </div>
                     <div className="h-px bg-slate-700" />
@@ -272,7 +272,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                 <div className="text-center py-12">
                   <Loader2 className="w-12 h-12 animate-spin text-primary-500 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold mb-2">Versturen...</h3>
-                  <p className="text-slate-400">Je transactie wordt verwerkt</p>
+                  <p className="text-gray-600">Je transactie wordt verwerkt</p>
                 </div>
               )}
 
@@ -288,7 +288,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                     <CheckCircle2 className="w-10 h-10 text-emerald-400" />
                   </motion.div>
                   <h3 className="text-xl font-semibold mb-2">Verstuurd!</h3>
-                  <p className="text-slate-400 mb-6">
+                  <p className="text-gray-600 mb-6">
                     Je transactie is succesvol verzonden
                   </p>
                   
