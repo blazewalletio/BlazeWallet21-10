@@ -171,8 +171,12 @@ export class PresaleService {
       }
       
       // Send transaction
+      const valueInWei = ethers.parseEther(amountBNB.toFixed(18));
+      console.log('Sending transaction with value:', valueInWei.toString(), 'wei');
+      
+      // Call the contribute() function with value
       const tx = await this.presaleContract.contribute({
-        value: ethers.parseEther(amountBNB.toFixed(18)),
+        value: valueInWei,
         gasLimit: 300000, // Set gas limit to avoid estimation issues
       });
       

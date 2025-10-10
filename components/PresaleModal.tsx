@@ -218,7 +218,17 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
     setSuccess('');
 
     try {
-      const presaleService = new PresaleService(wallet);
+      // Ensure wallet has provider
+      let connectedWallet = wallet;
+      if (!wallet.provider) {
+        console.log('🔧 Wallet has no provider, creating one for contribution...');
+        const chainConfig = CHAINS[currentChain];
+        const provider = new ethers.JsonRpcProvider(chainConfig.rpcUrl);
+        connectedWallet = wallet.connect(provider);
+        useWalletStore.setState({ wallet: connectedWallet });
+      }
+      
+      const presaleService = new PresaleService(connectedWallet);
       
       // Contribute
       const txHash = await presaleService.contribute(amount);
