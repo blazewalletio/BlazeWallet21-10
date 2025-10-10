@@ -8,6 +8,7 @@ import { PresaleService } from '@/lib/presale-service';
 import { PRESALE_CONSTANTS, CURRENT_PRESALE } from '@/lib/presale-config';
 import { CHAINS } from '@/lib/chains';
 import { ethers } from 'ethers';
+import LoadingSpinner from './LoadingSpinner';
 
 interface PresaleModalProps {
   isOpen: boolean;
@@ -514,7 +515,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
                   {/* Show loading state */}
                   {isLoading && (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+                      <LoadingSpinner size="md" text="Presale data laden..." showText={true} />
                     </div>
                   )}
                 </div>
@@ -567,4 +568,5 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
     </AnimatePresence>
   );
 }
+
 

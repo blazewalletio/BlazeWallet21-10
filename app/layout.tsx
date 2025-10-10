@@ -5,10 +5,10 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Blaze - Lightning Fast Crypto Wallet",
-  description: "The fastest crypto wallet on earth. Buy, swap, send instantly with BLAZE tokens.",
+  title: "Blaze - Lightning Fast Crypto",
+  description: "The fastest crypto wallet on earth. Buy, swap, send instantly.",
   manifest: "/manifest.json",
-  themeColor: "#ea580c",
+  themeColor: "#ffffff",
   viewport: {
     width: "device-width",
     initialScale: 1,

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import BlazeLogo from './BlazeLogo';
+import Image from 'next/image';
 
 export default function SplashScreen() {
   return (
@@ -9,7 +10,7 @@ export default function SplashScreen() {
       initial={{ opacity: 1 }}
       animate={{ opacity: 0 }}
       transition={{ duration: 0.5, delay: 1.5 }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-slate-950 via-orange-950 to-red-950"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950"
       style={{ pointerEvents: 'none' }}
     >
       {/* Animated Background Gradients */}
@@ -25,7 +26,7 @@ export default function SplashScreen() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-orange-500/30 to-red-500/30 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary-500/30 to-accent-500/30 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -39,7 +40,7 @@ export default function SplashScreen() {
             ease: "easeInOut",
             delay: 0.5
           }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-red-500/30 to-orange-500/30 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-accent-500/30 to-primary-500/30 rounded-full blur-3xl"
         />
       </div>
 
@@ -68,15 +69,17 @@ export default function SplashScreen() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl blur-2xl"
+              className="absolute inset-0 bg-gradient-primary rounded-3xl blur-2xl"
             />
             
             {/* Main Icon */}
-            <div className="relative w-24 h-24 mx-auto bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl overflow-hidden">
-              <img 
-                src="/blaze-logo-real.png" 
-                alt="Blaze Logo" 
-                className="w-16 h-16 object-contain"
+            <div className="relative w-24 h-24 mx-auto bg-gradient-primary rounded-3xl flex items-center justify-center shadow-2xl">
+              <Image
+                src="/blaze-logo-official.png"
+                alt="Blaze"
+                width={56}
+                height={56}
+                className="object-contain"
               />
             </div>
           </div>
@@ -87,7 +90,7 @@ export default function SplashScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-6xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent mb-2 tracking-tight"
+          className="text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2 tracking-tight"
         >
           Blaze
         </motion.h1>
@@ -122,7 +125,7 @@ export default function SplashScreen() {
                 delay: i * 0.2,
                 ease: "easeInOut"
               }}
-              className="w-2 h-2 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"
+              className="w-2 h-2 bg-gradient-primary rounded-full"
             />
           ))}
         </motion.div>
@@ -130,3 +133,4 @@ export default function SplashScreen() {
     </motion.div>
   );
 }
+
