@@ -16,11 +16,14 @@ export async function GET(request: NextRequest) {
 
     // Get API keys from environment
     const getApiKey = (chain: string): string => {
+      const etherscanKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
+      const bscscanKey = process.env.NEXT_PUBLIC_BSCSCAN_API_KEY;
+      
       const keys: Record<string, string | undefined> = {
-        '1': process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
-        '11155111': process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
-        '56': process.env.NEXT_PUBLIC_BSCSCAN_API_KEY,
-        '97': process.env.NEXT_PUBLIC_BSCSCAN_API_KEY,
+        '1': etherscanKey,
+        '11155111': etherscanKey,
+        '56': bscscanKey || etherscanKey, // Fallback to Etherscan key
+        '97': bscscanKey || etherscanKey, // Fallback to Etherscan key for testnet
         '137': process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY,
       };
       return keys[chain] || '';
