@@ -35,6 +35,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
     maxContribution: PRESALE_CONSTANTS.maxContribution,
     active: false,
     finalized: false,
+    bnbPrice: 600, // Default BNB price, will be updated from contract
   });
 
   const [userInfo, setUserInfo] = useState({
@@ -188,6 +189,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
       timeRemaining: info.timeRemaining,
       active: info.active,
       finalized: info.finalized,
+      bnbPrice: info.bnbPrice, // Update BNB price from contract
     });
     
     // Load user info
@@ -423,6 +425,17 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
                       className="input-field"
                       disabled={isContributing}
                     />
+                    
+                    {/* BNB Equivalent Display */}
+                    {contributionAmount && parseFloat(contributionAmount) > 0 && (
+                      <div className="mt-2 flex items-center justify-between bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                        <span className="text-sm text-gray-700">BNB equivalent:</span>
+                        <span className="text-sm font-bold text-gray-900">
+                          {(parseFloat(contributionAmount) / presaleInfo.bnbPrice).toFixed(4)} BNB
+                        </span>
+                      </div>
+                    )}
+                    
                     <div className="text-xs text-gray-600 mt-1">
                       Min: ${presaleInfo.minContribution} | Max: ${presaleInfo.maxContribution} per wallet
                     </div>

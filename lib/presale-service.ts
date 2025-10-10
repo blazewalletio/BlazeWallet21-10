@@ -27,6 +27,7 @@ export interface PresaleInfo {
   tokensSold: number;
   participantCount: number;
   timeRemaining: number; // in milliseconds
+  bnbPrice: number; // Current BNB price in USD
 }
 
 export interface UserInfo {
@@ -115,6 +116,7 @@ export class PresaleService {
         tokensSold: parseFloat(ethers.formatUnits(info.tokensSold, 18)),
         participantCount: Number(info.participantCount),
         timeRemaining: timeRemainingMs, // Convert seconds to ms
+        bnbPrice: bnbPrice, // Include BNB price for frontend calculations
       };
       
       console.log('✅ Final result:', result);
