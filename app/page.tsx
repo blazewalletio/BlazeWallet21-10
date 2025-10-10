@@ -43,40 +43,40 @@ export default function Home() {
   // Loading state
   if (hasWallet === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-orange-950 to-red-950">
         {/* Animated Background Gradients */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-accent-500/20 to-primary-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
         
         <div className="relative z-10 text-center">
           {/* Logo Animation */}
           <div className="relative mb-6">
             {/* Glow Effect */}
-            <div className="absolute inset-0 bg-gradient-primary rounded-3xl blur-2xl animate-pulse" />
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl blur-2xl animate-pulse" />
             
             {/* Main Icon */}
-            <div className="relative w-20 h-20 mx-auto bg-gradient-primary rounded-3xl flex items-center justify-center shadow-2xl">
+            <div className="relative w-20 h-20 mx-auto bg-gradient-to-r from-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl">
               <div className="text-4xl">🔥</div>
             </div>
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2 tracking-tight">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent mb-2 tracking-tight">
             Blaze
           </h1>
 
           {/* Loading Text */}
-          <div className="text-slate-400 text-lg mb-4">
+          <div className="text-slate-300 text-lg mb-4">
             Wallet laden...
           </div>
 
           {/* Loading Dots */}
           <div className="flex justify-center space-x-2">
-            <div className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" />
-            <div className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-            <div className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" />
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
           </div>
         </div>
       </div>
