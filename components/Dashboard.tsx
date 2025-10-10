@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowUpRight, ArrowDownLeft, RefreshCw, Settings, 
+  ArrowUpRight, ArrowDownLeft, ArrowLeft, RefreshCw, Settings, 
   TrendingUp, Eye, EyeOff, Plus, Zap, ChevronRight,
   Repeat, Wallet as WalletIcon, TrendingDown, PieChart, Rocket, CreditCard,
   Lock, Gift, Vote, Users, Palette
@@ -27,14 +27,14 @@ import AnimatedNumber from './AnimatedNumber';
 import QuickPayModal from './QuickPayModal';
 import FounderDeploy from './FounderDeploy';
 import TransactionHistory from './TransactionHistory';
-import StakingModal from './StakingModal';
-import GovernanceModal from './GovernanceModal';
-import LaunchpadModal from './LaunchpadModal';
+import StakingDashboard from './StakingDashboard';
+import GovernanceDashboard from './GovernanceDashboard';
+import LaunchpadDashboard from './LaunchpadDashboard';
 import ReferralDashboard from './ReferralDashboard';
-import NFTMintModal from './NFTMintModal';
+import NFTMintDashboard from './NFTMintDashboard';
 import CashbackTracker from './CashbackTracker';
 import PremiumBadge, { PremiumCard } from './PremiumBadge';
-import PresaleModal from './PresaleModal';
+import PresaleDashboard from './PresaleDashboard';
 import VestingDashboard from './VestingDashboard';
 import { getPortfolioHistory } from '@/lib/portfolio-history';
 
@@ -667,12 +667,116 @@ export default function Dashboard() {
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
       <QuickPayModal isOpen={showQuickPay} onClose={() => setShowQuickPay(false)} />
       
-      {/* BLAZE Feature Modals */}
-      <StakingModal isOpen={showStaking} onClose={() => setShowStaking(false)} />
-      <GovernanceModal isOpen={showGovernance} onClose={() => setShowGovernance(false)} />
-      <LaunchpadModal isOpen={showLaunchpad} onClose={() => setShowLaunchpad(false)} />
-      <NFTMintModal isOpen={showNFTMint} onClose={() => setShowNFTMint(false)} />
-      <PresaleModal isOpen={showPresale} onClose={() => setShowPresale(false)} />
+      {/* BLAZE Feature Pages */}
+      <AnimatePresence>
+        {showStaking && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+          >
+            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+              <button
+                onClick={() => setShowStaking(false)}
+                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Dashboard
+              </button>
+              <StakingDashboard />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showGovernance && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+          >
+            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+              <button
+                onClick={() => setShowGovernance(false)}
+                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Dashboard
+              </button>
+              <GovernanceDashboard />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showLaunchpad && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+          >
+            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+              <button
+                onClick={() => setShowLaunchpad(false)}
+                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Dashboard
+              </button>
+              <LaunchpadDashboard />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showNFTMint && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+          >
+            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+              <button
+                onClick={() => setShowNFTMint(false)}
+                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Dashboard
+              </button>
+              <NFTMintDashboard />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showPresale && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+          >
+            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+              <button
+                onClick={() => setShowPresale(false)}
+                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Dashboard
+              </button>
+              <PresaleDashboard />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       {/* Full Screen Modals for Dashboards */}
       <AnimatePresence>
@@ -787,4 +891,5 @@ export default function Dashboard() {
     </>
   );
 }
+
 
