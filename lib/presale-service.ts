@@ -172,10 +172,17 @@ export class PresaleService {
       
       // Send transaction
       const valueInWei = ethers.parseEther(amountBNB.toFixed(18));
-      console.log('Sending transaction with value:', valueInWei.toString(), 'wei');
+      console.log('💰 Contributing:', {
+        amountUSD: amountUSD,
+        amountBNB: amountBNB.toFixed(4),
+        valueInWei: valueInWei.toString(),
+        presaleAddress: this.presaleContract.target
+      });
       
       // Call the contribute() function with value
-      const tx = await this.presaleContract.contribute({
+      // Use getFunction to ensure we're calling the right function
+      const contributeFn = this.presaleContract.getFunction('contribute');
+      const tx = await contributeFn({
         value: valueInWei,
         gasLimit: 300000, // Set gas limit to avoid estimation issues
       });
