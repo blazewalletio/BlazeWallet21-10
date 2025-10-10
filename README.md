@@ -289,3 +289,6 @@ Your wallet. Your keys. Your arc.
 **Built with ❤️ and Next.js**
 
 **Arc v2.0** - The future of money is curved. 🌈
+
+
+

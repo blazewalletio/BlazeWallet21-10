@@ -6,8 +6,8 @@ import {
   X, Shield, Key, Trash2, Download, 
   Eye, EyeOff, Copy, Check, Bell, Moon, Sun 
 } from 'lucide-react';
-import Image from 'next/image';
 import { useWalletStore } from '@/lib/wallet-store';
+import Image from 'next/image';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -258,5 +258,4 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     </AnimatePresence>
   );
 }
-
 

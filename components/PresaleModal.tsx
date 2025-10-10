@@ -9,6 +9,7 @@ import { PRESALE_CONSTANTS, CURRENT_PRESALE } from '@/lib/presale-config';
 import { CHAINS } from '@/lib/chains';
 import { ethers } from 'ethers';
 import LoadingSpinner from './LoadingSpinner';
+import Image from 'next/image';
 
 interface PresaleModalProps {
   isOpen: boolean;
@@ -298,10 +299,21 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
               {/* Header */}
               <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                    <Rocket className="w-6 h-6 text-orange-500" />
-                    BLAZE Token Presale
-                  </h2>
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
+                      <Image
+                        src="/blaze-logo-official.png"
+                        alt="Blaze"
+                        width={24}
+                        height={24}
+                        className="object-contain"
+                      />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                      <Rocket className="w-6 h-6 text-orange-500" />
+                      BLAZE Token Presale
+                    </h2>
+                  </div>
                   <p className="text-sm text-gray-600 mt-1">Join the early supporters - 2.4x gain at launch!</p>
                 </div>
                 <button

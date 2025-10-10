@@ -8,6 +8,7 @@ import {
   Repeat, Wallet as WalletIcon, TrendingDown, PieChart, Rocket, CreditCard,
   Lock, Gift, Vote, Users, Palette
 } from 'lucide-react';
+import Image from 'next/image';
 import { useWalletStore } from '@/lib/wallet-store';
 import { BlockchainService } from '@/lib/blockchain';
 import { TokenService } from '@/lib/token-service';
@@ -203,7 +204,21 @@ export default function Dashboard() {
         <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/95 border-b border-gray-200 shadow-sm">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
+                {/* Blaze Logo */}
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                    <Image
+                      src="/blaze-logo-official.png"
+                      alt="Blaze"
+                      width={20}
+                      height={20}
+                      className="object-contain"
+                    />
+                  </div>
+                  <span className="font-bold text-gray-900 hidden sm:block">Blaze</span>
+                </div>
+                
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowChainSelector(true)}
@@ -787,3 +802,4 @@ export default function Dashboard() {
     </>
   );
 }
+

@@ -320,3 +320,4 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
     </AnimatePresence>
   );
 }
+

@@ -255,3 +255,4 @@ Virtual Card = Universeel
 QR Scanner = Flexible
 
 Pick je method en pay! 💳⚡
+
