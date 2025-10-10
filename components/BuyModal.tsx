@@ -167,3 +167,5 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
     </AnimatePresence>
   );
 }
+
+

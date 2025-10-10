@@ -202,3 +202,5 @@ export const POPULAR_TOKENS: Record<string, any[]> = {
   ],
   bscTestnet: [],
 };
+
+

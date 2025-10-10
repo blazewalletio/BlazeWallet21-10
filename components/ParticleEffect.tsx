@@ -72,3 +72,5 @@ export default function ParticleEffect({ trigger, type = 'success' }: ParticleEf
 }
 
 // Add shake animation to globals.css
+
+

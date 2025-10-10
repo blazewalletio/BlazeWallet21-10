@@ -246,3 +246,5 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     </AnimatePresence>
   );
 }
+
+

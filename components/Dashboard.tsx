@@ -199,30 +199,11 @@ export default function Dashboard() {
   return (
     <>
       <div className="min-h-screen pb-24">
-        {/* Header with Logo and Network Selector */}
+        {/* Header with Network Selector */}
         <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/95 border-b border-gray-200 shadow-sm">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-4">
-                {/* Blaze Logo */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="w-10 h-10 relative">
-                    <img 
-                      src="/blazelogooff.png" 
-                      alt="Blaze" 
-                      className="w-full h-full object-contain drop-shadow-sm"
-                    />
-                  </div>
-                  <div className="text-xl font-bold bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                    Blaze
-                  </div>
-                </motion.div>
-
+              <div className="flex items-center gap-3">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowChainSelector(true)}
@@ -806,3 +787,4 @@ export default function Dashboard() {
     </>
   );
 }
+

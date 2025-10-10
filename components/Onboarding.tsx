@@ -81,14 +81,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 }}
                 className="inline-block"
               >
-                <div className="w-20 h-20 mx-auto mb-6 relative">
-                  <img 
-                    src="/blazelogooff.png" 
-                    alt="Blaze" 
-                    className="w-full h-full object-contain drop-shadow-xl"
-                  />
-                </div>
-              </motion.div>
+                <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center mb-6">
+                <BlazeLogo size={48} />
+              </div>
+            </motion.div>
 
             <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 tracking-tight">
               Blaze
@@ -294,4 +290,5 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     </div>
   );
 }
+
 

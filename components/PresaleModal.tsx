@@ -297,18 +297,9 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
               {/* Header */}
               <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <div className="w-8 h-8 relative">
-                      <img 
-                        src="/blazelogooff.png" 
-                        alt="Blaze" 
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <span className="flex items-center gap-2">
-                      <Rocket className="w-6 h-6 text-orange-500" />
-                      BLAZE Token Presale
-                    </span>
+                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                    <Rocket className="w-6 h-6 text-orange-500" />
+                    BLAZE Token Presale
                   </h2>
                   <p className="text-sm text-gray-600 mt-1">Join the early supporters - 2.4x gain at launch!</p>
                 </div>
@@ -576,5 +567,6 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
     </AnimatePresence>
   );
 }
+
 
 
