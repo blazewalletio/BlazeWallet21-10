@@ -55,13 +55,13 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold">Koop crypto</h2>
-                <p className="text-sm text-text-tertiary mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   Met iDEAL, creditcard of bankoverschrijving
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 hover:bg-white/10 rounded-full transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -71,21 +71,21 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             <div className="grid grid-cols-3 gap-3 mb-6">
               <div className="text-center p-3 bg-blue-500/10 rounded-xl">
                 <Zap className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                <p className="text-xs text-text-secondary">Instant</p>
+                <p className="text-xs text-slate-300">Instant</p>
               </div>
               <div className="text-center p-3 bg-emerald-500/10 rounded-xl">
                 <ShieldCheck className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-                <p className="text-xs text-text-secondary">Veilig</p>
+                <p className="text-xs text-slate-300">Veilig</p>
               </div>
               <div className="text-center p-3 bg-purple-500/10 rounded-xl">
                 <CreditCard className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                <p className="text-xs text-text-secondary">Makkelijk</p>
+                <p className="text-xs text-slate-300">Makkelijk</p>
               </div>
             </div>
 
             {/* Popular Assets */}
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-text-tertiary mb-3">Populaire crypto</h3>
+              <h3 className="text-sm font-semibold text-slate-400 mb-3">Populaire crypto</h3>
               <div className="grid grid-cols-2 gap-3">
                 {supportedAssets.slice(0, 6).map((currencyCode) => {
                   const displayName = MoonPayService.getDisplayName(currencyCode);
@@ -94,7 +94,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                       key={currencyCode}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleBuy(currencyCode)}
-                      className="p-4 bg-gray-100/50 hover:bg-gray-100 rounded-xl transition-colors text-left"
+                      className="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-xl transition-colors text-left"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-lg font-bold">
@@ -102,7 +102,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                         </div>
                         <div>
                           <p className="font-semibold">{displayName}</p>
-                          <p className="text-xs text-text-tertiary">Kopen</p>
+                          <p className="text-xs text-slate-400">Kopen</p>
                         </div>
                       </div>
                     </motion.button>
@@ -113,20 +113,20 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
 
             {/* Payment Methods */}
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-text-tertiary mb-3">Betaalmethodes</h3>
+              <h3 className="text-sm font-semibold text-slate-400 mb-3">Betaalmethodes</h3>
               <div className="flex flex-wrap gap-2">
-                <div className="px-3 py-2 bg-gray-100/50 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-slate-800/50 rounded-lg text-sm">
                   <Banknote className="w-4 h-4 inline mr-1" />
                   iDEAL
                 </div>
-                <div className="px-3 py-2 bg-gray-100/50 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-slate-800/50 rounded-lg text-sm">
                   <CreditCard className="w-4 h-4 inline mr-1" />
                   Creditcard
                 </div>
-                <div className="px-3 py-2 bg-gray-100/50 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-slate-800/50 rounded-lg text-sm">
                   Bank
                 </div>
-                <div className="px-3 py-2 bg-gray-100/50 rounded-lg text-sm">
+                <div className="px-3 py-2 bg-slate-800/50 rounded-lg text-sm">
                   SEPA
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                 <ShieldCheck className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm">
                   <p className="text-blue-300 font-medium mb-1">Powered by MoonPay</p>
-                  <p className="text-text-tertiary text-xs">
+                  <p className="text-slate-400 text-xs">
                     Wereldwijd vertrouwde fiat-naar-crypto service. Crypto wordt direct naar je Arc wallet gestuurd.
                     Fees: ~4.5% per transactie.
                   </p>
@@ -158,7 +158,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             </motion.button>
 
             {/* Disclaimer */}
-            <p className="text-xs text-text-primary0 text-center mt-4">
+            <p className="text-xs text-slate-500 text-center mt-4">
               Door te klikken ga je naar MoonPay. Arc Wallet slaat geen betalingsgegevens op.
             </p>
           </motion.div>

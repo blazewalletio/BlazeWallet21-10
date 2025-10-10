@@ -108,7 +108,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                 </div>
                 <button
                   onClick={onClose}
-                  className="glass p-2 rounded-lg hover:bg-gray-100"
+                  className="glass p-2 rounded-lg hover:bg-white/10"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -132,7 +132,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                           className={`glass-card p-6 text-center rounded-2xl transition-all ${
                             selectedAmount === amt
                               ? 'ring-2 ring-primary-500 bg-primary-500/20'
-                              : 'hover:bg-gray-100'
+                              : 'hover:bg-white/10'
                           }`}
                         >
                           <div className="text-3xl font-bold">€{amt}</div>
@@ -142,9 +142,9 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-sm text-text-tertiary mb-2">Of custom bedrag</h3>
+                    <h3 className="text-sm text-slate-400 mb-2">Of custom bedrag</h3>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-text-tertiary">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-slate-400">
                         €
                       </span>
                       <input
@@ -172,7 +172,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                       <motion.button
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleQuickPay('lightning')}
-                        className="w-full glass-card p-4 rounded-xl flex items-center justify-between hover:bg-gray-100 transition-all group"
+                        className="w-full glass-card p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-all group"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
@@ -180,7 +180,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                           </div>
                           <div className="text-left">
                             <div className="font-semibold">Lightning Network</div>
-                            <div className="text-sm text-text-tertiary">Instant Bitcoin betaling</div>
+                            <div className="text-sm text-slate-400">Instant Bitcoin betaling</div>
                           </div>
                         </div>
                         <div className="text-emerald-400 text-sm font-semibold">
@@ -192,7 +192,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                       <motion.button
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleQuickPay('card')}
-                        className="w-full glass-card p-4 rounded-xl flex items-center justify-between hover:bg-gray-100 transition-all"
+                        className="w-full glass-card p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-all"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
@@ -200,7 +200,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                           </div>
                           <div className="text-left">
                             <div className="font-semibold">Virtual Card</div>
-                            <div className="text-sm text-text-tertiary">Crypto → Fiat auto-convert</div>
+                            <div className="text-sm text-slate-400">Crypto → Fiat auto-convert</div>
                           </div>
                         </div>
                       </motion.button>
@@ -209,7 +209,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                       <motion.button
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleQuickPay('scan')}
-                        className="w-full glass-card p-4 rounded-xl flex items-center justify-between hover:bg-gray-100 transition-all"
+                        className="w-full glass-card p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-all"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
@@ -217,7 +217,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                           </div>
                           <div className="text-left">
                             <div className="font-semibold">Scan Merchant QR</div>
-                            <div className="text-sm text-text-tertiary">Betaal bij winkel</div>
+                            <div className="text-sm text-slate-400">Betaal bij winkel</div>
                           </div>
                         </div>
                       </motion.button>
@@ -235,12 +235,12 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                 >
                   <div className="text-center">
                     <div className="text-4xl font-bold mb-2">€{amount}</div>
-                    <div className="text-text-tertiary">Lightning Network Payment</div>
+                    <div className="text-slate-400">Lightning Network Payment</div>
                   </div>
 
                   {lightningQR && (
                     <div className="glass-card p-6 text-center">
-                      <div className="mb-4 text-sm text-text-tertiary">
+                      <div className="mb-4 text-sm text-slate-400">
                         Scan met Lightning wallet
                       </div>
                       <img 
@@ -249,7 +249,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                         className="mx-auto rounded-xl"
                       />
                       <div className="mt-4 p-3 glass rounded-lg">
-                        <div className="text-xs text-text-tertiary mb-1">Invoice</div>
+                        <div className="text-xs text-slate-400 mb-1">Invoice</div>
                         <div className="text-xs font-mono break-all">
                           lnbc{amount * 10000}u1...
                         </div>
@@ -300,11 +300,11 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
 
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-text-tertiary">Te betalen</span>
+                      <span className="text-slate-400">Te betalen</span>
                       <span className="text-2xl font-bold">€{amount}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-text-tertiary">Auto-convert</span>
+                      <span className="text-slate-400">Auto-convert</span>
                       <span className="text-sm">~{(amount / 1700).toFixed(6)} ETH</span>
                     </div>
                   </div>
@@ -339,11 +339,11 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                   animate={{ opacity: 1, x: 0 }}
                   className="space-y-6"
                 >
-                  <div className="glass-card aspect-square rounded-2xl flex items-center justify-center bg-background-secondary/50">
+                  <div className="glass-card aspect-square rounded-2xl flex items-center justify-center bg-slate-900/50">
                     <div className="text-center">
                       <Scan className="w-16 h-16 text-primary-500 mx-auto mb-4 animate-pulse" />
                       <div className="text-lg font-semibold mb-2">Scan Merchant QR</div>
-                      <div className="text-sm text-text-tertiary">
+                      <div className="text-sm text-slate-400">
                         Richt camera op betaal-QR code
                       </div>
                     </div>

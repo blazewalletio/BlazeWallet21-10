@@ -208,9 +208,9 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
       case '1inch':
         return 'text-blue-400';
       case 'price-estimate':
-        return 'text-text-tertiary';
+        return 'text-slate-400';
       default:
-        return 'text-text-tertiary';
+        return 'text-slate-400';
     }
   };
 
@@ -252,7 +252,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-white/10 rounded-full transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -272,7 +272,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
           {/* From Token */}
           <div className="glass-card mb-2">
-            <div className="text-xs text-text-tertiary mb-2">Van</div>
+            <div className="text-xs text-slate-400 mb-2">Van</div>
             <div className="flex items-center gap-3">
               <input
                 type="number"
@@ -285,7 +285,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
               <select
                 value={fromToken}
                 onChange={(e) => setFromToken(e.target.value)}
-                className="bg-gray-200 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
+                className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
                 disabled={isSwapping}
               >
                 <option value="native">{chain.nativeCurrency.symbol}</option>
@@ -296,7 +296,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                 ))}
               </select>
             </div>
-            <div className="text-xs text-text-primary0 mt-2">
+            <div className="text-xs text-slate-500 mt-2">
               Balance: {balance} {chain.nativeCurrency.symbol}
             </div>
           </div>
@@ -310,7 +310,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                 setFromToken(toToken === '' ? 'native' : toToken);
                 setToToken(temp === 'native' ? (popularTokens[0]?.address || '') : temp);
               }}
-              className="p-3 glass-card hover:bg-gray-100 rounded-full transition-colors"
+              className="p-3 glass-card hover:bg-white/10 rounded-full transition-colors"
               disabled={isSwapping}
             >
               <ArrowDown className="w-5 h-5" />
@@ -319,7 +319,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
           {/* To Token */}
           <div className="glass-card mb-4">
-            <div className="text-xs text-text-tertiary mb-2">Naar</div>
+            <div className="text-xs text-slate-400 mb-2">Naar</div>
             <div className="flex items-center gap-3">
               <input
                 type="text"
@@ -331,7 +331,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
               <select
                 value={toToken}
                 onChange={(e) => setToToken(e.target.value)}
-                className="bg-gray-200 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
+                className="bg-slate-700 px-3 py-2 rounded-xl font-semibold outline-none flex-shrink-0 max-w-[120px]"
                 disabled={isSwapping}
               >
                 <option value="">Token</option>
@@ -352,17 +352,17 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
               className="glass-card mb-4 text-sm"
             >
               <div className="flex justify-between mb-2">
-                <span className="text-text-tertiary">Koers:</span>
+                <span className="text-slate-400">Koers:</span>
                 <span className="font-medium">
                   1 {getTokenSymbol(fromToken)} = {getExchangeRate()} {getTokenSymbol(toToken)}
                 </span>
               </div>
               <div className="flex justify-between mb-2">
-                <span className="text-text-tertiary">Geschatte gas:</span>
+                <span className="text-slate-400">Geschatte gas:</span>
                 <span className="font-medium">{(parseInt(quote.estimatedGas || '180000') / 1000).toFixed(0)}k</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-tertiary flex items-center gap-1">
+                <span className="text-slate-400 flex items-center gap-1">
                   <Zap className="w-3 h-3" />
                   Powered by:
                 </span>
@@ -425,7 +425,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
           </motion.button>
 
           {/* Additional Info */}
-          <p className="text-xs text-text-primary0 mt-3 text-center">
+          <p className="text-xs text-slate-500 mt-3 text-center">
             Controleer altijd de details voor je swapped. Slippage: 1%
           </p>
         </motion.div>

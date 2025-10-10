@@ -45,7 +45,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="glass p-2 rounded-lg hover:bg-gray-100"
+                  className="glass p-2 rounded-lg hover:bg-white/10"
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
@@ -57,7 +57,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
                     key={key}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleSelectChain(key)}
-                    className={`w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-gray-100 transition-all ${
+                    className={`w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-all ${
                       currentChain === key ? 'ring-2 ring-primary-500' : ''
                     }`}
                   >
@@ -77,7 +77,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
                             </span>
                           )}
                         </div>
-                        <div className="text-sm text-text-tertiary">{chain.nativeCurrency.symbol}</div>
+                        <div className="text-sm text-slate-400">{chain.nativeCurrency.symbol}</div>
                       </div>
                     </div>
                     

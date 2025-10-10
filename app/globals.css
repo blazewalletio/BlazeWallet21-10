@@ -13,27 +13,29 @@
   }
 
   body {
-    @apply bg-white text-text-primary;
+    @apply bg-white text-gray-900;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Vanilla Neon Glass Effect - Light Mode */
+  /* Clean card styles */
   .glass {
-    @apply backdrop-blur-xl bg-white/80 border border-gray-200/60;
+    @apply bg-white border border-gray-200;
   }
 
   .glass-card {
-    @apply glass rounded-2xl p-6 shadow-soft;
+    @apply bg-white rounded-2xl p-6 border border-gray-200 shadow-soft;
   }
 
-  /* Scrollbar styling - Light Mode */
+  /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    @apply bg-gray-50;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -46,96 +48,55 @@
 
   /* Smooth transitions */
   * {
-    @apply transition-colors duration-200;
+    @apply transition-colors duration-150;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-primary text-text-primary rounded-xl font-semibold border-2 border-neon-peach;
-    @apply hover:shadow-neon-peach hover:scale-105;
-    @apply active:scale-95 transition-all duration-200;
+    @apply px-6 py-3 bg-primary-600 text-white rounded-xl font-semibold;
+    @apply hover:bg-primary-700 hover:shadow-soft-lg;
+    @apply active:scale-[0.98] transition-all duration-150;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-white border-2 border-neon-lilac text-text-primary rounded-xl font-semibold;
-    @apply hover:bg-neon-lilac/10 hover:shadow-neon-lilac hover:scale-105 active:scale-95;
-    @apply transition-all duration-200;
+    @apply px-6 py-3 bg-gray-100 text-gray-900 rounded-xl font-semibold border border-gray-200;
+    @apply hover:bg-gray-200 hover:shadow-soft;
+    @apply active:scale-[0.98] transition-all duration-150;
   }
 
   .input-field {
-    @apply w-full bg-white border-2 border-gray-200 px-4 py-3 text-text-primary placeholder-text-tertiary rounded-xl;
-    @apply focus:outline-none focus:border-neon-peach focus:shadow-neon-sm;
-    @apply transition-all duration-200;
+    @apply w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply transition-all duration-150;
   }
 
   .card-hover {
-    @apply transform transition-all duration-300;
-    @apply hover:scale-[1.02] hover:-translate-y-1;
-    @apply hover:shadow-soft-lg;
-  }
-
-  /* Neon Border Effect */
-  .neon-border {
-    @apply border-2 border-transparent;
-    background: linear-gradient(white, white) padding-box,
-                linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF) border-box;
-  }
-
-  .neon-border-animate {
-    @apply border-2 border-transparent relative;
-    background: linear-gradient(white, white) padding-box,
-                linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF) border-box;
-  }
-
-  .neon-border-animate::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    padding: 2px;
-    background: linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: rotate-gradient 3s linear infinite;
+    @apply transform transition-all duration-200;
+    @apply hover:shadow-soft-lg hover:-translate-y-0.5;
   }
 }
 
-/* Custom animations */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
+/* Clean animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
-  100% {
-    background-position: 1000px 0;
+  to {
+    opacity: 1;
   }
 }
 
-.shimmer {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 212, 179, 0) 0%,
-    rgba(255, 212, 179, 0.2) 50%,
-    rgba(255, 212, 179, 0) 100%
-  );
-  background-size: 1000px 100%;
+.fade-in {
+  animation: fade-in 0.3s ease-out;
 }
 
-/* Loading skeleton - Light Mode */
+/* Loading skeleton */
 .skeleton {
   @apply animate-pulse bg-gray-200 rounded;
 }
 
-/* Shake animation */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-/* Subtle shimmer effect - Pastel Neon */
+/* Subtle shimmer effect for premium elements */
 @keyframes subtle-shimmer {
   0% {
     background-position: -200% center;
@@ -155,9 +116,7 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 212, 179, 0.15) 25%,
-    rgba(230, 179, 255, 0.15) 50%,
-    rgba(179, 240, 255, 0.15) 75%,
+    rgba(14, 165, 233, 0.03) 50%,
     transparent 100%
   );
   background-size: 200% 100%;
@@ -166,33 +125,17 @@
   z-index: 1;
 }
 
-/* Subtle glow for buttons - Pastel Neon */
-@keyframes subtle-glow {
-  0%, 100% {
-    box-shadow: 0 4px 20px rgba(255, 212, 179, 0.3),
-                0 0 0 0 rgba(255, 212, 179, 0);
-  }
-  50% {
-    box-shadow: 0 4px 30px rgba(255, 212, 179, 0.5),
-                0 0 0 4px rgba(255, 212, 179, 0.2);
-  }
-}
-
-.subtle-glow {
-  animation: subtle-glow 2s ease-in-out infinite;
-}
-
-/* 3D Card Effect */
+/* Clean card effect */
 .card-3d {
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .card-3d:hover {
-  transform: translateY(-10px) rotateX(5deg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
-/* Gradient animation */
+/* Gradient animation for accents */
 @keyframes gradient-shift {
   0%, 100% {
     background-position: 0% 50%;
@@ -207,49 +150,11 @@
   animation: gradient-shift 8s ease infinite;
 }
 
-/* Ripple effect */
-@keyframes ripple {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-.ripple {
-  animation: ripple 0.6s ease-out;
-}
-
-/* Bounce in */
-@keyframes bounce-in {
-  0% {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.bounce-in {
-  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
 /* Slide up fade in */
 @keyframes slide-up-fade {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -258,62 +163,15 @@
 }
 
 .slide-up-fade {
-  animation: slide-up-fade 0.5s ease-out forwards;
+  animation: slide-up-fade 0.4s ease-out forwards;
 }
 
-/* Neon Glow Pulse - Pastel */
-@keyframes neon-pulse {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(255, 212, 179, 0.4),
-                0 0 20px rgba(230, 179, 255, 0.3),
-                0 0 30px rgba(179, 240, 255, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(255, 212, 179, 0.6),
-                0 0 30px rgba(230, 179, 255, 0.5),
-                0 0 40px rgba(179, 240, 255, 0.4);
-  }
+/* Clean glow for important elements */
+.subtle-glow {
+  box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+  transition: box-shadow 0.3s ease;
 }
 
-.neon-pulse {
-  animation: neon-pulse 2s ease-in-out infinite;
-}
-
-/* Rotate gradient for animated borders */
-@keyframes rotate-gradient {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
-
-/* Floating animation with neon glow */
-@keyframes float-glow {
-  0%, 100% {
-    transform: translateY(0px);
-    box-shadow: 0 5px 15px rgba(255, 212, 179, 0.3);
-  }
-  50% {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 25px rgba(255, 212, 179, 0.5);
-  }
-}
-
-.float-glow {
-  animation: float-glow 3s ease-in-out infinite;
-}
-
-/* Text gradient effect */
-.text-gradient {
-  background: linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Light mode modal backdrop */
-.modal-backdrop {
-  @apply bg-white/80 backdrop-blur-md;
+.subtle-glow:hover {
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
 }

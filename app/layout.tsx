@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Blaze - Lightning Fast Crypto",
   description: "The fastest crypto wallet on earth. Buy, swap, send instantly.",
   manifest: "/manifest.json",
-  themeColor: "#f97316",
+  themeColor: "#ffffff",
   viewport: {
     width: "device-width",
     initialScale: 1,
@@ -24,9 +24,8 @@ export default function RootLayout({
   return (
     <html lang="nl">
       <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-900/20 via-transparent to-accent-900/20 pointer-events-none" />
-          <main className="relative z-10">
+        <div className="min-h-screen bg-gray-50">
+          <main className="relative">
             {children}
           </main>
         </div>

@@ -76,7 +76,7 @@ export default function TransactionHistory() {
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse">
-              <div className="h-16 bg-gray-100/50 rounded-xl"></div>
+              <div className="h-16 bg-slate-800/50 rounded-xl"></div>
             </div>
           ))}
         </div>
@@ -88,7 +88,7 @@ export default function TransactionHistory() {
     return (
       <div className="glass-card p-6">
         <h3 className="text-lg font-semibold mb-4">Recente transacties</h3>
-        <div className="text-center py-8 text-text-tertiary">
+        <div className="text-center py-8 text-slate-400">
           <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
           <p>Nog geen transacties</p>
           <p className="text-sm mt-1">Je transacties verschijnen hier zodra je ze maakt</p>
@@ -113,7 +113,7 @@ export default function TransactionHistory() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="glass p-4 rounded-xl hover:bg-gray-50 transition-colors group"
+                className="glass p-4 rounded-xl hover:bg-white/5 transition-colors group"
               >
                 <div className="flex items-center gap-4">
                   {/* Icon */}
@@ -143,7 +143,7 @@ export default function TransactionHistory() {
                         <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-text-tertiary">
+                    <div className="flex items-center gap-2 text-sm text-slate-400">
                       <span className="font-mono truncate">
                         {BlockchainService.formatAddress(otherAddress)}
                       </span>
@@ -159,7 +159,7 @@ export default function TransactionHistory() {
                         )}
                       </button>
                     </div>
-                    <div className="text-xs text-text-primary0 mt-1">
+                    <div className="text-xs text-slate-500 mt-1">
                       {formatTime(tx.timestamp)}
                     </div>
                   </div>
@@ -168,7 +168,7 @@ export default function TransactionHistory() {
                   <div className="text-right">
                     <div className={`font-semibold ${
                       tx.isError 
-                        ? 'text-text-primary0' 
+                        ? 'text-slate-500' 
                         : isSent 
                           ? 'text-orange-400' 
                           : 'text-emerald-400'

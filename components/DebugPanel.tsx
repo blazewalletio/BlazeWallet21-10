@@ -44,7 +44,7 @@ export default function DebugPanel() {
       <motion.button
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 left-4 z-50 glass-card p-3 rounded-full shadow-lg hover:bg-gray-100"
+        className="fixed bottom-4 left-4 z-50 glass-card p-3 rounded-full shadow-lg hover:bg-white/10"
         title="Debug Panel"
       >
         <Bug className="w-5 h-5 text-primary-400" />
@@ -67,7 +67,7 @@ export default function DebugPanel() {
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="glass p-2 rounded-lg hover:bg-gray-100"
+            className="glass p-2 rounded-lg hover:bg-white/10"
           >
             <X className="w-4 h-4" />
           </button>
@@ -76,7 +76,7 @@ export default function DebugPanel() {
         <div className="space-y-3 text-sm">
           {/* Current Network */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-text-tertiary text-xs mb-1">Netwerk</div>
+            <div className="text-slate-400 text-xs mb-1">Netwerk</div>
             <div className="flex items-center gap-2">
               <div 
                 className="w-6 h-6 rounded-full flex items-center justify-center text-sm"
@@ -86,14 +86,14 @@ export default function DebugPanel() {
               </div>
               <div>
                 <div className="font-semibold">{chain.name}</div>
-                <div className="text-xs text-text-tertiary">Chain ID: {chain.id}</div>
+                <div className="text-xs text-slate-400">Chain ID: {chain.id}</div>
               </div>
             </div>
           </div>
 
           {/* Wallet Address */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-text-tertiary text-xs mb-1">Jouw adres</div>
+            <div className="text-slate-400 text-xs mb-1">Jouw adres</div>
             <div className="font-mono text-xs break-all mb-2">{address}</div>
             <div className="flex gap-2">
               <button
@@ -117,7 +117,7 @@ export default function DebugPanel() {
 
           {/* Current Balance */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-text-tertiary text-xs mb-1">Balance in app</div>
+            <div className="text-slate-400 text-xs mb-1">Balance in app</div>
             <div className="text-xl font-bold">
               {balance} {chain.nativeCurrency.symbol}
             </div>
@@ -125,7 +125,7 @@ export default function DebugPanel() {
 
           {/* Manual Check */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-text-tertiary text-xs mb-2">Manual blockchain check</div>
+            <div className="text-slate-400 text-xs mb-2">Manual blockchain check</div>
             <button
               onClick={checkBalanceManually}
               disabled={isChecking}
@@ -135,7 +135,7 @@ export default function DebugPanel() {
             </button>
             {manualBalance && (
               <div className="text-xs">
-                <div className="text-text-tertiary">Result:</div>
+                <div className="text-slate-400">Result:</div>
                 <div className="font-mono font-bold text-primary-400">
                   {manualBalance} {!manualBalance.includes('Error') && chain.nativeCurrency.symbol}
                 </div>
@@ -145,8 +145,8 @@ export default function DebugPanel() {
 
           {/* RPC Endpoint */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-text-tertiary text-xs mb-1">RPC Endpoint</div>
-            <div className="font-mono text-xs break-all text-text-secondary">
+            <div className="text-slate-400 text-xs mb-1">RPC Endpoint</div>
+            <div className="font-mono text-xs break-all text-slate-300">
               {chain.rpcUrl}
             </div>
           </div>
@@ -164,8 +164,8 @@ export default function DebugPanel() {
 
           {/* Quick Network Switch */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-text-tertiary text-xs mb-2">Stuurde je naar verkeerd netwerk?</div>
-            <div className="text-xs text-text-secondary mb-2">
+            <div className="text-slate-400 text-xs mb-2">Stuurde je naar verkeerd netwerk?</div>
+            <div className="text-xs text-slate-300 mb-2">
               Click je adres bovenaan om van netwerk te switchen
             </div>
           </div>
