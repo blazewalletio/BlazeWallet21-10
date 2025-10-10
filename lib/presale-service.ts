@@ -71,13 +71,30 @@ export class PresaleService {
    */
   async getPresaleInfo(): Promise<PresaleInfo> {
     try {
+      console.log('🔍 Fetching presale info from contract:', CURRENT_PRESALE.presaleAddress);
+      
       const info = await this.presaleContract.getPresaleInfo();
       
+      console.log('📊 Raw contract result:', {
+        active: info.active,
+        finalized: info.finalized,
+        raised: info.raised.toString(),
+        tokensSold: info.tokensSold.toString(),
+        participantCount: info.participantCount.toString(),
+        timeRemaining: info.timeRemaining.toString(),
+      });
+      
       // Convert raised amount from wei to USD
-      // Assuming 1 BNB = ~$600 (you'd want to fetch real price)
       const bnbPrice = await this.getBNBPrice();
       const raisedBNB = parseFloat(ethers.formatEther(info.raised));
       const raisedUSD = raisedBNB * bnbPrice;
+      
+      console.log('💰 Conversion:', {
+        raisedBNB,
+        bnbPrice,
+        raisedUSD,
+        timeRemainingDays: Number(info.timeRemaining) / (24 * 60 * 60),
+      });
       
       return {
         active: info.active,
