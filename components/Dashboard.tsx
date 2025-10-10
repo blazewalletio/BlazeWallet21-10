@@ -368,28 +368,6 @@ export default function Dashboard() {
             </div>
           </motion.div>
 
-          {/* Quick Pay Highlight */}
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setShowQuickPay(true)}
-            className="glass-card relative overflow-hidden p-6 rounded-2xl subtle-shimmer cursor-pointer hover:bg-gray-50 transition-colors"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 animate-gradient" />
-            <div className="relative z-10 flex items-center gap-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center">
-                <Zap className="w-8 h-8 text-white" />
-              </div>
-              <div className="flex-1 text-left">
-                <div className="text-lg font-bold mb-1 text-gray-900">Quick Pay</div>
-                <div className="text-sm text-gray-600">Lightning fast payments</div>
-              </div>
-              <ChevronRight className="w-6 h-6 text-gray-400" />
-            </div>
-          </motion.button>
-
           {/* Quick Actions */}
           <div className="grid grid-cols-4 gap-3">
             <motion.button
