@@ -84,6 +84,16 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
         finalized: info.finalized,
       });
       
+      // Debug time formatting
+      const days = Math.floor(info.timeRemaining / (24 * 60 * 60 * 1000));
+      const hours = Math.floor((info.timeRemaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+      console.log('⏰ Time formatting debug:', {
+        timeRemainingMs: info.timeRemaining,
+        days,
+        hours,
+        formatted: `${days}d ${hours}h`
+      });
+      
       setPresaleInfo({
         ...presaleInfo,
         totalRaised: info.raised,

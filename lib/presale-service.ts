@@ -72,6 +72,7 @@ export class PresaleService {
   async getPresaleInfo(): Promise<PresaleInfo> {
     try {
       console.log('🔍 Fetching presale info from contract:', CURRENT_PRESALE.presaleAddress);
+      console.log('🔍 Using provider: Browser provider');
       
       const info = await this.presaleContract.getPresaleInfo();
       
@@ -89,23 +90,37 @@ export class PresaleService {
       const raisedBNB = parseFloat(ethers.formatEther(info.raised));
       const raisedUSD = raisedBNB * bnbPrice;
       
+      const timeRemainingSeconds = Number(info.timeRemaining);
+      const timeRemainingMs = timeRemainingSeconds * 1000;
+      
       console.log('💰 Conversion:', {
         raisedBNB,
         bnbPrice,
         raisedUSD,
-        timeRemainingDays: Number(info.timeRemaining) / (24 * 60 * 60),
+        timeRemainingSeconds,
+        timeRemainingMs,
+        timeRemainingDays: timeRemainingSeconds / (24 * 60 * 60),
       });
       
-      return {
+      const result = {
         active: info.active,
         finalized: info.finalized,
         raised: raisedUSD,
         tokensSold: parseFloat(ethers.formatUnits(info.tokensSold, 18)),
         participantCount: Number(info.participantCount),
-        timeRemaining: Number(info.timeRemaining) * 1000, // Convert to ms
+        timeRemaining: timeRemainingMs, // Convert seconds to ms
       };
+      
+      console.log('✅ Final result:', result);
+      
+      return result;
     } catch (error) {
-      console.error('Error getting presale info:', error);
+      console.error('❌ Error getting presale info:', error);
+      console.error('❌ Error details:', {
+        message: (error as any).message,
+        code: (error as any).code,
+        reason: (error as any).reason,
+      });
       throw error;
     }
   }
