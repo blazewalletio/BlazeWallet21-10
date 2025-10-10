@@ -91,7 +91,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                 <h2 className="text-2xl font-bold">Crypto ontvangen</h2>
                 <button
                   onClick={onClose}
-                  className="glass p-2 rounded-lg hover:bg-white/10"
+                  className="glass p-2 rounded-lg hover:bg-gray-100"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -99,7 +99,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
 
               <div className="space-y-6">
                 <div className="text-center">
-                  <p className="text-slate-400 mb-6">
+                  <p className="text-text-tertiary mb-6">
                     Scan deze QR code of deel je wallet adres
                   </p>
 
@@ -128,11 +128,11 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
 
                 {/* Address */}
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">
+                  <label className="text-sm text-text-tertiary mb-2 block">
                     Jouw Ethereum adres
                   </label>
-                  <div className="glass-card bg-slate-900/50">
-                    <div className="font-mono text-sm break-all text-slate-300">
+                  <div className="glass-card bg-background-secondary/50">
+                    <div className="font-mono text-sm break-all text-text-secondary">
                       {address}
                     </div>
                   </div>
@@ -179,7 +179,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
 
                 {/* Network selector placeholder */}
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">
+                  <label className="text-sm text-text-tertiary mb-2 block">
                     Netwerk
                   </label>
                   <div className="glass-card flex items-center gap-3">
@@ -188,7 +188,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                     </div>
                     <div>
                       <div className="font-semibold">Ethereum</div>
-                      <div className="text-xs text-slate-400">Mainnet</div>
+                      <div className="text-xs text-text-tertiary">Mainnet</div>
                     </div>
                   </div>
                 </div>

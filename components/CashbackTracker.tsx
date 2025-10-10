@@ -27,7 +27,7 @@ export default function CashbackTracker() {
           <Gift className="w-6 h-6 text-green-400" />
           Cashback Rewards
         </h2>
-        <p className="text-slate-400">
+        <p className="text-text-tertiary">
           Earn 2% cashback in BLAZE on every transaction
         </p>
       </div>
@@ -44,7 +44,7 @@ export default function CashbackTracker() {
             <span className="text-sm font-semibold">Total Earned</span>
           </div>
           <div className="text-3xl font-bold text-green-400">{stats.totalEarned} BLAZE</div>
-          <div className="text-sm text-slate-400 mt-1">
+          <div className="text-sm text-text-tertiary mt-1">
             ≈ ${(stats.totalEarned * 0.01).toFixed(2)}
           </div>
         </motion.div>
@@ -53,7 +53,7 @@ export default function CashbackTracker() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-slate-800/50 border border-slate-700 rounded-xl p-6"
+          className="bg-gray-100/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-2 text-blue-400 mb-2">
             <TrendingUp className="w-5 h-5" />
@@ -69,14 +69,14 @@ export default function CashbackTracker() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-slate-800/50 border border-slate-700 rounded-xl p-6"
+          className="bg-gray-100/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-2 text-orange-400 mb-2">
             <Zap className="w-5 h-5" />
             <span className="text-sm font-semibold">Pending</span>
           </div>
           <div className="text-3xl font-bold text-orange-400">{stats.pending} BLAZE</div>
-          <div className="text-sm text-slate-400 mt-1">
+          <div className="text-sm text-text-tertiary mt-1">
             Claimable now
           </div>
         </motion.div>
@@ -85,14 +85,14 @@ export default function CashbackTracker() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-slate-800/50 border border-slate-700 rounded-xl p-6"
+          className="bg-gray-100/50 border border-gray-200 rounded-xl p-6"
         >
           <div className="flex items-center gap-2 text-purple-400 mb-2">
             <TrendingUp className="w-5 h-5" />
             <span className="text-sm font-semibold">Transactions</span>
           </div>
           <div className="text-3xl font-bold">{stats.transactions}</div>
-          <div className="text-sm text-slate-400 mt-1">
+          <div className="text-sm text-text-tertiary mt-1">
             Total rewarded
           </div>
         </motion.div>
@@ -107,7 +107,7 @@ export default function CashbackTracker() {
               <span className="text-2xl">💸</span>
             </div>
             <h4 className="font-semibold mb-1">Make a Transaction</h4>
-            <p className="text-slate-400">
+            <p className="text-text-tertiary">
               Swap, send, or buy crypto in Blaze Wallet
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function CashbackTracker() {
               <span className="text-2xl">🎁</span>
             </div>
             <h4 className="font-semibold mb-1">Earn 2% Cashback</h4>
-            <p className="text-slate-400">
+            <p className="text-text-tertiary">
               Automatically receive BLAZE tokens back
             </p>
           </div>
@@ -125,7 +125,7 @@ export default function CashbackTracker() {
               <span className="text-2xl">💰</span>
             </div>
             <h4 className="font-semibold mb-1">Claim Rewards</h4>
-            <p className="text-slate-400">
+            <p className="text-text-tertiary">
               Withdraw or stake your earned BLAZE
             </p>
           </div>
@@ -133,13 +133,13 @@ export default function CashbackTracker() {
       </div>
 
       {/* Recent Cashback */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+      <div className="bg-gray-100/50 border border-gray-200 rounded-xl p-6">
         <h3 className="font-semibold mb-4">Recent Cashback</h3>
         <div className="space-y-3">
           {recentCashback.map((item, index) => (
             <div
               key={index}
-              className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0"
+              className="flex items-center justify-between py-3 border-b border-gray-200 last:border-0"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
@@ -147,7 +147,7 @@ export default function CashbackTracker() {
                 </div>
                 <div>
                   <div className="font-semibold">{item.type} Cashback</div>
-                  <div className="text-sm text-slate-400">{item.date}</div>
+                  <div className="text-sm text-text-tertiary">{item.date}</div>
                 </div>
               </div>
               <div className="text-right">

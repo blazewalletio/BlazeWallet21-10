@@ -4,44 +4,44 @@
 
 @layer base {
   :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
   }
 
   * {
-    @apply border-slate-800;
+    @apply border-gray-200;
   }
 
   body {
-    @apply bg-slate-950 text-slate-50;
+    @apply bg-white text-text-primary;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Glassmorphism utilities */
+  /* Vanilla Neon Glass Effect - Light Mode */
   .glass {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+    @apply backdrop-blur-xl bg-white/80 border border-gray-200/60;
   }
 
   .glass-card {
-    @apply glass rounded-2xl p-6 shadow-xl;
+    @apply glass rounded-2xl p-6 shadow-soft;
   }
 
-  /* Scrollbar styling */
+  /* Scrollbar styling - Light Mode */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-slate-900;
+    @apply bg-gray-100;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-700 rounded-full;
+    @apply bg-gray-300 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-600;
+    @apply bg-gray-400;
   }
 
   /* Smooth transitions */
@@ -52,27 +52,53 @@
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-primary text-white rounded-xl font-semibold;
-    @apply hover:shadow-lg hover:shadow-primary-500/50 hover:scale-105;
+    @apply px-6 py-3 bg-gradient-primary text-text-primary rounded-xl font-semibold border-2 border-neon-peach;
+    @apply hover:shadow-neon-peach hover:scale-105;
     @apply active:scale-95 transition-all duration-200;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 glass-card text-slate-200 rounded-xl font-semibold;
-    @apply hover:bg-white/10 hover:scale-105 active:scale-95;
+    @apply px-6 py-3 bg-white border-2 border-neon-lilac text-text-primary rounded-xl font-semibold;
+    @apply hover:bg-neon-lilac/10 hover:shadow-neon-lilac hover:scale-105 active:scale-95;
     @apply transition-all duration-200;
   }
 
   .input-field {
-    @apply w-full glass-card px-4 py-3 text-slate-100 placeholder-slate-500;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary-500/50;
+    @apply w-full bg-white border-2 border-gray-200 px-4 py-3 text-text-primary placeholder-text-tertiary rounded-xl;
+    @apply focus:outline-none focus:border-neon-peach focus:shadow-neon-sm;
     @apply transition-all duration-200;
   }
 
   .card-hover {
     @apply transform transition-all duration-300;
     @apply hover:scale-[1.02] hover:-translate-y-1;
-    @apply hover:shadow-2xl hover:shadow-primary-500/20;
+    @apply hover:shadow-soft-lg;
+  }
+
+  /* Neon Border Effect */
+  .neon-border {
+    @apply border-2 border-transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF) border-box;
+  }
+
+  .neon-border-animate {
+    @apply border-2 border-transparent relative;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF) border-box;
+  }
+
+  .neon-border-animate::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotate-gradient 3s linear infinite;
   }
 }
 
@@ -90,16 +116,16 @@
   animation: shimmer 2s infinite linear;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(255, 212, 179, 0) 0%,
+    rgba(255, 212, 179, 0.2) 50%,
+    rgba(255, 212, 179, 0) 100%
   );
   background-size: 1000px 100%;
 }
 
-/* Loading skeleton */
+/* Loading skeleton - Light Mode */
 .skeleton {
-  @apply animate-pulse bg-slate-800 rounded;
+  @apply animate-pulse bg-gray-200 rounded;
 }
 
 /* Shake animation */
@@ -109,7 +135,7 @@
   20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-/* Subtle shimmer effect */
+/* Subtle shimmer effect - Pastel Neon */
 @keyframes subtle-shimmer {
   0% {
     background-position: -200% center;
@@ -129,9 +155,9 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(139, 92, 246, 0.05) 25%,
-    rgba(59, 130, 246, 0.08) 50%,
-    rgba(139, 92, 246, 0.05) 75%,
+    rgba(255, 212, 179, 0.15) 25%,
+    rgba(230, 179, 255, 0.15) 50%,
+    rgba(179, 240, 255, 0.15) 75%,
     transparent 100%
   );
   background-size: 200% 100%;
@@ -140,15 +166,15 @@
   z-index: 1;
 }
 
-/* Subtle glow for buttons */
+/* Subtle glow for buttons - Pastel Neon */
 @keyframes subtle-glow {
   0%, 100% {
-    box-shadow: 0 4px 20px rgba(251, 146, 60, 0.3),
-                0 0 0 0 rgba(251, 146, 60, 0);
+    box-shadow: 0 4px 20px rgba(255, 212, 179, 0.3),
+                0 0 0 0 rgba(255, 212, 179, 0);
   }
   50% {
-    box-shadow: 0 4px 30px rgba(251, 146, 60, 0.5),
-                0 0 0 4px rgba(251, 146, 60, 0.1);
+    box-shadow: 0 4px 30px rgba(255, 212, 179, 0.5),
+                0 0 0 4px rgba(255, 212, 179, 0.2);
   }
 }
 
@@ -233,4 +259,61 @@
 
 .slide-up-fade {
   animation: slide-up-fade 0.5s ease-out forwards;
+}
+
+/* Neon Glow Pulse - Pastel */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 212, 179, 0.4),
+                0 0 20px rgba(230, 179, 255, 0.3),
+                0 0 30px rgba(179, 240, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 212, 179, 0.6),
+                0 0 30px rgba(230, 179, 255, 0.5),
+                0 0 40px rgba(179, 240, 255, 0.4);
+  }
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+/* Rotate gradient for animated borders */
+@keyframes rotate-gradient {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* Floating animation with neon glow */
+@keyframes float-glow {
+  0%, 100% {
+    transform: translateY(0px);
+    box-shadow: 0 5px 15px rgba(255, 212, 179, 0.3);
+  }
+  50% {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 25px rgba(255, 212, 179, 0.5);
+  }
+}
+
+.float-glow {
+  animation: float-glow 3s ease-in-out infinite;
+}
+
+/* Text gradient effect */
+.text-gradient {
+  background: linear-gradient(135deg, #FFD4B3, #E6B3FF, #B3F0FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Light mode modal backdrop */
+.modal-backdrop {
+  @apply bg-white/80 backdrop-blur-md;
 }

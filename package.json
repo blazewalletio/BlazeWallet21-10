@@ -1,1 +1,44 @@
-
+{
+  "name": "blaze-wallet",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@uniswap/sdk-core": "^7.7.2",
+    "@uniswap/smart-order-router": "^4.22.21",
+    "@uniswap/v3-sdk": "^3.25.2",
+    "@zxing/library": "^0.21.3",
+    "bip39": "^3.1.0",
+    "canvas-confetti": "^1.9.3",
+    "ethers": "^6.13.0",
+    "framer-motion": "^11.3.0",
+    "html5-qrcode": "^2.3.8",
+    "lucide-react": "^0.400.0",
+    "next": "14.2.5",
+    "qrcode": "^1.5.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-number-format": "^5.4.4",
+    "react-spring": "^10.0.3",
+    "recharts": "^2.12.7",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^20",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

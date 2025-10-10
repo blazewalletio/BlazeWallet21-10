@@ -1,8 +1,10 @@
 'use client';
-import BlazeLogo from './BlazeLogo';import { useState } from 'react';
+
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, CheckCircle2, Copy, Check } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
+import BlazeLogo from './BlazeLogo';
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -87,10 +89,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 tracking-tight">
               Blaze
             </h1>
-            <p className="text-slate-400 text-lg mb-2">
+            <p className="text-text-tertiary text-lg mb-2">
               Lightning fast crypto
             </p>
-              <div className="flex gap-4 justify-center text-sm text-slate-500 mb-8">
+              <div className="flex gap-4 justify-center text-sm text-text-primary0 mb-8">
                 <span className="flex items-center gap-1">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                   Veilig
@@ -134,7 +136,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           >
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-2">Je recovery phrase</h2>
-              <p className="text-slate-400">
+              <p className="text-text-tertiary">
                 Bewaar deze 12 woorden veilig. Je hebt ze nodig om je wallet te herstellen.
               </p>
             </div>
@@ -146,8 +148,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                     key={index}
                     className="glass p-3 rounded-lg text-center"
                   >
-                    <div className="text-xs text-slate-500 mb-1">{index + 1}</div>
-                    <div className="font-mono text-slate-200">{word}</div>
+                    <div className="text-xs text-text-primary0 mb-1">{index + 1}</div>
+                    <div className="font-mono text-text-secondary">{word}</div>
                   </div>
                 ))}
               </div>
@@ -196,7 +198,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           >
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-2">Verificatie</h2>
-              <p className="text-slate-400">
+              <p className="text-text-tertiary">
                 Vul de juiste woorden in om te bevestigen dat je ze hebt opgeschreven.
               </p>
             </div>
@@ -204,7 +206,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             <div className="space-y-4">
               {wordsToVerify.map((index) => (
                 <div key={index} className="space-y-2">
-                  <label className="text-sm text-slate-400">
+                  <label className="text-sm text-text-tertiary">
                     Woord #{index + 1}
                   </label>
                   <input
@@ -246,7 +248,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           >
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-2">Wallet importeren</h2>
-              <p className="text-slate-400">
+              <p className="text-text-tertiary">
                 Vul je 12-woorden recovery phrase in om je wallet te herstellen.
               </p>
             </div>

@@ -189,14 +189,14 @@ export default function Dashboard() {
     <>
       <div className="min-h-screen pb-24">
         {/* Header with Network Selector */}
-        <div className="sticky top-0 z-30 backdrop-blur-xl bg-slate-950/80 border-b border-white/5">
+        <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/80 border-b border-gray-200">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowChainSelector(true)}
-                  className="flex items-center gap-2 glass-card px-4 py-2 rounded-xl hover:bg-white/10"
+                  className="flex items-center gap-2 glass-card px-4 py-2 rounded-xl hover:bg-gray-100"
                 >
                   <div 
                     className="w-8 h-8 rounded-full flex items-center justify-center text-lg"
@@ -206,9 +206,9 @@ export default function Dashboard() {
                   </div>
                   <div className="text-left">
                     <div className="text-sm font-semibold">{chain.shortName}</div>
-                    <div className="text-xs text-slate-400 font-mono">{formattedAddress}</div>
+                    <div className="text-xs text-text-tertiary font-mono">{formattedAddress}</div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <ChevronRight className="w-4 h-4 text-text-tertiary" />
                 </motion.button>
               </div>
 
@@ -216,7 +216,7 @@ export default function Dashboard() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowFounderDeploy(true)}
-                  className="glass-card px-3 py-2 rounded-xl hover:bg-white/10 flex items-center gap-2 bg-gradient-primary"
+                  className="glass-card px-3 py-2 rounded-xl hover:bg-gray-100 flex items-center gap-2 bg-gradient-primary"
                   title="Deploy Arc Token"
                 >
                   <Rocket className="w-5 h-5" />
@@ -226,14 +226,14 @@ export default function Dashboard() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => fetchData(true)}
                   disabled={isRefreshing}
-                  className="glass-card p-3 rounded-xl hover:bg-white/10"
+                  className="glass-card p-3 rounded-xl hover:bg-gray-100"
                 >
                   <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowSettings(true)}
-                  className="glass-card p-3 rounded-xl hover:bg-white/10"
+                  className="glass-card p-3 rounded-xl hover:bg-gray-100"
                 >
                   <Settings className="w-5 h-5" />
                 </motion.button>
@@ -247,13 +247,13 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card relative overflow-hidden card-3d subtle-shimmer"
+            className="bg-white border-2 neon-border-animate relative overflow-hidden card-3d shadow-soft-lg rounded-2xl p-6"
           >
-            <div className="absolute inset-0 bg-gradient-primary opacity-10 animate-gradient" />
+            <div className="absolute inset-0 bg-gradient-primary opacity-5 animate-gradient" />
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <div className="text-sm text-slate-400 mb-2">Portfolio waarde</div>
+                  <div className="text-sm text-text-tertiary mb-2">Portfolio waarde</div>
                   <div className="flex items-center gap-3 mb-2">
                     {showBalance ? (
                       <>
@@ -267,7 +267,7 @@ export default function Dashboard() {
                         <motion.button
                           whileTap={{ scale: 0.9 }}
                           onClick={() => setShowBalance(false)}
-                          className="text-slate-400 hover:text-slate-300"
+                          className="text-text-tertiary hover:text-text-secondary"
                         >
                           <Eye className="w-5 h-5" />
                         </motion.button>
@@ -278,7 +278,7 @@ export default function Dashboard() {
                         <motion.button
                           whileTap={{ scale: 0.9 }}
                           onClick={() => setShowBalance(true)}
-                          className="text-slate-400 hover:text-slate-300"
+                          className="text-text-tertiary hover:text-text-secondary"
                         >
                           <EyeOff className="w-5 h-5" />
                         </motion.button>
@@ -357,8 +357,8 @@ export default function Dashboard() {
                     onClick={() => setSelectedTimeRange(range.hours)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       selectedTimeRange === range.hours
-                        ? 'bg-primary-500 text-white shadow-lg'
-                        : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                        ? 'bg-gradient-primary text-text-primary border-2 border-neon-peach shadow-neon-sm font-bold'
+                        : 'bg-white border-2 border-gray-200 text-text-secondary hover:border-neon-lilac hover:shadow-neon-sm'
                     }`}
                   >
                     {range.label}
@@ -375,7 +375,7 @@ export default function Dashboard() {
             transition={{ delay: 0.25 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setShowQuickPay(true)}
-            className="glass-card relative overflow-hidden p-6 rounded-2xl subtle-shimmer cursor-pointer hover:bg-white/5 transition-colors"
+            className="glass-card relative overflow-hidden p-6 rounded-2xl subtle-shimmer cursor-pointer hover:bg-gray-50 transition-colors"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 animate-gradient" />
             <div className="relative z-10 flex items-center gap-4">
@@ -384,9 +384,9 @@ export default function Dashboard() {
               </div>
               <div className="flex-1 text-left">
                 <div className="text-lg font-bold mb-1">Quick Pay</div>
-                <div className="text-sm text-slate-400">Lightning fast payments</div>
+                <div className="text-sm text-text-tertiary">Lightning fast payments</div>
               </div>
-              <ChevronRight className="w-6 h-6 text-slate-400" />
+              <ChevronRight className="w-6 h-6 text-text-tertiary" />
             </div>
           </motion.button>
 
@@ -398,9 +398,9 @@ export default function Dashboard() {
               transition={{ delay: 0.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowBuyModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="bg-white border-2 border-gray-200 hover:border-neon-aqua card-hover p-4 text-center rounded-xl shadow-soft hover:shadow-neon-aqua transition-all"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-neon-aqua to-neon-lilac rounded-xl flex items-center justify-center mb-2 shadow-neon-sm">
                 <CreditCard className="w-6 h-6 text-white" />
               </div>
               <div className="text-sm font-semibold">Koop</div>
@@ -412,9 +412,9 @@ export default function Dashboard() {
               transition={{ delay: 0.15 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowSendModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="bg-white border-2 border-gray-200 hover:border-neon-peach card-hover p-4 text-center rounded-xl shadow-soft hover:shadow-neon-peach transition-all"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-neon-peach to-neon-lemon rounded-xl flex items-center justify-center mb-2 shadow-neon-sm">
                 <ArrowUpRight className="w-6 h-6 text-white" />
               </div>
               <div className="text-sm font-semibold">Stuur</div>
@@ -426,9 +426,9 @@ export default function Dashboard() {
               transition={{ delay: 0.2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowReceiveModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="bg-white border-2 border-gray-200 hover:border-neon-lilac card-hover p-4 text-center rounded-xl shadow-soft hover:shadow-neon-lilac transition-all"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-neon-lilac to-neon-aqua rounded-xl flex items-center justify-center mb-2 shadow-neon-sm">
                 <ArrowDownLeft className="w-6 h-6 text-white" />
               </div>
               <div className="text-sm font-semibold">Ontvang</div>
@@ -440,9 +440,9 @@ export default function Dashboard() {
               transition={{ delay: 0.25 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowSwapModal(true)}
-              className="glass-card card-hover p-4 text-center"
+              className="bg-white border-2 border-gray-200 hover:border-neon-lemon card-hover p-4 text-center rounded-xl shadow-soft hover:shadow-neon-md transition-all"
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2">
+              <div className="w-12 h-12 mx-auto bg-gradient-primary rounded-xl flex items-center justify-center mb-2 shadow-neon-sm">
                 <Repeat className="w-6 h-6 text-white" />
               </div>
               <div className="text-sm font-semibold">Swap</div>
@@ -467,7 +467,7 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="glass-card"
+            className="bg-white border-2 neon-border rounded-2xl p-6 shadow-soft-lg"
           >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold flex items-center gap-2">
@@ -481,78 +481,78 @@ export default function Dashboard() {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowStaking(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                className="bg-white border-2 border-gray-200 p-4 rounded-xl hover:border-neon-peach hover:shadow-neon-sm transition-all text-left"
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neon-peach to-neon-lemon rounded-lg flex items-center justify-center mb-3 shadow-neon-sm">
                   <Lock className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Staking</div>
-                <div className="text-xs text-slate-400">Earn up to 25% APY</div>
+                <div className="text-xs text-text-tertiary">Earn up to 25% APY</div>
               </motion.button>
 
               {/* Cashback */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowCashback(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                className="bg-white border-2 border-gray-200 p-4 rounded-xl hover:border-neon-lilac hover:shadow-neon-sm transition-colors text-left"
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neon-aqua to-neon-lilac rounded-lg flex items-center justify-center mb-3">
                   <Gift className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Cashback</div>
-                <div className="text-xs text-slate-400">2% on all transactions</div>
+                <div className="text-xs text-text-tertiary">2% on all transactions</div>
               </motion.button>
 
               {/* Governance */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowGovernance(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                className="bg-white border-2 border-gray-200 p-4 rounded-xl hover:border-neon-lilac hover:shadow-neon-sm transition-colors text-left"
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center mb-3">
                   <Vote className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Governance</div>
-                <div className="text-xs text-slate-400">Vote on proposals</div>
+                <div className="text-xs text-text-tertiary">Vote on proposals</div>
               </motion.button>
 
               {/* Launchpad */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowLaunchpad(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                className="bg-white border-2 border-gray-200 p-4 rounded-xl hover:border-neon-lilac hover:shadow-neon-sm transition-colors text-left"
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neon-aqua to-neon-peach rounded-lg flex items-center justify-center mb-3">
                   <Rocket className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Launchpad</div>
-                <div className="text-xs text-slate-400">Early access to IDOs</div>
+                <div className="text-xs text-text-tertiary">Early access to IDOs</div>
               </motion.button>
 
               {/* Referrals */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowReferrals(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                className="bg-white border-2 border-gray-200 p-4 rounded-xl hover:border-neon-lilac hover:shadow-neon-sm transition-colors text-left"
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-neon-lemon to-neon-peach rounded-lg flex items-center justify-center mb-3">
                   <Users className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">Referrals</div>
-                <div className="text-xs text-slate-400">Earn 50 BLAZE/referral</div>
+                <div className="text-xs text-text-tertiary">Earn 50 BLAZE/referral</div>
               </motion.button>
 
               {/* NFT Collection */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowNFTMint(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                className="bg-white border-2 border-gray-200 p-4 rounded-xl hover:border-neon-lilac hover:shadow-neon-sm transition-colors text-left"
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center mb-3">
                   <Palette className="w-5 h-5 text-white" />
                 </div>
                 <div className="font-semibold mb-1">NFT Skins</div>
-                <div className="text-xs text-slate-400">Exclusive wallet themes</div>
+                <div className="text-xs text-text-tertiary">Exclusive wallet themes</div>
               </motion.button>
             </div>
           </motion.div>
@@ -572,7 +572,7 @@ export default function Dashboard() {
               {/* Native Token */}
               <motion.div
                 whileTap={{ scale: 0.98 }}
-                className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
+                className="glass p-4 rounded-xl flex items-center justify-between hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-4">
                   <div 
@@ -583,7 +583,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <div className="font-semibold">{chain.nativeCurrency.name}</div>
-                    <div className="text-sm text-slate-400">
+                    <div className="text-sm text-text-tertiary">
                       {parseFloat(balance).toFixed(4)} {chain.nativeCurrency.symbol}
                     </div>
                   </div>
@@ -608,7 +608,7 @@ export default function Dashboard() {
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ delay: index * 0.05 }}
                     whileTap={{ scale: 0.98 }}
-                    className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
+                    className="glass p-4 rounded-xl flex items-center justify-between hover:bg-gray-100 transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-600 rounded-full flex items-center justify-center text-xl">
@@ -616,7 +616,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <div className="font-semibold">{token.name}</div>
-                        <div className="text-sm text-slate-400">
+                        <div className="text-sm text-text-tertiary">
                           {parseFloat(token.balance || '0').toFixed(4)} {token.symbol}
                         </div>
                       </div>
@@ -632,7 +632,7 @@ export default function Dashboard() {
               </AnimatePresence>
 
               {tokens.length === 0 && (
-                <div className="text-center py-8 text-slate-400">
+                <div className="text-center py-8 text-text-tertiary">
                   <div className="text-3xl mb-2">🪙</div>
                   <p className="text-sm">Nog geen tokens</p>
                   <button
@@ -674,12 +674,12 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-slate-950 overflow-y-auto"
+            className="fixed inset-0 z-50 bg-white overflow-y-auto"
           >
             <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowReferrals(false)}
-                className="mb-4 text-slate-400 hover:text-white"
+                className="mb-4 text-text-tertiary hover:text-white"
               >
                 ← Back to Dashboard
               </button>
@@ -695,12 +695,12 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-slate-950 overflow-y-auto"
+            className="fixed inset-0 z-50 bg-white overflow-y-auto"
           >
             <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowCashback(false)}
-                className="mb-4 text-slate-400 hover:text-white"
+                className="mb-4 text-text-tertiary hover:text-white"
               >
                 ← Back to Dashboard
               </button>
@@ -725,13 +725,13 @@ export default function Dashboard() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-2xl pointer-events-auto"
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-background-secondary rounded-2xl pointer-events-auto"
             >
-              <div className="sticky top-0 z-10 bg-slate-900 border-b border-slate-700/50 px-6 py-4 flex justify-between items-center">
+              <div className="sticky top-0 z-10 bg-background-secondary border-b border-gray-200/50 px-6 py-4 flex justify-between items-center">
                 <h2 className="text-xl font-bold">🔥 Deploy Blaze Token</h2>
                 <button
                   onClick={() => setShowFounderDeploy(false)}
-                  className="text-slate-400 hover:text-white transition-colors"
+                  className="text-text-tertiary hover:text-white transition-colors"
                 >
                   ✕
                 </button>
@@ -751,7 +751,7 @@ export default function Dashboard() {
         transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setShowQuickPay(true)}
-        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full shadow-2xl flex items-center justify-center subtle-glow hover:scale-110 transition-transform duration-300"
+        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-primary rounded-full shadow-soft-lg border-2 border-neon-peach flex items-center justify-center neon-pulse hover:scale-110 transition-transform duration-300"
         title="Quick Pay"
       >
         <Zap className="w-8 h-8 text-white" />

@@ -59,7 +59,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={onClose}
-                    className="glass p-2 rounded-lg hover:bg-white/10"
+                    className="glass p-2 rounded-lg hover:bg-gray-100"
                   >
                     <X className="w-5 h-5" />
                   </motion.button>
@@ -69,19 +69,19 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div className="space-y-6">
                 {/* Account Info */}
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-text-tertiary mb-3 flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     Account
                   </h3>
                   <div className="glass-card">
-                    <div className="text-sm text-slate-400 mb-1">Wallet adres</div>
+                    <div className="text-sm text-text-tertiary mb-1">Wallet adres</div>
                     <div className="font-mono text-sm break-all">{address}</div>
                   </div>
                 </div>
 
                 {/* Recovery Phrase */}
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-text-tertiary mb-3 flex items-center gap-2">
                     <Key className="w-4 h-4" />
                     Beveiliging
                   </h3>
@@ -118,7 +118,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           <div className="grid grid-cols-3 gap-2 text-sm font-mono">
                             {mnemonic.split(' ').map((word, index) => (
                               <div key={index} className="glass p-2 rounded text-center">
-                                <span className="text-slate-500 text-xs">{index + 1}.</span>
+                                <span className="text-text-primary0 text-xs">{index + 1}.</span>
                                 {' '}{word}
                               </div>
                             ))}
@@ -155,36 +155,36 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
                 {/* Preferences */}
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-400 mb-3">
+                  <h3 className="text-sm font-semibold text-text-tertiary mb-3">
                     Voorkeuren
                   </h3>
                   
                   <div className="space-y-3">
                     <div className="glass-card flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <Bell className="w-5 h-5 text-slate-400" />
+                        <Bell className="w-5 h-5 text-text-tertiary" />
                         <div>
                           <div className="font-semibold text-sm">Notificaties</div>
-                          <div className="text-xs text-slate-400">Transactie updates</div>
+                          <div className="text-xs text-text-tertiary">Transactie updates</div>
                         </div>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
                       </label>
                     </div>
 
                     <div className="glass-card flex items-center justify-between opacity-50">
                       <div className="flex items-center gap-3">
-                        <Moon className="w-5 h-5 text-slate-400" />
+                        <Moon className="w-5 h-5 text-text-tertiary" />
                         <div>
                           <div className="font-semibold text-sm">Dark mode</div>
-                          <div className="text-xs text-slate-400">Standaard aan</div>
+                          <div className="text-xs text-text-tertiary">Standaard aan</div>
                         </div>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" defaultChecked disabled />
-                        <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
                       </label>
                     </div>
                   </div>
@@ -234,7 +234,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </div>
 
                 {/* App Info */}
-                <div className="text-center text-sm text-slate-400 pb-8">
+                <div className="text-center text-sm text-text-tertiary pb-8">
                   <div className="mb-2 font-semibold text-lg bg-gradient-primary bg-clip-text text-transparent">Blaze v2.0</div>
                   <div className="text-xs">Lightning fast crypto</div>
                 </div>

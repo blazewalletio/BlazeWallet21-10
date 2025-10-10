@@ -1,5 +1,7 @@
 'use client';
-import BlazeLogo from './BlazeLogo';import { motion } from 'framer-motion';
+
+import { motion } from 'framer-motion';
+import BlazeLogo from './BlazeLogo';
 
 export default function SplashScreen() {
   return (
@@ -91,7 +93,7 @@ export default function SplashScreen() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          className="text-slate-400 text-lg"
+          className="text-text-tertiary text-lg"
         >
           Lightning fast crypto
         </motion.p>

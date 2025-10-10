@@ -54,7 +54,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="glass p-2 rounded-lg hover:bg-white/10"
+                  className="glass p-2 rounded-lg hover:bg-gray-100"
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
@@ -62,7 +62,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
 
               {/* Search */}
               <div className="relative mb-6">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -74,13 +74,13 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
 
               {/* Popular Tokens */}
               <div className="space-y-3 overflow-y-auto max-h-[50vh] mb-6">
-                <h3 className="text-sm font-semibold text-slate-400 mb-3">Populaire tokens</h3>
+                <h3 className="text-sm font-semibold text-text-tertiary mb-3">Populaire tokens</h3>
                 {filteredTokens.map((token) => (
                   <motion.button
                     key={token.address}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleAddToken(token)}
-                    className="w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10"
+                    className="w-full glass p-4 rounded-xl flex items-center justify-between hover:bg-gray-100"
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-600 rounded-full flex items-center justify-center text-lg">
@@ -88,15 +88,15 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
                       </div>
                       <div className="text-left">
                         <div className="font-semibold">{token.symbol}</div>
-                        <div className="text-sm text-slate-400">{token.name}</div>
+                        <div className="text-sm text-text-tertiary">{token.name}</div>
                       </div>
                     </div>
-                    <Plus className="w-5 h-5 text-slate-400" />
+                    <Plus className="w-5 h-5 text-text-tertiary" />
                   </motion.button>
                 ))}
 
                 {filteredTokens.length === 0 && (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-text-tertiary">
                     <div className="text-3xl mb-2">🔍</div>
                     <p className="text-sm">Geen tokens gevonden</p>
                   </div>
