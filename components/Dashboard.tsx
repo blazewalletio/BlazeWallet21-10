@@ -674,15 +674,15 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
           >
-            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowStaking(false)}
-                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Dashboard
+                Terug naar Dashboard
               </button>
               <StakingDashboard />
             </div>
@@ -696,15 +696,15 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
           >
-            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowGovernance(false)}
-                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Dashboard
+                Terug naar Dashboard
               </button>
               <GovernanceDashboard />
             </div>
@@ -718,15 +718,15 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
           >
-            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowLaunchpad(false)}
-                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Dashboard
+                Terug naar Dashboard
               </button>
               <LaunchpadDashboard />
             </div>
@@ -740,15 +740,15 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
           >
-            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowNFTMint(false)}
-                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Dashboard
+                Terug naar Dashboard
               </button>
               <NFTMintDashboard />
             </div>
@@ -762,15 +762,15 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
           >
-            <div className="pointer-events-auto max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="max-w-4xl mx-auto p-6">
               <button
                 onClick={() => setShowPresale(false)}
-                className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Dashboard
+                Terug naar Dashboard
               </button>
               <PresaleDashboard />
             </div>
@@ -891,5 +891,6 @@ export default function Dashboard() {
     </>
   );
 }
+
 
 
