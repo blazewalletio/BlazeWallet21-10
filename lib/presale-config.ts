@@ -2,8 +2,8 @@ export const PRESALE_CONFIG = {
   // BSC TESTNET (voor testen)
   testnet: {
     chainId: 97,
-    presaleAddress: '', // Fill in after deployment
-    tokenAddress: '', // Fill in after deployment
+    presaleAddress: '0xf1898f9d831e3bEbC137e006914205810cD09935',
+    tokenAddress: '0x336063dE7E7FB365C40dd3f9Cc7FDa52B75b8Cad',
     rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
     explorerUrl: 'https://testnet.bscscan.com',
   },
