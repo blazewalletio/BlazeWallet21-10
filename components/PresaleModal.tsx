@@ -42,6 +42,10 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
 
   const progress = (presaleInfo.totalRaised / presaleInfo.hardCap) * 100;
   const tokensYouGet = parseFloat(contributionAmount || '0') / presaleInfo.tokenPrice;
+  
+  // Determine presale status
+  const isPresaleActive = presaleInfo.active && !presaleInfo.finalized && presaleInfo.timeRemaining > 0;
+  const isPresaleEnded = !presaleInfo.active || presaleInfo.finalized || presaleInfo.timeRemaining <= 0;
 
   // Load presale data when modal opens
   useEffect(() => {
@@ -71,6 +75,15 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
       
       // Load presale info
       const info = await presaleService.getPresaleInfo();
+      
+      console.log('🔍 Presale info from service:', {
+        raised: info.raised,
+        participants: info.participantCount,
+        timeRemaining: info.timeRemaining,
+        active: info.active,
+        finalized: info.finalized,
+      });
+      
       setPresaleInfo({
         ...presaleInfo,
         totalRaised: info.raised,
@@ -354,7 +367,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
                   )}
 
                   {/* Show contribute button only if presale is active */}
-                  {presaleInfo.active && !presaleInfo.finalized && (
+                  {isPresaleActive && (
                     <button
                       onClick={handleContribute}
                       disabled={isContributing || !contributionAmount || parseFloat(contributionAmount) < presaleInfo.minContribution}
@@ -375,10 +388,13 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
                   )}
                   
                   {/* Show message if presale ended */}
-                  {!presaleInfo.active && !presaleInfo.finalized && (
+                  {isPresaleEnded && (
                     <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
                       <p className="text-sm text-yellow-700 font-semibold">
                         ⏰ Presale has ended. Waiting for finalization...
+                      </p>
+                      <p className="text-xs text-yellow-600 mt-1">
+                        Active: {presaleInfo.active.toString()}, Time: {presaleInfo.timeRemaining}ms
                       </p>
                     </div>
                   )}

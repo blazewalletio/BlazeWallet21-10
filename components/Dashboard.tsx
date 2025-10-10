@@ -99,6 +99,13 @@ export default function Dashboard() {
       // Fetch native price
       const nativePrice = await priceService.getPrice(chain.nativeCurrency.symbol);
       const nativeValueUSD = parseFloat(bal) * nativePrice;
+      
+      console.log(`[${timestamp}] Native balance details:`, {
+        balance: bal,
+        symbol: chain.nativeCurrency.symbol,
+        priceUSD: nativePrice,
+        valueUSD: nativeValueUSD
+      });
 
       // Fetch token balances
       const popularTokens = POPULAR_TOKENS[currentChain] || [];
@@ -268,6 +275,10 @@ export default function Dashboard() {
                             prefix="$"
                           />
                         </h2>
+                        <div className="text-right">
+                          <div className="text-sm text-gray-500">{balance} {chain.nativeCurrency.symbol}</div>
+                          <div className="text-xs text-gray-400">Native balance</div>
+                        </div>
                         <motion.button
                           whileTap={{ scale: 0.9 }}
                           onClick={() => setShowBalance(false)}
