@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   title: "Blaze - Lightning Fast Crypto",
   description: "The fastest crypto wallet on earth. Buy, swap, send instantly.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/blaze-logo-official.png",
+    apple: "/blaze-logo-official.png",
+  },
   themeColor: "#ffffff",
   viewport: {
     width: "device-width",
@@ -33,3 +37,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+
