@@ -34,38 +34,50 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        <>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm pointer-events-auto"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
           />
-
+          
           {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-md glass-card rounded-3xl p-6 pointer-events-auto max-h-[90vh] overflow-y-auto"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Koop crypto</h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Met iDEAL, creditcard of bankoverschrijving
-                </p>
-              </div>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            <div className="pointer-events-auto">
+              <div className="w-full max-w-md glass-card rounded-2xl max-h-[90vh] overflow-y-auto">
+                {/* Header */}
+                <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                        <CreditCard className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-semibold">Koop crypto</h2>
+                        <p className="text-xs text-gray-400">
+                          Met iDEAL, creditcard of bankoverschrijving
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={onClose}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-6">
 
             {/* Features */}
             <div className="grid grid-cols-3 gap-3 mb-6">
@@ -150,7 +162,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => handleBuy()}
-              className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
             >
               <CreditCard className="w-5 h-5" />
               Start kopen
@@ -161,8 +173,11 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             <p className="text-xs text-slate-500 text-center mt-4">
               Door te klikken ga je naar MoonPay. Arc Wallet slaat geen betalingsgegevens op.
             </p>
+                </div>
+              </div>
+            </div>
           </motion.div>
-        </div>
+        </>
       )}
     </AnimatePresence>
   );

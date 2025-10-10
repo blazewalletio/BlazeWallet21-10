@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, ArrowRight, ArrowUpRight, Loader2, CheckCircle2 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { BlockchainService } from '@/lib/blockchain';
 import ParticleEffect from './ParticleEffect';
@@ -102,32 +102,44 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
           />
           
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+          >
             <div className="pointer-events-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-lg"
-            >
-              <div className="glass-card max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Crypto versturen</h2>
-                <button
-                  onClick={handleClose}
-                  className="glass p-2 rounded-lg hover:bg-gray-50"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+              <div className="w-full max-w-md glass-card rounded-2xl max-h-[90vh] overflow-y-auto">
+                {/* Header */}
+                <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                        <ArrowUpRight className="w-4 h-4 text-white" />
+                      </div>
+                      <h2 className="text-xl font-semibold">Crypto versturen</h2>
+                    </div>
+                    <button
+                      onClick={handleClose}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-6">
 
               {step === 'input' && (
                 <div className="space-y-6">
@@ -305,20 +317,21 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
 
                   <button
                     onClick={handleClose}
-                    className="w-full btn-primary py-4"
+                    className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-semibold transition-all"
                   >
                     Sluiten
                   </button>
                 </div>
               )}
+                </div>
               </div>
-            </motion.div>
             </div>
-          </div>
+          </motion.div>
         </>
       )}
     </AnimatePresence>
   );
 }
+
 
 

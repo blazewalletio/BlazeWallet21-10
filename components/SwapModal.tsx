@@ -227,36 +227,46 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-black/80 backdrop-blur-sm pointer-events-auto"
-        />
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+          />
+          
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+          >
+            <div className="pointer-events-auto">
+              <div className="w-full max-w-md glass-card rounded-2xl max-h-[90vh] overflow-y-auto">
+                {/* Header */}
+                <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                        <Zap className="w-4 h-4 text-white" />
+                      </div>
+                      <h2 className="text-xl font-semibold">Swap</h2>
+                    </div>
+                    <button
+                      onClick={onClose}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
 
-        {/* Modal */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-md glass-card p-6 pointer-events-auto max-h-[90vh] overflow-y-auto"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              <Zap className="w-6 h-6 text-primary-500" />
-              Swap
-            </h2>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-50 rounded-full transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+                <div className="p-6">
 
           {/* Success Message */}
           {success && (
@@ -409,7 +419,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
             whileTap={{ scale: canSwap() ? 0.98 : 1 }}
             onClick={handleSwap}
             disabled={!canSwap()}
-            className="w-full py-4 bg-gradient-to-r from-primary-500 to-purple-500 rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all"
           >
             {isSwapping ? (
               <>
@@ -424,12 +434,16 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
             )}
           </motion.button>
 
-          {/* Additional Info */}
-          <p className="text-xs text-slate-500 mt-3 text-center">
-            Controleer altijd de details voor je swapped. Slippage: 1%
-          </p>
-        </motion.div>
-      </div>
+                  {/* Additional Info */}
+                  <p className="text-xs text-slate-500 mt-3 text-center">
+                    Controleer altijd de details voor je swapped. Slippage: 1%
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
     </AnimatePresence>
   );
 }
