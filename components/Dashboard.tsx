@@ -34,6 +34,8 @@ import ReferralDashboard from './ReferralDashboard';
 import NFTMintModal from './NFTMintModal';
 import CashbackTracker from './CashbackTracker';
 import PremiumBadge, { PremiumCard } from './PremiumBadge';
+import PresaleModal from './PresaleModal';
+import VestingDashboard from './VestingDashboard';
 import { getPortfolioHistory } from '@/lib/portfolio-history';
 
 export default function Dashboard() {
@@ -63,6 +65,8 @@ export default function Dashboard() {
   const [showReferrals, setShowReferrals] = useState(false);
   const [showNFTMint, setShowNFTMint] = useState(false);
   const [showCashback, setShowCashback] = useState(false);
+  const [showPresale, setShowPresale] = useState(false);
+  const [showVesting, setShowVesting] = useState(false);
   const [totalValueUSD, setTotalValueUSD] = useState(0);
   const [change24h, setChange24h] = useState(2.5);
   const [chartData, setChartData] = useState<number[]>([]);
@@ -215,12 +219,12 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowFounderDeploy(true)}
-                  className="px-3 py-2 rounded-xl flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-soft"
-                  title="Deploy Blaze Token"
+                  onClick={() => setShowPresale(true)}
+                  className="px-3 py-2 rounded-xl flex items-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 shadow-soft"
+                  title="Join Presale"
                 >
                   <Rocket className="w-5 h-5" />
-                  <span className="text-sm font-semibold hidden sm:inline">Deploy</span>
+                  <span className="text-sm font-semibold hidden sm:inline">Presale</span>
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
@@ -532,6 +536,19 @@ export default function Dashboard() {
                 <div className="font-semibold mb-1">NFT Skins</div>
                 <div className="text-xs text-slate-400">Exclusive wallet themes</div>
               </motion.button>
+
+              {/* Vesting (Founder Only) */}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowVesting(true)}
+                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left border-2 border-purple-500/30"
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-3">
+                  <Lock className="w-5 h-5 text-white" />
+                </div>
+                <div className="font-semibold mb-1">Vesting</div>
+                <div className="text-xs text-slate-400">120M tokens locked</div>
+              </motion.button>
             </div>
           </motion.div>
 
@@ -644,6 +661,7 @@ export default function Dashboard() {
       <GovernanceModal isOpen={showGovernance} onClose={() => setShowGovernance(false)} />
       <LaunchpadModal isOpen={showLaunchpad} onClose={() => setShowLaunchpad(false)} />
       <NFTMintModal isOpen={showNFTMint} onClose={() => setShowNFTMint(false)} />
+      <PresaleModal isOpen={showPresale} onClose={() => setShowPresale(false)} />
       
       {/* Full Screen Modals for Dashboards */}
       <AnimatePresence>
@@ -683,6 +701,27 @@ export default function Dashboard() {
                 ← Terug naar Dashboard
               </button>
               <CashbackTracker />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showVesting && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
+          >
+            <div className="max-w-4xl mx-auto p-6">
+              <button
+                onClick={() => setShowVesting(false)}
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
+              >
+                ← Terug naar Dashboard
+              </button>
+              <VestingDashboard />
             </div>
           </motion.div>
         )}

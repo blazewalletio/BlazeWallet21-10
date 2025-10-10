@@ -1,0 +1,295 @@
+import { ethers } from 'ethers';
+import { CURRENT_PRESALE, PRESALE_CONSTANTS } from './presale-config';
+
+// Simplified ABIs - only functions we need
+const PRESALE_ABI = [
+  'function contribute() external payable',
+  'function getPresaleInfo() external view returns (bool active, bool finalized, uint256 raised, uint256 tokensSold, uint256 participantCount, uint256 timeRemaining)',
+  'function getUserInfo(address user) external view returns (uint256 contribution, uint256 tokenAllocation, bool claimed)',
+  'function claimTokens() external',
+  'function claimRefund() external',
+  'function startPresale(uint256 durationInDays) external',
+  'function finalizePresale() external',
+];
+
+const TOKEN_ABI = [
+  'function balanceOf(address account) external view returns (uint256)',
+  'function symbol() external view returns (string)',
+  'function name() external view returns (string)',
+  'function decimals() external view returns (uint8)',
+  'function totalSupply() external view returns (uint256)',
+];
+
+export interface PresaleInfo {
+  active: boolean;
+  finalized: boolean;
+  raised: number; // in USD
+  tokensSold: number;
+  participantCount: number;
+  timeRemaining: number; // in milliseconds
+}
+
+export interface UserInfo {
+  contribution: number; // in USD
+  tokenAllocation: number;
+  hasClaimed: boolean;
+}
+
+export class PresaleService {
+  private presaleContract: ethers.Contract;
+  private tokenContract: ethers.Contract | null = null;
+  private provider: ethers.BrowserProvider;
+  private wallet: ethers.Signer;
+
+  constructor(wallet: ethers.Signer) {
+    this.wallet = wallet;
+    this.provider = wallet.provider as ethers.BrowserProvider;
+    
+    // Initialize presale contract
+    if (!CURRENT_PRESALE.presaleAddress) {
+      throw new Error('Presale contract address not configured');
+    }
+    
+    this.presaleContract = new ethers.Contract(
+      CURRENT_PRESALE.presaleAddress,
+      PRESALE_ABI,
+      wallet
+    );
+
+    // Initialize token contract if address is available
+    if (CURRENT_PRESALE.tokenAddress) {
+      this.tokenContract = new ethers.Contract(
+        CURRENT_PRESALE.tokenAddress,
+        TOKEN_ABI,
+        wallet
+      );
+    }
+  }
+
+  /**
+   * Get current presale information
+   */
+  async getPresaleInfo(): Promise<PresaleInfo> {
+    try {
+      const info = await this.presaleContract.getPresaleInfo();
+      
+      // Convert raised amount from wei to USD
+      // Assuming 1 BNB = ~$600 (you'd want to fetch real price)
+      const bnbPrice = await this.getBNBPrice();
+      const raisedBNB = parseFloat(ethers.formatEther(info.raised));
+      const raisedUSD = raisedBNB * bnbPrice;
+      
+      return {
+        active: info.active,
+        finalized: info.finalized,
+        raised: raisedUSD,
+        tokensSold: parseFloat(ethers.formatUnits(info.tokensSold, 18)),
+        participantCount: Number(info.participantCount),
+        timeRemaining: Number(info.timeRemaining) * 1000, // Convert to ms
+      };
+    } catch (error) {
+      console.error('Error getting presale info:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get user's contribution and allocation info
+   */
+  async getUserInfo(address: string): Promise<UserInfo> {
+    try {
+      const info = await this.presaleContract.getUserInfo(address);
+      
+      const bnbPrice = await this.getBNBPrice();
+      const contributionBNB = parseFloat(ethers.formatEther(info.contribution));
+      const contributionUSD = contributionBNB * bnbPrice;
+      
+      return {
+        contribution: contributionUSD,
+        tokenAllocation: parseFloat(ethers.formatUnits(info.tokenAllocation, 18)),
+        hasClaimed: info.claimed,
+      };
+    } catch (error) {
+      console.error('Error getting user info:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Contribute to presale
+   * @param amountUSD Amount in USD to contribute
+   */
+  async contribute(amountUSD: number): Promise<string> {
+    try {
+      // Convert USD to BNB
+      const bnbPrice = await this.getBNBPrice();
+      const amountBNB = amountUSD / bnbPrice;
+      
+      console.log(`Contributing $${amountUSD} (${amountBNB.toFixed(4)} BNB)`);
+      
+      // Check limits
+      if (amountUSD < PRESALE_CONSTANTS.minContribution) {
+        throw new Error(`Minimum contribution is $${PRESALE_CONSTANTS.minContribution}`);
+      }
+      
+      // Send transaction
+      const tx = await this.presaleContract.contribute({
+        value: ethers.parseEther(amountBNB.toFixed(18)),
+        gasLimit: 300000, // Set gas limit to avoid estimation issues
+      });
+      
+      console.log('Transaction sent:', tx.hash);
+      
+      // Wait for confirmation
+      const receipt = await tx.wait();
+      console.log('Transaction confirmed:', receipt.hash);
+      
+      return receipt.hash;
+    } catch (error: any) {
+      console.error('Error contributing:', error);
+      
+      // Parse error message
+      if (error.message.includes('Below minimum contribution')) {
+        throw new Error(`Minimum contribution is $${PRESALE_CONSTANTS.minContribution}`);
+      } else if (error.message.includes('Exceeds maximum contribution')) {
+        throw new Error(`Maximum contribution is $${PRESALE_CONSTANTS.maxContribution} per wallet`);
+      } else if (error.message.includes('Hard cap reached')) {
+        throw new Error('Presale is full! Hard cap reached.');
+      } else if (error.message.includes('Presale not active')) {
+        throw new Error('Presale is not active yet');
+      } else if (error.message.includes('user rejected')) {
+        throw new Error('Transaction rejected by user');
+      }
+      
+      throw error;
+    }
+  }
+
+  /**
+   * Claim tokens after presale is finalized
+   */
+  async claimTokens(): Promise<string> {
+    try {
+      const tx = await this.presaleContract.claimTokens({
+        gasLimit: 200000,
+      });
+      
+      console.log('Claim transaction sent:', tx.hash);
+      
+      const receipt = await tx.wait();
+      console.log('Tokens claimed:', receipt.hash);
+      
+      return receipt.hash;
+    } catch (error: any) {
+      console.error('Error claiming tokens:', error);
+      
+      if (error.message.includes('Presale not finalized')) {
+        throw new Error('Presale is not finalized yet. Please wait.');
+      } else if (error.message.includes('Already claimed')) {
+        throw new Error('You have already claimed your tokens');
+      } else if (error.message.includes('No tokens to claim')) {
+        throw new Error('You have no tokens to claim');
+      }
+      
+      throw error;
+    }
+  }
+
+  /**
+   * Claim refund if soft cap not reached
+   */
+  async claimRefund(): Promise<string> {
+    try {
+      const tx = await this.presaleContract.claimRefund({
+        gasLimit: 200000,
+      });
+      
+      const receipt = await tx.wait();
+      return receipt.hash;
+    } catch (error) {
+      console.error('Error claiming refund:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get user's token balance (after claim)
+   */
+  async getTokenBalance(address: string): Promise<number> {
+    if (!this.tokenContract) {
+      throw new Error('Token contract not initialized');
+    }
+    
+    try {
+      const balance = await this.tokenContract.balanceOf(address);
+      return parseFloat(ethers.formatUnits(balance, 18));
+    } catch (error) {
+      console.error('Error getting token balance:', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Get BNB price in USD (mock for now - replace with real price feed)
+   * TODO: Integrate with Chainlink or CoinGecko API
+   */
+  private async getBNBPrice(): Promise<number> {
+    // For now, return a mock price
+    // In production, fetch from Chainlink oracle or price API
+    return 600; // $600 per BNB
+    
+    // Example with CoinGecko (implement later):
+    // const response = await fetch('/api/prices?symbols=BNB');
+    // const data = await response.json();
+    // return data.prices.BNB;
+  }
+
+  /**
+   * Helper: Get current chain ID
+   */
+  async getChainId(): Promise<number> {
+    const network = await this.provider.getNetwork();
+    return Number(network.chainId);
+  }
+
+  /**
+   * Helper: Verify we're on correct network
+   */
+  async verifyNetwork(): Promise<boolean> {
+    const chainId = await this.getChainId();
+    return chainId === CURRENT_PRESALE.chainId;
+  }
+
+  /**
+   * Helper: Switch to presale network
+   */
+  async switchNetwork(): Promise<void> {
+    try {
+      await (window as any).ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: `0x${CURRENT_PRESALE.chainId.toString(16)}` }],
+      });
+    } catch (error: any) {
+      // If chain not added, add it
+      if (error.code === 4902) {
+        await (window as any).ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: `0x${CURRENT_PRESALE.chainId.toString(16)}`,
+            chainName: CURRENT_PRESALE.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'BNB',
+              decimals: 18,
+            },
+            rpcUrls: [CURRENT_PRESALE.rpcUrl],
+            blockExplorerUrls: [CURRENT_PRESALE.explorerUrl],
+          }],
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+}
+
