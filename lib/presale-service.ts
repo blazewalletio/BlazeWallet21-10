@@ -43,6 +43,12 @@ export class PresaleService {
 
   constructor(wallet: ethers.Signer) {
     this.wallet = wallet;
+    
+    // Check if wallet has a provider
+    if (!wallet.provider) {
+      throw new Error('Wallet provider is not available. Please ensure wallet is connected.');
+    }
+    
     this.provider = wallet.provider as ethers.BrowserProvider;
     
     // Initialize presale contract
@@ -280,6 +286,9 @@ export class PresaleService {
    * Helper: Get current chain ID
    */
   async getChainId(): Promise<number> {
+    if (!this.provider) {
+      throw new Error('Provider not available');
+    }
     const network = await this.provider.getNetwork();
     return Number(network.chainId);
   }

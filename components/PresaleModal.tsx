@@ -60,9 +60,22 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
       return;
     }
 
+    // Check if wallet has provider
+    if (!wallet.provider) {
+      setError('Wallet provider not available. Please reconnect your wallet.');
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     
     try {
+      console.log('🔍 Creating PresaleService with wallet:', {
+        hasProvider: !!wallet.provider,
+        address: wallet.address,
+        providerType: wallet.provider.constructor.name
+      });
+      
       const presaleService = new PresaleService(wallet);
       
       // Verify correct network
