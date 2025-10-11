@@ -1,16 +1,16 @@
-# 🌈 Arc - Your Financial Arc
+# 🔥 BLAZE Wallet - Ignite Your Crypto Journey
 
-**Bend money.** Lightning fast crypto wallet with revolutionary design.
+**Set your finances ablaze.** Lightning fast crypto wallet with revolutionary design and DeFi features.
 
 ---
 
-## ✨ What is Arc?
+## ✨ What is BLAZE Wallet?
 
-Arc is not just a crypto wallet - it's your **financial arc**, the bridge between traditional money and the future. With Arc, you bend money to your will: instant payments, multi-chain support, and the most beautiful UI you've ever seen in crypto.
+BLAZE Wallet is not just a crypto wallet - it's your **gateway to DeFi**, combining traditional wallet functionality with advanced features like staking, governance, NFT skins, and more. With BLAZE, you ignite your financial future: instant payments, multi-chain support, and the most beautiful UI you've ever seen in crypto.
 
-### Why "Arc"?
+### Why "BLAZE"?
 
-An arc represents a **journey**, a **path**, a **connection** between two points. Arc is your journey to financial freedom, connecting you to the future of money.
+BLAZE represents **speed**, **power**, and **transformation**. BLAZE Wallet sets your crypto journey on fire with blazing-fast transactions, burning tokenomics, and a community that's on fire for DeFi innovation.
 
 ---
 
@@ -81,26 +81,23 @@ npm start
 3. Import repository
 4. Deploy! 🚀
 
-Arc works out-of-the-box on Vercel.
+BLAZE Wallet works out-of-the-box on Vercel.
 
 ---
 
-## 💡 How to Use Arc
+## 💡 How to Use BLAZE Wallet
 
 ### Create Your Wallet
-1. Open Arc
+1. Open BLAZE Wallet
 2. Tap "Nieuwe wallet aanmaken"
 3. **Write down your 12 words** (critical!)
 4. Verify 3 words
 5. Done! 🎉
 
-### Pay with Arc
-1. Tap the **floating Zap button** or **Quick Pay card**
-2. Select amount
-3. Choose method:
-   - **Lightning** - For crypto merchants
-   - **Virtual Card** - For anywhere (via Coinbase/Crypto.com)
-   - **Scan QR** - For merchant terminals
+### Pay with BLAZE
+1. Tap the **Send button** or **Quick Pay**
+2. Enter amount and address
+3. Choose network (BSC = cheapest for BLAZE!)
 4. Confirm and pay!
 
 ### Multi-Chain
@@ -112,7 +109,7 @@ Arc works out-of-the-box on Vercel.
 
 ## 🔐 Security
 
-Arc is **non-custodial**:
+BLAZE Wallet is **non-custodial**:
 - Your keys = Your crypto
 - Private keys never leave your device
 - Encrypted local storage
@@ -150,18 +147,18 @@ PWA:             Native manifest
 
 ### iOS
 1. Safari → Share → "Add to Home Screen"
-2. Name it "Arc"
+2. Name it "BLAZE"
 3. Tap to install
 
 ### Android
-1. Chrome → Menu → "Install Arc"
+1. Chrome → Menu → "Install BLAZE Wallet"
 2. Done!
 
 **Result:** Full-screen app with shortcuts!
 
 ---
 
-## 🎨 Arc Design System
+## 🎨 BLAZE Design System
 
 ### Colors
 ```css
@@ -172,9 +169,9 @@ Danger:    #F43F5E (Rose)
 ```
 
 ### Logo
-- **Curved line** (arc shape)
-- **Gradient** (purple → cyan)
-- **Minimal** and **timeless**
+- **Flame icon** 🔥
+- **Gradient** (orange → red → yellow)
+- **Bold** and **energetic**
 
 ### Typography
 - **Font:** Inter (modern, clean)
@@ -225,13 +222,13 @@ Danger:    #F43F5E (Rose)
 
 ## 🌍 Use Cases
 
-**Coffee Shop:** Lightning Network (free, instant)  
+**Coffee Shop:** Quick crypto payment  
 **Supermarket:** Virtual Card (Apple Pay)  
-**Online Shop:** QR payment or Virtual Card  
-**Friend Transfer:** Lightning or on-chain  
-**Crypto Store:** Direct wallet payment  
+**Online Shop:** QR payment or direct transfer  
+**Friend Transfer:** On-chain with low fees  
+**DeFi Trading:** Built-in swap and staking  
 
-**Arc works everywhere.** 🌐
+**BLAZE Wallet works everywhere.** 🌐
 
 ---
 
@@ -254,19 +251,19 @@ Danger:    #F43F5E (Rose)
 ## 📞 Support
 
 **App Issues:** Check Debug Panel (🐛 icon)  
-**Virtual Card:** Contact Coinbase/Crypto.com  
-**General:** [GitHub Issues](https://github.com/yourusername/arc)
+**BLAZE Token:** Join our community on Telegram  
+**General:** [GitHub Issues](https://github.com/blazewalletio/BlazeWallet)
 
 ---
 
-## 🏆 What Makes Arc Special
+## 🏆 What Makes BLAZE Wallet Special
 
-1. **Name** - Short, memorable, timeless
+1. **DeFi Features** - Staking, Governance, Launchpad, NFTs all built-in
 2. **Design** - Most beautiful crypto wallet ever
-3. **Speed** - Lightning Network = instant
-4. **Everywhere** - Virtual Card works at any merchant
+3. **BLAZE Token** - Integrated tokenomics with rewards
+4. **Multi-Chain** - BSC, Ethereum, Polygon, and more
 5. **Mobile-First** - Built for your phone
-6. **No Compromises** - Beauty + Function
+6. **No Compromises** - Beauty + Function + DeFi Power
 
 ---
 
@@ -278,17 +275,20 @@ MIT License - Use freely for personal and commercial projects.
 
 ## 💬 Philosophy
 
-**"Bend money."**
+**"Set your finances ablaze."**
 
-Money should bend to you, not the other way around. Arc gives you complete control over your financial future. Fast, beautiful, powerful.
+Your crypto journey should be on fire with opportunities. BLAZE Wallet gives you complete control over your DeFi future with powerful tools, beautiful design, and a burning passion for innovation.
 
-Your wallet. Your keys. Your arc.
+Your wallet. Your keys. Your BLAZE.
 
 ---
 
 **Built with ❤️ and Next.js**
 
-**Arc v2.0** - The future of money is curved. 🌈
+**BLAZE Wallet v2.0** - The future of DeFi is on fire. 🔥
+
+
+
 
 
 

@@ -17,7 +17,7 @@
 2. Ga naar **"Applications"** (links in menu)
 3. Klik **"Create Application"**
 4. Vul in:
-   - Name: `Arc Wallet Production`
+   - Name: `BLAZE Wallet Production`
    - Description: `Crypto wallet swap aggregation`
 5. Klik **"Create"**
 6. **Kopieer de API Key** (bewaar veilig!)
@@ -29,7 +29,7 @@
 ### Via Vercel Dashboard:
 
 1. Ga naar: https://vercel.com/dashboard
-2. Selecteer project: **arcwallet**
+2. Selecteer project: **blazewallet**
 3. Ga naar: **Settings → Environment Variables**
 4. Klik **"Add New"**
 5. Vul in:
@@ -63,7 +63,7 @@ npx vercel --prod
 
 ## Stap 4: Verify (30 seconden)
 
-1. Open: https://arcwallet.vercel.app
+1. Open: https://blazewallet.vercel.app
 2. Hard refresh: Cmd + Shift + R
 3. Open Swap modal
 4. Type: 0.005 ETH → USDT
@@ -79,7 +79,7 @@ npx vercel --prod
 - ✅ Volledige functionaliteit
 - ✅ Rate limit: 100 requests/minuut
 
-**Arc wallet gebruik (schatting):**
+**BLAZE Wallet gebruik (schatting):**
 - ~10 quote requests per swap (typing)
 - ~1 transaction per swap (execute)
 - 100 swaps/dag = ~1,100 requests

@@ -1,7 +1,7 @@
 {
-  "name": "arc-token-contracts",
+  "name": "blaze-token-contracts",
   "version": "1.0.0",
-  "description": "Arc Token smart contracts",
+  "description": "BLAZE Token smart contracts for BLAZE Wallet",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",

@@ -2,7 +2,7 @@
 
 ## Waarom Heb Je API Keys Nodig?
 
-Vanaf **oktober 2024** heeft Etherscan hun API geüpdatet naar **V2** en deze vereist een API key voor transaction history. Zonder API key zie je **geen transacties** in Arc wallet!
+Vanaf **oktober 2024** heeft Etherscan hun API geüpdatet naar **V2** en deze vereist een API key voor transaction history. Zonder API key zie je **geen transacties** in BLAZE Wallet!
 
 ---
 
@@ -76,7 +76,7 @@ npm run dev
 ### Voor Vercel Production:
 
 1. **Ga naar Vercel Dashboard:**
-   - Open: https://vercel.com/rick-schlimbacks-projects/arcwallet
+   - Open: https://vercel.com/rick-schlimbacks-projects/blazewallet
 
 2. **Settings → Environment Variables**
 
@@ -133,7 +133,7 @@ npm run dev
 A: **NEXT_PUBLIC_** keys zijn client-side en dus zichtbaar in de browser. Dit is OK voor read-only block explorer APIs. Etherscan rate-limits per IP, niet per key, dus abuse is beperkt.
 
 ### **Q: Moet ik voor deze keys betalen?**
-A: **NEE!** Alle block explorer APIs hebben gratis tiers die RUIM voldoende zijn voor Arc wallet.
+A: **NEE!** Alle block explorer APIs hebben gratis tiers die RUIM voldoende zijn voor BLAZE Wallet.
 
 ### **Q: Werkt Arc zonder API keys?**
 A: Nee, voor Ethereum heb je sinds oktober 2024 een API key nodig. BSC, Polygon etc. kunnen nog wel zonder, maar met beperkte rate limits.
@@ -154,4 +154,4 @@ A: Ja! Je kunt dezelfde key gebruiken voor beide. Rate limits zijn per IP, niet 
 
 ---
 
-**Zonder Etherscan API key zie je GEEN transacties in Arc wallet op Ethereum!** 🔑
+**Zonder Etherscan API key zie je GEEN transacties in BLAZE Wallet op Ethereum!** 🔑
