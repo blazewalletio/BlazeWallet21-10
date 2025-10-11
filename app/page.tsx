@@ -5,11 +5,16 @@ import { useWalletStore } from '@/lib/wallet-store';
 import Onboarding from '@/components/Onboarding';
 import Dashboard from '@/components/Dashboard';
 import SplashScreen from '@/components/SplashScreen';
+import PasswordSetupModal from '@/components/PasswordSetupModal';
+import PasswordUnlockModal from '@/components/PasswordUnlockModal';
 
 export default function Home() {
   const [hasWallet, setHasWallet] = useState<boolean | null>(null);
   const [showSplash, setShowSplash] = useState(true);
-  const { importWallet } = useWalletStore();
+  const [showPasswordSetup, setShowPasswordSetup] = useState(false);
+  const [showPasswordUnlock, setShowPasswordUnlock] = useState(false);
+  const [showRecoveryPhrase, setShowRecoveryPhrase] = useState(false);
+  const { importWallet, hasPassword, isLocked, wallet } = useWalletStore();
 
   useEffect(() => {
     // Hide splash immediately - no delay
@@ -17,17 +22,31 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Check if user has a wallet in localStorage
+    // Check wallet state on load
     const checkWallet = async () => {
-      const storedMnemonic = localStorage.getItem('wallet_mnemonic');
+      const storedAddress = localStorage.getItem('wallet_address');
+      const hasPasswordStored = localStorage.getItem('has_password') === 'true';
       
-      if (storedMnemonic) {
-        try {
-          await importWallet(storedMnemonic);
+      if (storedAddress) {
+        if (hasPasswordStored) {
+          // Wallet exists with password protection
           setHasWallet(true);
-        } catch (error) {
-          console.error('Error importing wallet:', error);
-          setHasWallet(false);
+          setShowPasswordUnlock(true);
+        } else {
+          // Wallet exists but no password set - check for old unencrypted mnemonic
+          const storedMnemonic = localStorage.getItem('wallet_mnemonic');
+          if (storedMnemonic) {
+            try {
+              await importWallet(storedMnemonic);
+              setHasWallet(true);
+              setShowPasswordSetup(true); // Prompt to set password
+            } catch (error) {
+              console.error('Error importing wallet:', error);
+              setHasWallet(false);
+            }
+          } else {
+            setHasWallet(false);
+          }
         }
       } else {
         setHasWallet(false);
@@ -35,6 +54,18 @@ export default function Home() {
     };
 
     checkWallet();
+  }, []);
+
+  // Auto-lock check
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (typeof window !== 'undefined') {
+        const { checkAutoLock } = useWalletStore.getState();
+        checkAutoLock();
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval);
   }, []);
 
   // Loading state - subtle loader
@@ -49,13 +80,38 @@ export default function Home() {
   return (
     <>
       {showSplash && <SplashScreen />}
+      
       {!hasWallet ? (
         <Onboarding onComplete={() => setHasWallet(true)} />
       ) : (
-        <Dashboard />
+        <>
+          <Dashboard />
+          
+          {/* Password Setup Modal */}
+          <PasswordSetupModal
+            isOpen={showPasswordSetup}
+            onComplete={() => {
+              setShowPasswordSetup(false);
+              setShowPasswordUnlock(false);
+            }}
+          />
+          
+          {/* Password Unlock Modal */}
+          <PasswordUnlockModal
+            isOpen={showPasswordUnlock}
+            onComplete={() => {
+              setShowPasswordUnlock(false);
+            }}
+            onFallback={() => {
+              setShowPasswordUnlock(false);
+              setShowRecoveryPhrase(true);
+            }}
+          />
+        </>
       )}
     </>
   );
 }
+
 
 

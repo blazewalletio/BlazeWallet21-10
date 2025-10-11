@@ -45,7 +45,8 @@ export default function Dashboard() {
     updateBalance, 
     currentChain, 
     tokens,
-    updateTokens 
+    updateTokens,
+    updateActivity 
   } = useWalletStore();
 
   // Founder/Developer wallet addresses (add your addresses here)
@@ -197,6 +198,26 @@ export default function Dashboard() {
     const interval = setInterval(() => fetchData(true), 30000); // Update every 30 seconds
     return () => clearInterval(interval);
   }, [address, currentChain]);
+
+  // Track user activity
+  useEffect(() => {
+    const handleUserActivity = () => {
+      updateActivity();
+    };
+
+    // Track various user interactions
+    window.addEventListener('click', handleUserActivity);
+    window.addEventListener('keydown', handleUserActivity);
+    window.addEventListener('scroll', handleUserActivity);
+    window.addEventListener('touchstart', handleUserActivity);
+
+    return () => {
+      window.removeEventListener('click', handleUserActivity);
+      window.removeEventListener('keydown', handleUserActivity);
+      window.removeEventListener('scroll', handleUserActivity);
+      window.removeEventListener('touchstart', handleUserActivity);
+    };
+  }, [updateActivity]);
 
   // Update chart when time range changes
   useEffect(() => {

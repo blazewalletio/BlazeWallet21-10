@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@uniswap/sdk-core": "^7.7.2",
     "@uniswap/smart-order-router": "^4.22.21",
     "@uniswap/v3-sdk": "^3.25.2",
     "@zxing/library": "^0.21.3",
     "bip39": "^3.1.0",
     "canvas-confetti": "^1.9.3",
+    "crypto-js": "^4.2.0",
     "ethers": "^6.13.0",
     "framer-motion": "^11.3.0",
     "html5-qrcode": "^2.3.8",
@@ -42,7 +44,3 @@
     "typescript": "^5"
   }
 }
-
-
-
-

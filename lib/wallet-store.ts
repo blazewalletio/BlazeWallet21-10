@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import * as bip39 from 'bip39';
 import { Token, Chain } from './types';
 import { CHAINS, DEFAULT_CHAIN } from './chains';
+import { encryptWallet, decryptWallet, hashPassword, verifyPassword, EncryptedWallet } from './crypto-utils';
 
 export interface WalletState {
   wallet: ethers.HDNodeWallet | null;
@@ -12,10 +13,14 @@ export interface WalletState {
   mnemonic: string | null;
   currentChain: string;
   tokens: Token[];
+  hasPassword: boolean;
+  lastActivity: number;
   
   // Actions
   createWallet: () => Promise<string>;
   importWallet: (mnemonic: string) => Promise<void>;
+  setPassword: (password: string) => Promise<void>;
+  unlockWithPassword: (password: string) => Promise<void>;
   lockWallet: () => void;
   unlockWallet: (mnemonic: string) => Promise<void>;
   updateBalance: (balance: string) => void;
@@ -24,6 +29,8 @@ export interface WalletState {
   addToken: (token: Token) => void;
   updateTokens: (tokens: Token[]) => void;
   removeToken: (tokenAddress: string) => void;
+  updateActivity: () => void;
+  checkAutoLock: () => void;
 }
 
 export const useWalletStore = create<WalletState>((set, get) => ({
@@ -34,6 +41,8 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   mnemonic: null,
   currentChain: DEFAULT_CHAIN,
   tokens: [],
+  hasPassword: false,
+  lastActivity: Date.now(),
 
   createWallet: async () => {
     // Generate a new random wallet with 12-word mnemonic
@@ -45,14 +54,14 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       address: wallet.address,
       mnemonic,
       isLocked: false,
+      lastActivity: Date.now(),
     });
 
-    // Store encrypted in localStorage
+    // Store address and chain preference (safe to store unencrypted)
     if (typeof window !== 'undefined') {
       localStorage.setItem('wallet_address', wallet.address);
-      // In production, encrypt this!
-      localStorage.setItem('wallet_mnemonic', mnemonic);
       localStorage.setItem('current_chain', DEFAULT_CHAIN);
+      // Mnemonic will be stored encrypted when user sets password
     }
 
     return mnemonic;
@@ -93,6 +102,77 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     }
   },
 
+  setPassword: async (password: string) => {
+    const { mnemonic, address } = get();
+    
+    if (!mnemonic || !address) {
+      throw new Error('Geen wallet gevonden om te versleutelen');
+    }
+
+    // Encrypt the mnemonic with the password
+    const encryptedWallet = encryptWallet(mnemonic, password);
+    const passwordHash = hashPassword(password);
+
+    // Store encrypted data
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('encrypted_wallet', JSON.stringify(encryptedWallet));
+      localStorage.setItem('password_hash', passwordHash);
+      localStorage.setItem('has_password', 'true');
+    }
+
+    set({
+      hasPassword: true,
+      lastActivity: Date.now(),
+    });
+
+    // Clear mnemonic from memory for security
+    set({ mnemonic: null });
+  },
+
+  unlockWithPassword: async (password: string) => {
+    try {
+      if (typeof window === 'undefined') {
+        throw new Error('Niet beschikbaar op server');
+      }
+
+      // Check if password is correct
+      const storedHash = localStorage.getItem('password_hash');
+      if (!storedHash || !verifyPassword(password, storedHash)) {
+        throw new Error('Ongeldig wachtwoord');
+      }
+
+      // Decrypt wallet
+      const encryptedWalletData = localStorage.getItem('encrypted_wallet');
+      if (!encryptedWalletData) {
+        throw new Error('Geen versleutelde wallet gevonden');
+      }
+
+      const encryptedWallet: EncryptedWallet = JSON.parse(encryptedWalletData);
+      const mnemonic = decryptWallet(encryptedWallet, password);
+      
+      // Validate and create wallet
+      const cleanMnemonic = mnemonic.trim().toLowerCase();
+      if (!bip39.validateMnemonic(cleanMnemonic)) {
+        throw new Error('Beschadigde wallet data');
+      }
+
+      const wallet = ethers.Wallet.fromPhrase(cleanMnemonic);
+      const savedChain = localStorage.getItem('current_chain') || DEFAULT_CHAIN;
+
+      set({
+        wallet,
+        address: wallet.address,
+        mnemonic: cleanMnemonic,
+        isLocked: false,
+        currentChain: savedChain,
+        lastActivity: Date.now(),
+      });
+
+    } catch (error) {
+      throw new Error('Ongeldig wachtwoord of beschadigde data');
+    }
+  },
+
   lockWallet: () => {
     set({
       wallet: null,
@@ -130,6 +210,9 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       localStorage.removeItem('wallet_mnemonic');
       localStorage.removeItem('current_chain');
       localStorage.removeItem('custom_tokens');
+      localStorage.removeItem('encrypted_wallet');
+      localStorage.removeItem('password_hash');
+      localStorage.removeItem('has_password');
     }
     set({
       wallet: null,
@@ -139,6 +222,8 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       mnemonic: null,
       currentChain: DEFAULT_CHAIN,
       tokens: [],
+      hasPassword: false,
+      lastActivity: Date.now(),
     });
   },
 
@@ -168,6 +253,23 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     set({ tokens });
   },
 
+  updateActivity: () => {
+    set({ lastActivity: Date.now() });
+  },
+
+  checkAutoLock: () => {
+    const { lastActivity, wallet } = get();
+    const AUTO_LOCK_TIME = 30 * 60 * 1000; // 30 minutes
+    
+    if (wallet && Date.now() - lastActivity > AUTO_LOCK_TIME) {
+      set({
+        wallet: null,
+        mnemonic: null,
+        isLocked: true,
+      });
+    }
+  },
+
   removeToken: (tokenAddress: string) => {
     const { tokens } = get();
     const newTokens = tokens.filter(
@@ -180,6 +282,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     }
   },
 }));
+
 
 
 
