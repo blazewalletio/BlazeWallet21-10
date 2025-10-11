@@ -73,8 +73,14 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       // Set flag to indicate we just created a wallet without password
       if (typeof window !== 'undefined') {
         localStorage.setItem('wallet_just_created', 'true');
+        localStorage.setItem('force_password_setup', 'true');
+        console.log('✅ Set wallet_just_created and force_password_setup flags');
       }
-      onComplete();
+      
+      // Don't call onComplete() - we need to reload to show password modal
+      // Instead, trigger a page reload to force the main app to detect the flags
+      console.log('🔄 Reloading page to trigger password setup');
+      window.location.reload();
     } else {
       setError('Onjuiste woorden. Probeer het opnieuw.');
     }
