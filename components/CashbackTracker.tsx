@@ -1,23 +1,93 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Gift, TrendingUp, Zap, ExternalLink } from 'lucide-react';
+import { Gift, TrendingUp, Zap, ExternalLink, AlertCircle, CheckCircle } from 'lucide-react';
+import { useWalletStore } from '@/lib/wallet-store';
+import { CashbackService, CashbackStats, CashbackTransaction } from '@/lib/cashback-service';
 
 export default function CashbackTracker() {
-  // Mock data - replace with real data
-  const stats = {
-    totalEarned: 125.50,
-    thisMonth: 45.20,
-    pending: 12.30,
-    transactions: 156,
+  const { connectedWallet } = useWalletStore();
+  const [stats, setStats] = useState<CashbackStats | null>(null);
+  const [recentCashback, setRecentCashback] = useState<CashbackTransaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [isClaiming, setIsClaiming] = useState(false);
+  
+  const cashbackService = new CashbackService();
+
+  // Load data when wallet connects
+  useEffect(() => {
+    const loadData = async () => {
+      if (!connectedWallet) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const userAddress = await connectedWallet.getAddress();
+        
+        const [statsData, transactionsData] = await Promise.all([
+          cashbackService.getCashbackStats(userAddress),
+          cashbackService.getRecentCashback(userAddress, 5),
+        ]);
+        
+        setStats(statsData);
+        setRecentCashback(transactionsData);
+      } catch (err: any) {
+        console.error('Error loading cashback data:', err);
+        setError(err.message || 'Failed to load cashback data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [connectedWallet]);
+
+  const handleClaim = async () => {
+    if (!connectedWallet || !stats || stats.pendingFormatted === 0) return;
+
+    try {
+      setIsClaiming(true);
+      setError(null);
+      setSuccess(null);
+      
+      const userAddress = await connectedWallet.getAddress();
+      const txHash = await cashbackService.claimCashback(userAddress, connectedWallet);
+      
+      setSuccess(`Successfully claimed ${stats.pendingFormatted.toFixed(4)} BLAZE! Transaction: ${txHash.slice(0, 10)}...`);
+      
+      // Reload data
+      const [statsData, transactionsData] = await Promise.all([
+        cashbackService.getCashbackStats(userAddress),
+        cashbackService.getRecentCashback(userAddress, 5),
+      ]);
+      
+      setStats(statsData);
+      setRecentCashback(transactionsData);
+      
+    } catch (err: any) {
+      console.error('Error claiming cashback:', err);
+      setError(err.message || 'Failed to claim cashback');
+    } finally {
+      setIsClaiming(false);
+    }
   };
 
-  const recentCashback = [
-    { type: 'Swap', amount: 5.20, date: '2 hours ago', tx: '0x1234...5678' },
-    { type: 'Send', amount: 0.50, date: '5 hours ago', tx: '0xabcd...efgh' },
-    { type: 'Swap', amount: 8.75, date: '1 day ago', tx: '0x9876...4321' },
-    { type: 'Swap', amount: 12.30, date: '2 days ago', tx: '0xfedc...ba98' },
-  ];
+  const formatTimeAgo = (timestamp: number) => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    
+    if (diff < 60000) return 'Just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+    return `${Math.floor(diff / 86400000)} days ago`;
+  };
 
   return (
     <div className="space-y-6">
@@ -32,71 +102,103 @@ export default function CashbackTracker() {
         </p>
       </div>
 
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-green-500/30 border-t-green-500 rounded-full animate-spin" />
+          <span className="ml-3 text-gray-600">Loading cashback data...</span>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+          <div>
+            <h3 className="font-semibold text-red-400 mb-1">Error</h3>
+            <p className="text-sm text-red-300">{error}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Success State */}
+      {success && (
+        <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-center gap-3">
+          <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+          <div>
+            <h3 className="font-semibold text-green-400 mb-1">Success</h3>
+            <p className="text-sm text-green-300">{success}</p>
+          </div>
+        </div>
+      )}
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-green-400 mb-2">
-            <Gift className="w-5 h-5" />
-            <span className="text-sm font-semibold">Total Earned</span>
-          </div>
-          <div className="text-3xl font-bold text-green-400">{stats.totalEarned} BLAZE</div>
-          <div className="text-sm text-gray-600 mt-1">
-            ≈ ${(stats.totalEarned * 0.01).toFixed(2)}
-          </div>
-        </motion.div>
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-green-400 mb-2">
+              <Gift className="w-5 h-5" />
+              <span className="text-sm font-semibold">Total Earned</span>
+            </div>
+            <div className="text-3xl font-bold text-green-400">{stats.totalEarnedFormatted.toFixed(4)} BLAZE</div>
+            <div className="text-sm text-gray-600 mt-1">
+              All time rewards
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-blue-400 mb-2">
-            <TrendingUp className="w-5 h-5" />
-            <span className="text-sm font-semibold">This Month</span>
-          </div>
-          <div className="text-3xl font-bold">{stats.thisMonth} BLAZE</div>
-          <div className="text-sm text-green-400 mt-1">
-            +{((stats.thisMonth / stats.totalEarned) * 100).toFixed(0)}% growth
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-blue-400 mb-2">
+              <TrendingUp className="w-5 h-5" />
+              <span className="text-sm font-semibold">This Month</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.thisMonthFormatted.toFixed(4)} BLAZE</div>
+            <div className="text-sm text-green-400 mt-1">
+              {stats.totalEarnedFormatted > 0 ? `+${((stats.thisMonthFormatted / stats.totalEarnedFormatted) * 100).toFixed(0)}% of total` : '0% of total'}
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-orange-400 mb-2">
-            <Zap className="w-5 h-5" />
-            <span className="text-sm font-semibold">Pending</span>
-          </div>
-          <div className="text-3xl font-bold text-orange-400">{stats.pending} BLAZE</div>
-          <div className="text-sm text-gray-600 mt-1">
-            Claimable now
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-orange-400 mb-2">
+              <Zap className="w-5 h-5" />
+              <span className="text-sm font-semibold">Pending</span>
+            </div>
+            <div className="text-3xl font-bold text-orange-400">{stats.pendingFormatted.toFixed(4)} BLAZE</div>
+            <div className="text-sm text-gray-600 mt-1">
+              Claimable now
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-purple-400 mb-2">
-            <TrendingUp className="w-5 h-5" />
-            <span className="text-sm font-semibold">Transactions</span>
-          </div>
-          <div className="text-3xl font-bold">{stats.transactions}</div>
-          <div className="text-sm text-gray-600 mt-1">
-            Total rewarded
-          </div>
-        </motion.div>
-      </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-gray-50/50 border border-gray-200 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-purple-400 mb-2">
+              <TrendingUp className="w-5 h-5" />
+              <span className="text-sm font-semibold">Transactions</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.transactions}</div>
+            <div className="text-sm text-gray-600 mt-1">
+              Total rewarded
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {/* How it Works */}
       <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-6">
@@ -133,49 +235,77 @@ export default function CashbackTracker() {
       </div>
 
       {/* Recent Cashback */}
-      <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6">
-        <h3 className="font-semibold mb-4">Recent Cashback</h3>
-        <div className="space-y-3">
-          {recentCashback.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between py-3 border-b border-gray-200 last:border-0"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
-                  <Gift className="w-5 h-5 text-green-400" />
+      {recentCashback.length > 0 && (
+        <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6">
+          <h3 className="font-semibold mb-4">Recent Cashback</h3>
+          <div className="space-y-3">
+            {recentCashback.map((item, index) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between py-3 border-b border-gray-200 last:border-0"
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    item.status === 'confirmed' ? 'bg-green-500/20' :
+                    item.status === 'pending' ? 'bg-orange-500/20' :
+                    'bg-gray-500/20'
+                  }`}>
+                    <Gift className={`w-5 h-5 ${
+                      item.status === 'confirmed' ? 'text-green-400' :
+                      item.status === 'pending' ? 'text-orange-400' :
+                      'text-gray-400'
+                    }`} />
+                  </div>
+                  <div>
+                    <div className="font-semibold capitalize">{item.transactionType} Cashback</div>
+                    <div className="text-sm text-gray-600">{formatTimeAgo(item.timestamp)}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="font-semibold">{item.type} Cashback</div>
-                  <div className="text-sm text-gray-600">{item.date}</div>
+                <div className="text-right">
+                  <div className="font-semibold text-green-400">
+                    +{item.cashbackAmountFormatted.toFixed(4)} BLAZE
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {item.transactionHash.slice(0, 8)}...{item.transactionHash.slice(-6)}
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="font-semibold text-green-400">
-                  +{item.amount} BLAZE
-                </div>
-                <a
-                  href="#"
-                  className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 justify-end"
-                >
-                  {item.tx} <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* No Cashback */}
+      {!isLoading && recentCashback.length === 0 && (
+        <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6 text-center">
+          <Gift className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">No Cashback Yet</h3>
+          <p className="text-gray-500">Start making transactions to earn cashback rewards!</p>
+        </div>
+      )}
 
       {/* Claim Button */}
-      {stats.pending > 0 && (
+      {stats && stats.pendingFormatted > 0 && (
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 rounded-xl font-semibold text-lg transition-all"
+          onClick={handleClaim}
+          disabled={isClaiming}
+          className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 rounded-xl font-semibold text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          Claim {stats.pending} BLAZE
+          {isClaiming ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Claiming...
+            </>
+          ) : (
+            <>
+              <Zap className="w-5 h-5" />
+              Claim {stats.pendingFormatted.toFixed(4)} BLAZE
+            </>
+          )}
         </motion.button>
       )}
     </div>

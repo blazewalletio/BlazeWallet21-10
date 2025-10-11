@@ -83,26 +83,31 @@ export class BlockchainService {
     try {
       const chainId = await this.provider.getNetwork().then(n => Number(n.chainId));
       
-      // Get API keys from environment (optional, but recommended)
+      // Get API keys from environment with fallbacks
       const getApiKey = (chain: number): string => {
         const keys: Record<number, string | undefined> = {
           1: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
           11155111: process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
-          56: process.env.NEXT_PUBLIC_BSCSCAN_API_KEY,
-          97: process.env.NEXT_PUBLIC_BSCSCAN_API_KEY,
-          137: process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY,
+          56: process.env.NEXT_PUBLIC_BSCSCAN_API_KEY || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          97: process.env.NEXT_PUBLIC_BSCSCAN_API_KEY || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          137: process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          42161: process.env.NEXT_PUBLIC_ARBISCAN_API_KEY || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          10: process.env.NEXT_PUBLIC_OPTIMISM_API_KEY || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
+          8453: process.env.NEXT_PUBLIC_BASESCAN_API_KEY || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY,
         };
-        return keys[chain] || '';
+        return keys[chain] || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY || '';
       };
 
-      // API endpoints for different chains
+      // API endpoints - using native APIs for better reliability (matches server-side)
       const apiConfig: Record<number, { url: string; v2: boolean }> = {
-        1: { url: 'https://api.etherscan.io/v2/api', v2: true }, // Ethereum V2
-        56: { url: 'https://api.bscscan.com/api', v2: false }, // BSC
+        1: { url: 'https://api.etherscan.io/api', v2: false }, // Ethereum
+        56: { url: 'https://api.bscscan.com/api', v2: false }, // BSC Mainnet
         97: { url: 'https://api-testnet.bscscan.com/api', v2: false }, // BSC Testnet
         137: { url: 'https://api.polygonscan.com/api', v2: false }, // Polygon
         42161: { url: 'https://api.arbiscan.io/api', v2: false }, // Arbitrum
-        11155111: { url: 'https://api-sepolia.etherscan.io/v2/api', v2: true }, // Sepolia V2
+        10: { url: 'https://api-optimistic.etherscan.io/api', v2: false }, // Optimism
+        8453: { url: 'https://api.basescan.org/api', v2: false }, // Base
+        11155111: { url: 'https://api-sepolia.etherscan.io/api', v2: false }, // Sepolia
       };
 
       const config = apiConfig[chainId];
@@ -189,4 +194,6 @@ export class BlockchainService {
     }
   }
 }
+
+
 

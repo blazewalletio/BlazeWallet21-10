@@ -70,8 +70,8 @@ contract BlazeToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyG
     // Fee discounts (basis points)
     mapping(address => uint256) public feeDiscounts;
     
-    // Premium membership (1000 ARC staked = lifetime premium)
-    uint256 public constant PREMIUM_THRESHOLD = 1000 * 10**18;
+    // Premium membership (10000 BLAZE staked = lifetime premium)
+    uint256 public constant PREMIUM_THRESHOLD = 10000 * 10**18;
     mapping(address => bool) public isPremium;
     
     // Events
@@ -116,8 +116,8 @@ contract BlazeToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyG
         _mint(_teamWallet, TEAM);
         _mint(_strategicWallet, STRATEGIC);
         
-        // Founder locked amount goes to vesting contract (handled separately)
-        // FOUNDER_LOCKED will be minted directly to vesting contract in deployment
+        // Mint founder locked tokens to founder wallet (will be transferred to vesting contract after deployment)
+        _mint(_founderWallet, FOUNDER_LOCKED);
     }
     
     /**
@@ -170,7 +170,6 @@ contract BlazeToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyG
         
         // Calculate rewards
         uint256 reward = calculateReward(msg.sender);
-        uint256 totalAmount = userStake.amount + reward;
         
         // Reset stake
         totalStaked -= userStake.amount;
@@ -184,8 +183,13 @@ contract BlazeToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyG
         // Reset fee discount
         feeDiscounts[msg.sender] = 0;
         
-        // Transfer tokens back
-        _transfer(address(this), msg.sender, totalAmount);
+        // Transfer staked tokens back from contract
+        _transfer(address(this), msg.sender, userStake.amount);
+        
+        // Transfer rewards from community wallet
+        if (reward > 0) {
+            _transfer(communityWallet, msg.sender, reward);
+        }
         
         emit Unstaked(msg.sender, userStake.amount, reward);
     }

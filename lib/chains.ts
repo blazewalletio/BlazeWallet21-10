@@ -61,7 +61,7 @@ export const CHAINS: Record<string, Chain> = {
     id: 11155111,
     name: 'Sepolia Testnet',
     shortName: 'SEP',
-    rpcUrl: 'https://rpc.sepolia.org',
+    rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
     explorerUrl: 'https://sepolia.etherscan.io',
     nativeCurrency: {
       name: 'Ethereum',
@@ -200,7 +200,17 @@ export const POPULAR_TOKENS: Record<string, any[]> = {
       logo: '💰',
     },
   ],
-  bscTestnet: [],
+  bscTestnet: [
+    {
+      address: '0x2C1421595151991ac3894943123d6c285bdF5116',
+      symbol: 'BLAZE',
+      name: 'Blaze Token',
+      decimals: 18,
+      logo: '🔥',
+    },
+  ],
 };
+
+
 
 

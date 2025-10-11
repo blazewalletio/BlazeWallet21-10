@@ -44,8 +44,11 @@ export default function TransactionHistory() {
       const blockchain = new BlockchainService(currentChain as any);
       const txs = await blockchain.getTransactionHistory(address, 10);
       setTransactions(txs);
+      console.log(`✅ Successfully loaded ${txs.length} transactions for ${currentChain}`);
     } catch (error) {
-      console.error('Error loading transactions:', error);
+      console.error(`❌ Error loading transactions for ${currentChain}:`, error);
+      // Still set empty array so UI shows "no transactions" instead of loading state
+      setTransactions([]);
     }
     setLoading(false);
   };

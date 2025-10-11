@@ -47,6 +47,16 @@ export default function Dashboard() {
     tokens,
     updateTokens 
   } = useWalletStore();
+
+  // Founder/Developer wallet addresses (add your addresses here)
+  const founderAddresses = [
+    '0x18347d3bcb33721e0c603befd2ffac8762d5a24d', // Your main wallet
+    '0x742d35cc6634c0532925a3b8d0c9e5c3d3e8d3f5', // Add other founder addresses
+    // Add more founder/developer addresses as needed
+  ].map(addr => addr.toLowerCase());
+
+  // Check if current wallet is a founder/developer
+  const isFounder = address && founderAddresses.includes(address.toLowerCase());
   
   const [showBalance, setShowBalance] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -549,17 +559,19 @@ export default function Dashboard() {
               </motion.button>
 
               {/* Vesting (Founder Only) */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowVesting(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left border-2 border-purple-500/30"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-3">
-                  <Lock className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Vesting</div>
-                <div className="text-xs text-slate-400">120M tokens locked</div>
-              </motion.button>
+              {isFounder && (
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowVesting(true)}
+                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left border-2 border-purple-500/30"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-3">
+                    <Lock className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="font-semibold mb-1">Vesting</div>
+                  <div className="text-xs text-slate-400">120M tokens locked</div>
+                </motion.button>
+              )}
             </div>
           </motion.div>
 
@@ -822,7 +834,7 @@ export default function Dashboard() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {showVesting && (
+        {showVesting && isFounder && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -834,7 +846,8 @@ export default function Dashboard() {
                 onClick={() => setShowVesting(false)}
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
-                ← Terug naar Dashboard
+                <ArrowLeft className="w-5 h-5" />
+                Terug naar Dashboard
               </button>
               <VestingDashboard />
             </div>
@@ -891,6 +904,7 @@ export default function Dashboard() {
     </>
   );
 }
+
 
 
 

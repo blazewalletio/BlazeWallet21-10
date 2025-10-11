@@ -1,71 +1,120 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Palette, Sparkles, ArrowLeft } from 'lucide-react';
+import { Palette, Sparkles, ArrowLeft, AlertCircle, CheckCircle } from 'lucide-react';
+import { useWalletStore } from '@/lib/wallet-store';
+import { NFTService, NFTCollection, NFTStats } from '@/lib/nft-service';
+import { ethers } from 'ethers';
 
 export default function NFTMintDashboard() {
+  const { wallet, connectedWallet } = useWalletStore();
   const [selectedSkin, setSelectedSkin] = useState<number | null>(null);
   const [isMinting, setIsMinting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  
+  // Real data from contracts
+  const [collections, setCollections] = useState<NFTCollection[]>([]);
+  const [stats, setStats] = useState<NFTStats | null>(null);
+  const [nftService, setNftService] = useState<NFTService | null>(null);
 
-  // Mock NFT skins
-  const skins = [
-    {
-      id: 0,
-      name: 'Classic Blue',
-      description: 'The original Blaze Wallet design with a modern twist',
-      price: 0.01,
-      rarity: 'Common',
-      gradient: 'from-blue-500 to-cyan-500',
-      minted: 1250,
-      supply: 5000,
-      benefits: ['Exclusive blue theme', 'Priority support', 'Early access to features'],
-    },
-    {
-      id: 1,
-      name: 'Fire Red',
-      description: 'Burning with passion and energy',
-      price: 0.02,
-      rarity: 'Rare',
-      gradient: 'from-red-500 to-orange-500',
-      minted: 450,
-      supply: 2000,
-      benefits: ['Exclusive red theme', 'Premium support', 'Beta access', 'Custom animations'],
-    },
-    {
-      id: 2,
-      name: 'Royal Purple',
-      description: 'Fit for royalty and luxury',
-      price: 0.05,
-      rarity: 'Epic',
-      gradient: 'from-purple-500 to-pink-500',
-      minted: 180,
-      supply: 1000,
-      benefits: ['Exclusive purple theme', 'VIP support', 'Alpha access', 'Custom sounds', 'Special effects'],
-    },
-    {
-      id: 3,
-      name: 'Golden Legend',
-      description: 'The ultimate Blaze Wallet experience',
-      price: 0.1,
-      rarity: 'Legendary',
-      gradient: 'from-yellow-400 to-orange-500',
-      minted: 25,
-      supply: 100,
-      benefits: ['Exclusive gold theme', 'Personal manager', 'All features unlocked', 'Custom everything', 'Exclusive events'],
-    },
-  ];
+  // Load data when wallet connects
+  useEffect(() => {
+    const loadData = async () => {
+      if (!connectedWallet) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const service = new NFTService(connectedWallet);
+        setNftService(service);
+        
+        const [collectionsData, statsData] = await Promise.all([
+          service.getCollections(),
+          service.getNFTStats(await connectedWallet.getAddress()),
+        ]);
+        
+        setCollections(collectionsData);
+        setStats(statsData);
+      } catch (err: any) {
+        console.error('Error loading NFT data:', err);
+        setError(err.message || 'Failed to load NFT data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [connectedWallet]);
+
+  // Helper function to get rarity based on collection
+  const getRarity = (collection: NFTCollection) => {
+    if (collection.maxSupply <= 100) return 'Legendary';
+    if (collection.maxSupply <= 500) return 'Epic';
+    if (collection.maxSupply <= 1000) return 'Rare';
+    return 'Common';
+  };
+
+  // Helper function to get gradient based on collection name
+  const getGradient = (name: string) => {
+    const nameLower = name.toLowerCase();
+    if (nameLower.includes('neon')) return 'from-blue-500 to-cyan-500';
+    if (nameLower.includes('galaxy')) return 'from-purple-500 to-pink-500';
+    if (nameLower.includes('diamond')) return 'from-yellow-400 to-orange-500';
+    return 'from-blue-500 to-cyan-500';
+  };
+
+  // Helper function to get benefits based on rarity
+  const getBenefits = (rarity: string) => {
+    switch (rarity) {
+      case 'Legendary':
+        return ['Exclusive theme', 'Personal manager', 'All features unlocked', 'Custom everything', 'Exclusive events'];
+      case 'Epic':
+        return ['Exclusive theme', 'VIP support', 'Alpha access', 'Custom sounds', 'Special effects'];
+      case 'Rare':
+        return ['Exclusive theme', 'Premium support', 'Beta access', 'Custom animations'];
+      default:
+        return ['Exclusive theme', 'Priority support', 'Early access to features'];
+    }
+  };
 
   const handleMint = async () => {
-    if (selectedSkin === null) return;
+    if (selectedSkin === null || !nftService) return;
     
-    setIsMinting(true);
-    // Simulate minting process
-    setTimeout(() => {
-      setIsMinting(false);
-      alert(`Successfully minted ${skins[selectedSkin].name} NFT!`);
+    try {
+      setIsMinting(true);
+      setError(null);
+      setSuccess(null);
+      
+      const collection = collections[selectedSkin];
+      console.log('Minting NFT from collection:', collection.name);
+      
+      const txHash = await nftService.mintNFT(collection.id);
+      
+      setSuccess(`Successfully minted ${collection.name} NFT! Transaction: ${txHash.slice(0, 10)}...`);
       setSelectedSkin(null);
-    }, 3000);
+      
+      // Reload data to update stats
+      const [collectionsData, statsData] = await Promise.all([
+        nftService.getCollections(),
+        nftService.getNFTStats(await connectedWallet!.getAddress()),
+      ]);
+      
+      setCollections(collectionsData);
+      setStats(statsData);
+      
+    } catch (err: any) {
+      console.error('Error minting NFT:', err);
+      setError(err.message || 'Failed to mint NFT');
+    } finally {
+      setIsMinting(false);
+    }
   };
 
   return (
@@ -96,154 +145,208 @@ export default function NFTMintDashboard() {
         </div>
       </div>
 
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
+          <span className="ml-3 text-gray-600">Loading NFT data...</span>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+          <div>
+            <h3 className="font-semibold text-red-400 mb-1">Error</h3>
+            <p className="text-sm text-red-300">{error}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Success State */}
+      {success && (
+        <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-center gap-3">
+          <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+          <div>
+            <h3 className="font-semibold text-green-400 mb-1">Success</h3>
+            <p className="text-sm text-green-300">{success}</p>
+          </div>
+        </div>
+      )}
+
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-purple-400 mb-2">
-            <Palette className="w-5 h-5" />
-            <span className="text-sm font-semibold">Total Minted</span>
-          </div>
-          <div className="text-3xl font-bold text-purple-400">1,905</div>
-          <div className="text-sm text-gray-600 mt-1">
-            NFT skins
-          </div>
-        </motion.div>
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-purple-400 mb-2">
+              <Palette className="w-5 h-5" />
+              <span className="text-sm font-semibold">Total Minted</span>
+            </div>
+            <div className="text-3xl font-bold text-purple-400">{stats.totalMinted.toLocaleString()}</div>
+            <div className="text-sm text-gray-600 mt-1">
+              NFT skins
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-blue-400 mb-2">
-            <Sparkles className="w-5 h-5" />
-            <span className="text-sm font-semibold">Your NFTs</span>
-          </div>
-          <div className="text-3xl font-bold text-blue-400">0</div>
-          <div className="text-sm text-gray-600 mt-1">
-            Currently owned
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-blue-400 mb-2">
+              <Sparkles className="w-5 h-5" />
+              <span className="text-sm font-semibold">Your NFTs</span>
+            </div>
+            <div className="text-3xl font-bold text-blue-400">{stats.userNFTs}</div>
+            <div className="text-sm text-gray-600 mt-1">
+              Currently owned
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-green-400 mb-2">
-            <Sparkles className="w-5 h-5" />
-            <span className="text-sm font-semibold">Floor Price</span>
-          </div>
-          <div className="text-3xl font-bold text-green-400">0.01</div>
-          <div className="text-sm text-gray-600 mt-1">
-            ETH
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-green-400 mb-2">
+              <Sparkles className="w-5 h-5" />
+              <span className="text-sm font-semibold">Your BLAZE</span>
+            </div>
+            <div className="text-3xl font-bold text-green-400">{stats.userBlazeBalanceFormatted.toFixed(0)}</div>
+            <div className="text-sm text-gray-600 mt-1">
+              BLAZE tokens
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-xl p-6"
-        >
-          <div className="flex items-center gap-2 text-orange-400 mb-2">
-            <Sparkles className="w-5 h-5" />
-            <span className="text-sm font-semibold">Total Volume</span>
-          </div>
-          <div className="text-3xl font-bold text-orange-400">45.2</div>
-          <div className="text-sm text-gray-600 mt-1">
-            ETH
-          </div>
-        </motion.div>
-      </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-xl p-6"
+          >
+            <div className="flex items-center gap-2 text-orange-400 mb-2">
+              <Sparkles className="w-5 h-5" />
+              <span className="text-sm font-semibold">Premium Status</span>
+            </div>
+            <div className="text-3xl font-bold text-orange-400">
+              {stats.premiumStatus ? 'Yes' : 'No'}
+            </div>
+            <div className="text-sm text-gray-600 mt-1">
+              {stats.premiumStatus ? `${stats.premiumDiscount}% discount` : 'Get 1k+ BLAZE'}
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {/* NFT Collection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {skins.map((skin, index) => {
-          const isSelected = selectedSkin === index;
-          
-          return (
-            <motion.div
-              key={skin.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              onClick={() => setSelectedSkin(index)}
-              className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all ${
-                isSelected
-                  ? 'border-purple-500 bg-purple-500/10'
-                  : 'border-gray-200 hover:border-gray-300 hover:shadow-lg'
-              }`}
-            >
-              {/* Rarity Badge */}
-              <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${
-                skin.rarity === 'Legendary' ? 'bg-gradient-to-r from-orange-500 to-red-500' :
-                skin.rarity === 'Epic' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
-                skin.rarity === 'Rare' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
-                'bg-gradient-to-r from-slate-500 to-slate-600'
-              }`}>
-                {skin.rarity}
-              </div>
-
-              {/* Preview */}
-              <div className={`w-full h-48 rounded-xl bg-gradient-to-br ${skin.gradient} mb-4 flex items-center justify-center relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/20" />
-                <div className="text-center relative z-10">
-                  <div className="w-20 h-20 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center">
-                    <Sparkles className="w-10 h-10 text-white/80" />
-                  </div>
-                  <div className="text-white font-bold text-lg">{skin.name}</div>
+      {collections.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {collections.map((collection, index) => {
+            const isSelected = selectedSkin === index;
+            const rarity = getRarity(collection);
+            const gradient = getGradient(collection.name);
+            const benefits = getBenefits(rarity);
+            
+            return (
+              <motion.div
+                key={collection.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => setSelectedSkin(index)}
+                className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all ${
+                  isSelected
+                    ? 'border-purple-500 bg-purple-500/10'
+                    : 'border-gray-200 hover:border-gray-300 hover:shadow-lg'
+                } ${!collection.active ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {/* Rarity Badge */}
+                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${
+                  rarity === 'Legendary' ? 'bg-gradient-to-r from-orange-500 to-red-500' :
+                  rarity === 'Epic' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                  rarity === 'Rare' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
+                  'bg-gradient-to-r from-slate-500 to-slate-600'
+                }`}>
+                  {rarity}
                 </div>
-              </div>
 
-              {/* Info */}
-              <div>
-                <h3 className="text-xl font-bold mb-1">{skin.name}</h3>
-                <p className="text-sm text-gray-600 mb-4">{skin.description}</p>
-
-                {/* Benefits */}
-                <div className="space-y-2 mb-4">
-                  <h4 className="text-sm font-semibold">Benefits:</h4>
-                  {skin.benefits.map((benefit, i) => (
-                    <div key={i} className="text-xs text-gray-600 flex items-center gap-2">
-                      <div className="w-1 h-1 bg-purple-400 rounded-full" />
-                      {benefit}
+                {/* Preview */}
+                <div className={`w-full h-48 rounded-xl bg-gradient-to-br ${gradient} mb-4 flex items-center justify-center relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="text-center relative z-10">
+                    <div className="w-20 h-20 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Sparkles className="w-10 h-10 text-white/80" />
                     </div>
-                  ))}
+                    <div className="text-white font-bold text-lg">{collection.name}</div>
+                  </div>
                 </div>
 
-                {/* Stats */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Price:</span>
-                    <span className="font-bold">{skin.price} ETH</span>
+                {/* Info */}
+                <div>
+                  <h3 className="text-xl font-bold mb-1">{collection.name}</h3>
+                  <p className="text-sm text-gray-600 mb-4">Exclusive NFT skin for Blaze Wallet</p>
+
+                  {/* Benefits */}
+                  <div className="space-y-2 mb-4">
+                    <h4 className="text-sm font-semibold">Benefits:</h4>
+                    {benefits.map((benefit, i) => (
+                      <div key={i} className="text-xs text-gray-600 flex items-center gap-2">
+                        <div className="w-1 h-1 bg-purple-400 rounded-full" />
+                        {benefit}
+                      </div>
+                    ))}
                   </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Minted:</span>
-                    <span className="font-semibold">{skin.minted}/{skin.supply}</span>
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-full bg-gradient-to-r ${skin.gradient}`}
-                      style={{ width: `${(skin.minted / skin.supply) * 100}%` }}
-                    />
+
+                  {/* Stats */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Price:</span>
+                      <span className="font-bold">{collection.priceFormatted.toFixed(2)} BLAZE</span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Minted:</span>
+                      <span className="font-semibold">{collection.minted}/{collection.maxSupply}</span>
+                    </div>
+                    
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className={`h-full bg-gradient-to-r ${gradient}`}
+                        style={{ width: `${collection.progress}%` }}
+                      />
+                    </div>
+
+                    {!collection.active && (
+                      <div className="text-xs text-red-500 font-semibold mt-2">
+                        Collection not active
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* No Collections */}
+      {!isLoading && collections.length === 0 && (
+        <div className="text-center py-12">
+          <Palette className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">No NFT Collections Available</h3>
+          <p className="text-gray-500">Check back later for new NFT collections to mint!</p>
+        </div>
+      )}
 
       {/* Mint Button */}
-      {selectedSkin !== null && (
+      {selectedSkin !== null && collections[selectedSkin] && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -251,26 +354,31 @@ export default function NFTMintDashboard() {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg font-bold">{skins[selectedSkin].name}</h3>
+              <h3 className="text-lg font-bold">{collections[selectedSkin].name}</h3>
               <p className="text-sm text-gray-600">Ready to mint</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold">{skins[selectedSkin].price} ETH</div>
+              <div className="text-2xl font-bold">{collections[selectedSkin].priceFormatted.toFixed(2)} BLAZE</div>
               <div className="text-sm text-gray-600">
-                ≈ ${(skins[selectedSkin].price * 1700).toFixed(0)}
+                {stats?.premiumStatus ? `Premium discount applied!` : 'Standard price'}
               </div>
             </div>
           </div>
           
           <button
             onClick={handleMint}
-            disabled={isMinting}
+            disabled={isMinting || !collections[selectedSkin].active}
             className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
           >
             {isMinting ? (
               <>
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 Minting...
+              </>
+            ) : !collections[selectedSkin].active ? (
+              <>
+                <AlertCircle className="w-5 h-5" />
+                Collection Not Active
               </>
             ) : (
               <>
