@@ -34,6 +34,10 @@ export default function Home() {
     };
     
     checkMobile();
+    console.log('🔍 Device detection:', { 
+      userAgent: navigator.userAgent,
+      isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    });
   }, []);
 
   useEffect(() => {
@@ -60,6 +64,7 @@ export default function Home() {
           setHasWallet(true);
           
           // Check device and authentication method
+          console.log('🔍 Auth flow decision:', { biometricEnabled, isMobile });
           if (biometricEnabled && isMobile) {
             // Try biometric authentication first on mobile
             console.log('📱 Mobile with biometric - showing biometric auth');
