@@ -30,6 +30,16 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     try {
       setError('');
       await importWallet(importInput.trim());
+      
+      // After importing wallet, we need to set a password
+      // The app will detect this and show password setup modal
+      // Don't call onComplete() immediately - let the main app handle password setup
+      
+      // Set a flag to indicate we just imported a wallet without password
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('wallet_just_imported', 'true');
+      }
+      
       onComplete();
     } catch (err) {
       setError('Ongeldige recovery phrase. Controleer je invoer.');
@@ -51,6 +61,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     );
     
     if (isValid) {
+      // Set flag to indicate we just created a wallet without password
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('wallet_just_created', 'true');
+      }
       onComplete();
     } else {
       setError('Onjuiste woorden. Probeer het opnieuw.');

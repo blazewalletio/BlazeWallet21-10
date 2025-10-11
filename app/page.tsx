@@ -67,9 +67,25 @@ export default function Home() {
         } else {
           // Wallet exists but no password set - check for old unencrypted mnemonic
           const storedMnemonic = localStorage.getItem('wallet_mnemonic');
-          if (storedMnemonic) {
+          const justImported = localStorage.getItem('wallet_just_imported') === 'true';
+          const justCreated = localStorage.getItem('wallet_just_created') === 'true';
+          
+          if (storedMnemonic || justImported || justCreated) {
             try {
-              await importWallet(storedMnemonic);
+              if (justImported) {
+                // Clear the flag
+                localStorage.removeItem('wallet_just_imported');
+                console.log('🔄 Wallet just imported - showing password setup');
+              } else if (justCreated) {
+                // Clear the flag
+                localStorage.removeItem('wallet_just_created');
+                console.log('🔄 Wallet just created - showing password setup');
+              } else if (storedMnemonic) {
+                // Legacy case - re-import from stored mnemonic
+                await importWallet(storedMnemonic);
+                console.log('🔄 Legacy wallet found - re-importing and showing password setup');
+              }
+              
               setHasWallet(true);
               setShowPasswordSetup(true); // Prompt to set password
             } catch (error) {
