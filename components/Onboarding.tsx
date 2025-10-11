@@ -38,6 +38,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       // Set a flag to indicate we just imported a wallet without password
       if (typeof window !== 'undefined') {
         localStorage.setItem('wallet_just_imported', 'true');
+        console.log('✅ Set wallet_just_imported flag');
       }
       
       onComplete();

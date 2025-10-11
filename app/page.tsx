@@ -43,7 +43,15 @@ export default function Home() {
       const hasPasswordStored = localStorage.getItem('has_password') === 'true';
       const biometricEnabled = localStorage.getItem('biometric_enabled') === 'true';
       
-      console.log('🔍 Checking wallet state:', { storedAddress, hasPasswordStored, biometricEnabled, isMobile });
+            console.log('🔍 Checking wallet state:', { storedAddress, hasPasswordStored, biometricEnabled, isMobile });
+            console.log('🔍 LocalStorage check:', {
+              wallet_address: localStorage.getItem('wallet_address'),
+              wallet_mnemonic: localStorage.getItem('wallet_mnemonic'),
+              has_password: localStorage.getItem('has_password'),
+              biometric_enabled: localStorage.getItem('biometric_enabled'),
+              wallet_just_imported: localStorage.getItem('wallet_just_imported'),
+              wallet_just_created: localStorage.getItem('wallet_just_created')
+            });
       
       if (storedAddress) {
         if (hasPasswordStored) {
@@ -87,6 +95,7 @@ export default function Home() {
               }
               
               setHasWallet(true);
+              console.log('🎯 Triggering password setup modal');
               setShowPasswordSetup(true); // Prompt to set password
             } catch (error) {
               console.error('Error importing wallet:', error);
