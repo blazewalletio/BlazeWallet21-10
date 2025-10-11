@@ -124,14 +124,14 @@ export class GovernanceService {
   constructor(wallet: ethers.Signer) {
     this.wallet = wallet;
     this.contract = new ethers.Contract(
-      CONTRACT_ADDRESSES.bscTestnet.governance,
+      CONTRACT_ADDRESSES.governance,
       GOVERNANCE_ABI,
       wallet
     );
     
     // We need the BLAZE token contract to get user balance (voting power)
     this.blazeToken = new ethers.Contract(
-      CONTRACT_ADDRESSES.bscTestnet.blazeToken,
+      CONTRACT_ADDRESSES.blazeToken,
       [
         {
           "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
@@ -317,6 +317,6 @@ export class GovernanceService {
    * Get contract address
    */
   getContractAddress(): string {
-    return CONTRACT_ADDRESSES.bscTestnet.governance;
+    return CONTRACT_ADDRESSES.governance;
   }
 }

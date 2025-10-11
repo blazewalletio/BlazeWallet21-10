@@ -47,6 +47,9 @@ export const CONTRACTS = CURRENT_NETWORK === 'testnet'
   ? BSC_TESTNET_CONTRACTS 
   : BSC_MAINNET_CONTRACTS;
 
+// Alias for backward compatibility
+export const CONTRACT_ADDRESSES = CONTRACTS;
+
 // Contract ABIs will be imported from the artifacts
 export { default as BlazeTokenABI } from '../contracts/artifacts/contracts/BlazeToken.sol/BlazeToken.json';
 export { default as BlazePresaleABI } from '../contracts/artifacts/contracts/BlazePresale.sol/BlazePresale.json';

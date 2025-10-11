@@ -7,7 +7,7 @@ import { useWalletStore } from '@/lib/wallet-store';
 import { ReferralService, ReferralData, ReferralStats, ReferralTransaction } from '@/lib/referral-service';
 
 export default function ReferralDashboard() {
-  const { connectedWallet } = useWalletStore();
+  const { wallet } = useWalletStore();
   const [copied, setCopied] = useState(false);
   const [referralData, setReferralData] = useState<ReferralData | null>(null);
   const [stats, setStats] = useState<ReferralStats | null>(null);
@@ -22,7 +22,7 @@ export default function ReferralDashboard() {
   // Load data when wallet connects
   useEffect(() => {
     const loadData = async () => {
-      if (!connectedWallet) {
+      if (!wallet) {
         setIsLoading(false);
         return;
       }
@@ -31,7 +31,7 @@ export default function ReferralDashboard() {
         setIsLoading(true);
         setError(null);
         
-        const userAddress = await connectedWallet.getAddress();
+        const userAddress = await wallet.getAddress();
         
         const [data, statsData, transactionsData] = await Promise.all([
           referralService.getReferralData(userAddress),
@@ -51,7 +51,7 @@ export default function ReferralDashboard() {
     };
 
     loadData();
-  }, [connectedWallet]);
+  }, [wallet]);
 
   const copyReferralLink = () => {
     if (!referralData) return;
@@ -61,15 +61,15 @@ export default function ReferralDashboard() {
   };
 
   const handleClaim = async () => {
-    if (!connectedWallet || !stats || stats.pendingRewardsFormatted === 0) return;
+    if (!wallet || !stats || stats.pendingRewardsFormatted === 0) return;
 
     try {
       setIsClaiming(true);
       setError(null);
       setSuccess(null);
       
-      const userAddress = await connectedWallet.getAddress();
-      const txHash = await referralService.claimReferralRewards(userAddress, connectedWallet);
+      const userAddress = await wallet.getAddress();
+      const txHash = await referralService.claimReferralRewards(userAddress, wallet);
       
       setSuccess(`Successfully claimed ${stats.pendingRewardsFormatted.toFixed(4)} BLAZE! Transaction: ${txHash.slice(0, 10)}...`);
       

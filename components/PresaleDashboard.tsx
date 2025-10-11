@@ -66,24 +66,24 @@ export default function PresaleDashboard() {
     setError('');
 
     try {
+      // Create provider if needed
+      let walletWithProvider = wallet;
+      
       console.log('🔗 Wallet details:', {
         hasWallet: !!wallet,
         hasAddress: !!address,
-        hasProvider: !!wallet.provider,
+        hasProvider: !!walletWithProvider.provider,
         currentChain: currentChain
       });
-
-      // Create provider if needed
-      let connectedWallet = wallet;
-      if (!wallet.provider) {
+      if (!walletWithProvider.provider) {
         console.log('🔧 Creating provider for wallet...');
         const chain = CHAINS[currentChain];
         const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
-        connectedWallet = wallet.connect(provider);
+        walletWithProvider = wallet.connect(provider);
         console.log('✅ Provider created and wallet connected');
       }
 
-      const presaleService = new PresaleService(connectedWallet);
+      const presaleService = new PresaleService(walletWithProvider);
       
       console.log('📊 Fetching presale info...');
       const info = await presaleService.getPresaleInfo();
@@ -154,14 +154,14 @@ export default function PresaleDashboard() {
       console.log('💰 Starting contribution process...');
       
       // Create provider if needed
-      let connectedWallet = wallet;
-      if (!wallet.provider) {
+      let walletWithProvider = wallet;
+      if (!walletWithProvider.provider) {
         const chain = CHAINS[currentChain];
         const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
-        connectedWallet = wallet.connect(provider);
+        walletWithProvider = wallet.connect(provider);
       }
 
-      const presaleService = new PresaleService(connectedWallet);
+      const presaleService = new PresaleService(walletWithProvider);
       
       console.log('💰 Contributing amount:', amountUSD);
       const tx = await presaleService.contribute(amountUSD);

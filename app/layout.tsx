@@ -5,14 +5,29 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Blaze - Lightning Fast Crypto",
-  description: "The fastest crypto wallet on earth. Buy, swap, send instantly.",
+  title: "BLAZE Wallet - Secure DeFi Wallet",
+  description: "Secure crypto wallet with DeFi features, biometric authentication, and cross-device sync.",
   manifest: "/manifest.json",
-  themeColor: "#ffffff",
+  themeColor: "#f97316",
   viewport: {
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
+    userScalable: false,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "BLAZE Wallet",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "BLAZE Wallet",
+    title: "BLAZE Wallet - Secure DeFi Wallet",
+    description: "Secure crypto wallet with DeFi features, biometric authentication, and cross-device sync.",
   },
 };
 
@@ -33,5 +48,6 @@ export default function RootLayout({
     </html>
   );
 }
+
 
 

@@ -7,7 +7,7 @@ import { useWalletStore } from '@/lib/wallet-store';
 import { GovernanceService, Proposal, GovernanceStats } from '@/lib/governance-service';
 
 export default function GovernanceDashboard() {
-  const { wallet, address, chain } = useWalletStore();
+  const { wallet, address, currentChain } = useWalletStore();
   const [activeTab, setActiveTab] = useState<'vote' | 'create'>('vote');
   const [newProposal, setNewProposal] = useState({ title: '', description: '' });
   const [proposals, setProposals] = useState<Proposal[]>([]);
@@ -54,7 +54,7 @@ export default function GovernanceDashboard() {
     };
 
     loadGovernanceData();
-  }, [wallet, address, chain]);
+  }, [wallet, address, currentChain]);
 
   const handleVote = async (proposalId: number, vote: 'for' | 'against') => {
     if (!wallet) {

@@ -8,7 +8,7 @@ import { NFTService, NFTCollection, NFTStats } from '@/lib/nft-service';
 import { ethers } from 'ethers';
 
 export default function NFTMintDashboard() {
-  const { wallet, connectedWallet } = useWalletStore();
+  const { wallet } = useWalletStore();
   const [selectedSkin, setSelectedSkin] = useState<number | null>(null);
   const [isMinting, setIsMinting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +23,7 @@ export default function NFTMintDashboard() {
   // Load data when wallet connects
   useEffect(() => {
     const loadData = async () => {
-      if (!connectedWallet) {
+      if (!wallet) {
         setIsLoading(false);
         return;
       }
@@ -32,12 +32,12 @@ export default function NFTMintDashboard() {
         setIsLoading(true);
         setError(null);
         
-        const service = new NFTService(connectedWallet);
+        const service = new NFTService(wallet);
         setNftService(service);
         
         const [collectionsData, statsData] = await Promise.all([
           service.getCollections(),
-          service.getNFTStats(await connectedWallet.getAddress()),
+          service.getNFTStats(await wallet.getAddress()),
         ]);
         
         setCollections(collectionsData);
@@ -51,7 +51,7 @@ export default function NFTMintDashboard() {
     };
 
     loadData();
-  }, [connectedWallet]);
+  }, [wallet]);
 
   // Helper function to get rarity based on collection
   const getRarity = (collection: NFTCollection) => {
@@ -103,7 +103,7 @@ export default function NFTMintDashboard() {
       // Reload data to update stats
       const [collectionsData, statsData] = await Promise.all([
         nftService.getCollections(),
-        nftService.getNFTStats(await connectedWallet!.getAddress()),
+        nftService.getNFTStats(await wallet!.getAddress()),
       ]);
       
       setCollections(collectionsData);

@@ -68,13 +68,13 @@ export default function StakingDashboard() {
       setIsLoading(true);
       
       // Create connected wallet with provider
-      let connectedWallet = wallet;
+      let walletWithProvider = wallet;
       if (!wallet.provider) {
         const provider = new ethers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545');
-        connectedWallet = wallet.connect(provider);
+        walletWithProvider = wallet.connect(provider);
       }
 
-      const stakingService = new StakingService(connectedWallet);
+      const stakingService = new StakingService(wallet);
 
       const [stake, stats, bal] = await Promise.all([
         stakingService.getStakeInfo(address),
@@ -126,13 +126,13 @@ export default function StakingDashboard() {
       setSuccess('');
 
       // Create connected wallet
-      let connectedWallet = wallet;
+      let walletWithProvider = wallet;
       if (!wallet.provider) {
         const provider = new ethers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545');
-        connectedWallet = wallet.connect(provider);
+        walletWithProvider = wallet.connect(provider);
       }
 
-      const stakingService = new StakingService(connectedWallet);
+      const stakingService = new StakingService(wallet);
       const txHash = await stakingService.stake(amount, selectedPlan);
 
       setSuccess(`Successfully staked ${amount} BLAZE!`);
@@ -177,13 +177,13 @@ export default function StakingDashboard() {
       setError('');
       setSuccess('');
 
-      let connectedWallet = wallet;
+      let walletWithProvider = wallet;
       if (!wallet.provider) {
         const provider = new ethers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545');
-        connectedWallet = wallet.connect(provider);
+        walletWithProvider = wallet.connect(provider);
       }
 
-      const stakingService = new StakingService(connectedWallet);
+      const stakingService = new StakingService(wallet);
       const txHash = await stakingService.unstake();
 
       setSuccess(`Successfully unstaked! Tx: ${txHash.slice(0, 10)}...`);
@@ -209,13 +209,13 @@ export default function StakingDashboard() {
       setError('');
       setSuccess('');
 
-      let connectedWallet = wallet;
+      let walletWithProvider = wallet;
       if (!wallet.provider) {
         const provider = new ethers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545');
-        connectedWallet = wallet.connect(provider);
+        walletWithProvider = wallet.connect(provider);
       }
 
-      const stakingService = new StakingService(connectedWallet);
+      const stakingService = new StakingService(wallet);
       const txHash = await stakingService.claimRewards();
 
       setSuccess(`Successfully claimed rewards! Tx: ${txHash.slice(0, 10)}...`);

@@ -7,7 +7,7 @@ import { useWalletStore } from '@/lib/wallet-store';
 import { CashbackService, CashbackStats, CashbackTransaction } from '@/lib/cashback-service';
 
 export default function CashbackTracker() {
-  const { connectedWallet } = useWalletStore();
+  const { wallet } = useWalletStore();
   const [stats, setStats] = useState<CashbackStats | null>(null);
   const [recentCashback, setRecentCashback] = useState<CashbackTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +20,7 @@ export default function CashbackTracker() {
   // Load data when wallet connects
   useEffect(() => {
     const loadData = async () => {
-      if (!connectedWallet) {
+      if (!wallet) {
         setIsLoading(false);
         return;
       }
@@ -29,7 +29,7 @@ export default function CashbackTracker() {
         setIsLoading(true);
         setError(null);
         
-        const userAddress = await connectedWallet.getAddress();
+        const userAddress = await wallet.getAddress();
         
         const [statsData, transactionsData] = await Promise.all([
           cashbackService.getCashbackStats(userAddress),
@@ -47,18 +47,18 @@ export default function CashbackTracker() {
     };
 
     loadData();
-  }, [connectedWallet]);
+  }, [wallet]);
 
   const handleClaim = async () => {
-    if (!connectedWallet || !stats || stats.pendingFormatted === 0) return;
+    if (!wallet || !stats || stats.pendingFormatted === 0) return;
 
     try {
       setIsClaiming(true);
       setError(null);
       setSuccess(null);
       
-      const userAddress = await connectedWallet.getAddress();
-      const txHash = await cashbackService.claimCashback(userAddress, connectedWallet);
+      const userAddress = await wallet.getAddress();
+      const txHash = await cashbackService.claimCashback(userAddress, wallet);
       
       setSuccess(`Successfully claimed ${stats.pendingFormatted.toFixed(4)} BLAZE! Transaction: ${txHash.slice(0, 10)}...`);
       

@@ -136,14 +136,14 @@ export class LaunchpadService {
   constructor(wallet: ethers.Signer) {
     this.wallet = wallet;
     this.contract = new ethers.Contract(
-      CONTRACT_ADDRESSES.bscTestnet.launchpad,
+      CONTRACT_ADDRESSES.launchpad,
       LAUNCHPAD_ABI,
       wallet
     );
     
     // We need the BLAZE token contract to check early access
     this.blazeToken = new ethers.Contract(
-      CONTRACT_ADDRESSES.bscTestnet.blazeToken,
+      CONTRACT_ADDRESSES.blazeToken,
       [
         {
           "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
@@ -379,6 +379,6 @@ export class LaunchpadService {
    * Get contract address
    */
   getContractAddress(): string {
-    return CONTRACT_ADDRESSES.bscTestnet.launchpad;
+    return CONTRACT_ADDRESSES.launchpad;
   }
 }

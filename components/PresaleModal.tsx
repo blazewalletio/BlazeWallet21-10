@@ -98,11 +98,11 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
         console.log('✅ All checks passed, starting to load presale data...');
         setIsLoading(true);
         
-        const presaleService = new PresaleService(connectedWallet);
+        const presaleService = new PresaleService(wallet);
         console.log('🔍 Creating PresaleService with connected wallet:', {
-          hasProvider: !!connectedWallet.provider,
-          address: connectedWallet.address,
-          providerType: connectedWallet.provider?.constructor.name
+          hasProvider: !!wallet.provider,
+          address: wallet.address,
+          providerType: 'JsonRpcProvider'
         });
         
         // Continue with presale data loading using connected wallet
@@ -123,7 +123,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
         console.log('🔍 Creating PresaleService with wallet:', {
           hasProvider: !!wallet.provider,
           address: wallet.address,
-          providerType: wallet.provider?.constructor.name
+          providerType: 'JsonRpcProvider'
         });
         
         const presaleService = new PresaleService(wallet);
@@ -221,16 +221,16 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
 
     try {
       // Ensure wallet has provider
-      let connectedWallet = wallet;
+      let walletWithProvider = wallet;
       if (!wallet.provider) {
         console.log('🔧 Wallet has no provider, creating one for contribution...');
         const chainConfig = CHAINS[currentChain];
         const provider = new ethers.JsonRpcProvider(chainConfig.rpcUrl);
-        connectedWallet = wallet.connect(provider);
-        useWalletStore.setState({ wallet: connectedWallet });
+        walletWithProvider = wallet.connect(provider);
+        useWalletStore.setState({ wallet: wallet });
       }
       
-      const presaleService = new PresaleService(connectedWallet);
+      const presaleService = new PresaleService(wallet);
       
       // Contribute
       const txHash = await presaleService.contribute(amount);
@@ -567,6 +567,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
     </AnimatePresence>
   );
 }
+
 
 
 
