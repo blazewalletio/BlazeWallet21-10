@@ -1,4 +1,4 @@
-# 🔥 BLAZE Wallet - Ignite Your Crypto Journey - Force Deploy
+# 🔥 BLAZE Wallet - Ignite Your Crypto Journey - GitHub Vercel Connected
 
 **Set your finances ablaze.** Lightning fast crypto wallet with revolutionary design and DeFi features.
 
