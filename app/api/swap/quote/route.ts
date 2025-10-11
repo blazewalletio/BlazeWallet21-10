@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 // Multi-source swap quote aggregator
 // Priority: 1inch API (if key available) → CoinGecko price estimate
 

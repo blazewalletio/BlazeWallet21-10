@@ -151,7 +151,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                 <div className="text-sm">
                   <p className="text-blue-300 font-medium mb-1">Powered by MoonPay</p>
                   <p className="text-gray-600 text-xs">
-                    Wereldwijd vertrouwde fiat-naar-crypto service. Crypto wordt direct naar je Arc wallet gestuurd.
+                    Wereldwijd vertrouwde fiat-naar-crypto service. Crypto wordt direct naar je BLAZE Wallet gestuurd.
                     Fees: ~4.5% per transactie.
                   </p>
                 </div>
@@ -171,7 +171,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
 
             {/* Disclaimer */}
             <p className="text-xs text-slate-500 text-center mt-4">
-              Door te klikken ga je naar MoonPay. Arc Wallet slaat geen betalingsgegevens op.
+              Door te klikken ga je naar MoonPay. BLAZE Wallet slaat geen betalingsgegevens op.
             </p>
                 </div>
               </div>

@@ -41,7 +41,7 @@ export default function DeployContract() {
         throw new Error(`No ${chain.nativeCurrency.symbol} for gas fees. Get some ${chain.nativeCurrency.symbol} first!`);
       }
 
-      console.log('🚀 Deploying Arc Token...');
+      console.log('🚀 Deploying BLAZE Token...');
       console.log('From:', wallet.address);
       console.log('Balance:', ethers.formatEther(balance), chain.nativeCurrency.symbol);
 
@@ -80,8 +80,8 @@ export default function DeployContract() {
             <Rocket className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold">Deploy Arc Token</h2>
-            <p className="text-gray-600 text-sm">Deploy directly from Arc wallet</p>
+            <h2 className="text-2xl font-bold">Deploy BLAZE Token</h2>
+            <p className="text-gray-600 text-sm">Deploy directly from BLAZE Wallet</p>
           </div>
         </div>
 
@@ -122,7 +122,7 @@ export default function DeployContract() {
             <div className="mb-4 p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
               <h3 className="text-xl font-semibold text-emerald-400 mb-2">Successfully Deployed!</h3>
-              <p className="text-gray-600 text-sm mb-4">Your Arc Token is now live on {chain.name}</p>
+              <p className="text-gray-600 text-sm mb-4">Your BLAZE Token is now live on {chain.name}</p>
               
               <div className="p-3 bg-white/50 rounded-lg">
                 <div className="text-xs text-gray-600 mb-1">Contract Address:</div>
@@ -192,7 +192,7 @@ export default function DeployContract() {
         <div className="mt-6 p-4 bg-white/50 rounded-xl">
           <h4 className="font-semibold mb-2">ℹ️ How it works</h4>
           <ul className="text-sm text-gray-600 space-y-1">
-            <li>• Uses your Arc wallet private key</li>
+            <li>• Uses your BLAZE Wallet private key</li>
             <li>• Deploys directly to blockchain</li>
             <li>• You pay gas fees from your balance</li>
             <li>• Contract is verified automatically</li>

@@ -34,7 +34,7 @@ export class MoonPayService {
       ...(config.baseCurrencyCode && { baseCurrencyCode: config.baseCurrencyCode }),
       ...(config.apiKey && { apiKey: config.apiKey }),
       // Customize appearance
-      colorCode: '%238B5CF6', // Arc purple
+      colorCode: '%23F97316', // BLAZE orange
       theme: 'dark',
       language: 'nl', // Dutch
     });

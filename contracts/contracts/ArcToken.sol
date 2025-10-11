@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
- * @title Arc Token
- * @dev The utility token that powers Arc wallet - V4 Enhanced
+ * @title BLAZE Token
+ * @dev The utility token that powers BLAZE Wallet - V4 Enhanced
  * 
  * Distribution (1B total):
  * - 25% Public Sale & Liquidity (250M)
@@ -70,8 +70,8 @@ contract ArcToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
     // Fee discounts (basis points)
     mapping(address => uint256) public feeDiscounts;
     
-    // Premium membership (1000 ARC staked = lifetime premium)
-    uint256 public constant PREMIUM_THRESHOLD = 1000 * 10**18;
+    // Premium membership (10000 BLAZE staked = lifetime premium)
+    uint256 public constant PREMIUM_THRESHOLD = 10000 * 10**18;
     mapping(address => bool) public isPremium;
     
     // Events
@@ -90,7 +90,7 @@ contract ArcToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
         address _teamWallet,
         address _strategicWallet,
         address _liquidityWallet
-    ) ERC20("Arc Token", "ARC") Ownable(msg.sender) {
+    ) ERC20("BLAZE Token", "BLAZE") Ownable(msg.sender) {
         require(_publicSaleWallet != address(0), "Invalid public sale wallet");
         require(_founderWallet != address(0), "Invalid founder wallet");
         require(_communityWallet != address(0), "Invalid community wallet");

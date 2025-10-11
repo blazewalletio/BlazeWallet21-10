@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 // 1inch swap transaction endpoint
 const ONEINCH_API_KEY = process.env.ONEINCH_API_KEY;
 

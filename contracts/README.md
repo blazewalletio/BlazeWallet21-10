@@ -1,8 +1,8 @@
-# 🌈 Arc Token V4 Enhanced - Smart Contracts
+# 🔥 BLAZE Token V4 Enhanced - Smart Contracts
 
 ## Overview
 
-Arc Token ($ARC) is the utility token powering the Arc wallet ecosystem.
+BLAZE Token ($BLAZE) is the utility token powering the BLAZE Wallet ecosystem.
 
 **Version:** V4 Enhanced  
 **Network:** Ethereum (+ BSC, Polygon bridges)  
@@ -70,19 +70,19 @@ Arc Token ($ARC) is the utility token powering the Arc wallet ecosystem.
 - 1-year lock: 20% APY
 
 **Premium Membership:**
-- Stake 1,000+ ARC = Lifetime premium
-- Unlocks advanced features in Arc wallet
+- Stake 10,000+ BLAZE = Lifetime premium
+- Unlocks advanced features in BLAZE Wallet
 
 ### 3. Fee Discounts
 
-Stake more, pay less on Arc wallet swaps:
+Stake more, pay less on BLAZE Wallet swaps:
 
 | Staked | Discount |
 |--------|----------|
-| 1,000 ARC | 10% |
-| 10,000 ARC | 25% |
-| 50,000 ARC | 50% |
-| 100,000 ARC | 75% |
+| 10,000 BLAZE | 10% |
+| 50,000 BLAZE | 25% |
+| 100,000 BLAZE | 50% |
+| 250,000 BLAZE | 75% |
 
 ### 4. No Anti-Dump Mechanisms
 

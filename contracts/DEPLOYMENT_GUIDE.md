@@ -1,4 +1,4 @@
-# 🚀 Arc Token V4 Enhanced - Deployment Guide
+# 🚀 BLAZE Token V4 Enhanced - Deployment Guide
 
 ## 📋 Pre-Deployment Checklist
 
@@ -7,13 +7,13 @@
 Create separate wallets for each allocation:
 
 ```
-✅ Public Sale Wallet    (150M ARC)
-✅ Liquidity Wallet      (100M ARC)
+✅ Public Sale Wallet    (150M BLAZE)
+✅ Liquidity Wallet      (100M BLAZE)
 ✅ Founder Wallet        (100M unlocked + receive vesting)
-✅ Community Wallet      (200M ARC)
-✅ Treasury Wallet       (150M ARC)
-✅ Team Wallet           (100M ARC)
-✅ Strategic Wallet      (50M ARC)
+✅ Community Wallet      (200M BLAZE)
+✅ Treasury Wallet       (150M BLAZE)
+✅ Team Wallet           (100M BLAZE)
+✅ Strategic Wallet      (50M BLAZE)
 ```
 
 **Security Best Practices:**
@@ -171,7 +171,7 @@ npx hardhat verify --network mainnet <VESTING_ADDRESS> \
 
 ### Uniswap V3 (Ethereum)
 
-**Amount: 50M ARC + $500k ETH**
+**Amount: 50M BLAZE + $500k ETH**
 
 1. Go to app.uniswap.org
 2. Connect founder/liquidity wallet
@@ -183,7 +183,7 @@ npx hardhat verify --network mainnet <VESTING_ADDRESS> \
 
 ### PancakeSwap (BSC)
 
-**Amount: 30M ARC + $200k BNB**
+**Amount: 30M BLAZE + $200k BNB**
 
 1. Bridge ARC to BSC (use official bridge)
 2. Go to pancakeswap.finance
@@ -192,7 +192,7 @@ npx hardhat verify --network mainnet <VESTING_ADDRESS> \
 
 ### QuickSwap (Polygon)
 
-**Amount: 20M ARC + $100k MATIC**
+**Amount: 20M BLAZE + $100k MATIC**
 
 1. Bridge ARC to Polygon
 2. Go to quickswap.exchange
@@ -313,7 +313,7 @@ Set up monitoring:
 
 **Twitter:**
 ```
-🌈 Arc Token ($ARC) is LIVE!
+🔥 BLAZE Token ($BLAZE) is LIVE!
 
 Contract: 0x...
 Verified: etherscan.io/address/0x...
@@ -324,7 +324,7 @@ Buy: app.uniswap.org/#/swap?outputCurrency=0x...
 ✅ Staking (8-20% APY)
 ✅ $800k liquidity (locked 2 years)
 
-Let's bend money! 🚀
+Set your finances ablaze! 🚀
 ```
 
 **Discord:**
@@ -435,5 +435,5 @@ Pin message with:
 
 ---
 
-**Arc Token V4 Enhanced**
-*Bend Money* 🌈
+**BLAZE Token V4 Enhanced**  
+*Set Your Finances Ablaze* 🔥

@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 // Server-side price fetching (avoids CORS issues)
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
