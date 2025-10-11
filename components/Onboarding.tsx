@@ -32,16 +32,24 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       await importWallet(importInput.trim());
       
       // After importing wallet, we need to set a password
-      // The app will detect this and show password setup modal
-      // Don't call onComplete() immediately - let the main app handle password setup
+      // Force the password setup modal to show immediately
+      console.log('🔄 Wallet imported successfully, forcing password setup');
       
       // Set a flag to indicate we just imported a wallet without password
       if (typeof window !== 'undefined') {
         localStorage.setItem('wallet_just_imported', 'true');
         console.log('✅ Set wallet_just_imported flag');
+        
+        // Also set a more direct flag
+        localStorage.setItem('force_password_setup', 'true');
+        console.log('✅ Set force_password_setup flag');
       }
       
-      onComplete();
+      // Don't call onComplete() - we need to stay in onboarding to show password modal
+      // Instead, trigger a page reload to force the main app to detect the flags
+      console.log('🔄 Reloading page to trigger password setup');
+      window.location.reload();
+      
     } catch (err) {
       setError('Ongeldige recovery phrase. Controleer je invoer.');
     }

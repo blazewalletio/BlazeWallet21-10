@@ -50,7 +50,8 @@ export default function Home() {
               has_password: localStorage.getItem('has_password'),
               biometric_enabled: localStorage.getItem('biometric_enabled'),
               wallet_just_imported: localStorage.getItem('wallet_just_imported'),
-              wallet_just_created: localStorage.getItem('wallet_just_created')
+              wallet_just_created: localStorage.getItem('wallet_just_created'),
+              force_password_setup: localStorage.getItem('force_password_setup')
             });
       
       if (storedAddress) {
@@ -77,10 +78,16 @@ export default function Home() {
           const storedMnemonic = localStorage.getItem('wallet_mnemonic');
           const justImported = localStorage.getItem('wallet_just_imported') === 'true';
           const justCreated = localStorage.getItem('wallet_just_created') === 'true';
+          const forcePasswordSetup = localStorage.getItem('force_password_setup') === 'true';
           
-          if (storedMnemonic || justImported || justCreated) {
+          if (storedMnemonic || justImported || justCreated || forcePasswordSetup) {
             try {
-              if (justImported) {
+              if (forcePasswordSetup) {
+                // Clear the flag
+                localStorage.removeItem('force_password_setup');
+                localStorage.removeItem('wallet_just_imported');
+                console.log('🚨 FORCE: Password setup required after wallet import');
+              } else if (justImported) {
                 // Clear the flag
                 localStorage.removeItem('wallet_just_imported');
                 console.log('🔄 Wallet just imported - showing password setup');
