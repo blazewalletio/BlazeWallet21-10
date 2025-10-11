@@ -200,3 +200,5 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
     </AnimatePresence>
   );
 }
+
+

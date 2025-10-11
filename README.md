@@ -1,4 +1,4 @@
-# 🔥 BLAZE Wallet - Ignite Your Crypto Journey
+# 🔥 BLAZE Wallet - Ignite Your Crypto Journey - Force Deploy
 
 **Set your finances ablaze.** Lightning fast crypto wallet with revolutionary design and DeFi features.
 
@@ -286,6 +286,7 @@ Your wallet. Your keys. Your BLAZE.
 **Built with ❤️ and Next.js**
 
 **BLAZE Wallet v2.0** - The future of DeFi is on fire. 🔥
+
 
 
 
