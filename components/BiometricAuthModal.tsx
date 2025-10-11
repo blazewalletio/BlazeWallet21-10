@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Fingerprint, Shield, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { WebAuthnService } from '@/lib/webauthn-service';
+import { useWalletStore } from '@/lib/wallet-store';
 
 interface BiometricAuthModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export default function BiometricAuthModal({
   const [webauthnService] = useState(() => WebAuthnService.getInstance());
   const [isSupported, setIsSupported] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
+  const { unlockWithBiometric } = useWalletStore();
 
   useEffect(() => {
     const checkSupport = async () => {
@@ -79,10 +81,16 @@ export default function BiometricAuthModal({
         const result = await webauthnService.authenticate(credentials[0].id);
         
         if (result.success) {
-          setSuccess(true);
-          setTimeout(() => {
-            onSuccess();
-          }, 1000);
+          // Unlock wallet with biometric authentication
+          try {
+            await unlockWithBiometric();
+            setSuccess(true);
+            setTimeout(() => {
+              onSuccess();
+            }, 1000);
+          } catch (unlockError: any) {
+            setError(unlockError.message || 'Wallet unlock mislukt');
+          }
         } else {
           setError(result.error || 'Authenticatie mislukt');
         }

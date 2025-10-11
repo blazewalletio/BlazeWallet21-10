@@ -37,27 +37,31 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Check wallet state on load
+    // Check wallet state on load - wait for isMobile to be set
     const checkWallet = async () => {
       const storedAddress = localStorage.getItem('wallet_address');
       const hasPasswordStored = localStorage.getItem('has_password') === 'true';
+      const biometricEnabled = localStorage.getItem('biometric_enabled') === 'true';
+      
+      console.log('🔍 Checking wallet state:', { storedAddress, hasPasswordStored, biometricEnabled, isMobile });
       
       if (storedAddress) {
         if (hasPasswordStored) {
           // Wallet exists with password protection
           setHasWallet(true);
           
-          // Check if biometric is enabled
-          const biometricEnabled = localStorage.getItem('biometric_enabled') === 'true';
-          
+          // Check device and authentication method
           if (biometricEnabled && isMobile) {
             // Try biometric authentication first on mobile
+            console.log('📱 Mobile with biometric - showing biometric auth');
             setShowBiometricAuth(true);
           } else if (!isMobile) {
             // Desktop users get QR login option
+            console.log('🖥️ Desktop - showing QR login');
             setShowQRLogin(true);
           } else {
             // Fallback to password
+            console.log('🔑 Fallback to password unlock');
             setShowPasswordUnlock(true);
           }
         } else {
@@ -81,8 +85,11 @@ export default function Home() {
       }
     };
 
-    checkWallet();
-  }, []);
+    // Only check wallet after isMobile is determined
+    if (isMobile !== null) {
+      checkWallet();
+    }
+  }, [isMobile]);
 
   // Auto-lock check
   useEffect(() => {

@@ -6,7 +6,7 @@ import {
   ArrowUpRight, ArrowDownLeft, ArrowLeft, RefreshCw, Settings, 
   TrendingUp, Eye, EyeOff, Plus, Zap, ChevronRight,
   Repeat, Wallet as WalletIcon, TrendingDown, PieChart, Rocket, CreditCard,
-  Lock, Gift, Vote, Users, Palette
+  Lock, Gift, Vote, Users, Palette, LogOut
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { BlockchainService } from '@/lib/blockchain';
@@ -46,7 +46,8 @@ export default function Dashboard() {
     currentChain, 
     tokens,
     updateTokens,
-    updateActivity 
+    updateActivity,
+    lockWallet 
   } = useWalletStore();
 
   // Founder/Developer wallet addresses (add your addresses here)
@@ -278,6 +279,14 @@ export default function Dashboard() {
                   className="glass-card p-3 rounded-xl hover:bg-gray-50"
                 >
                   <Settings className="w-5 h-5 text-gray-700" />
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => lockWallet()}
+                  className="glass-card p-3 rounded-xl hover:bg-red-50 text-red-600"
+                  title="Wallet vergrendelen"
+                >
+                  <LogOut className="w-5 h-5" />
                 </motion.button>
               </div>
             </div>

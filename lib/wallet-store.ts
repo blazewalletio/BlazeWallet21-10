@@ -5,6 +5,7 @@ import { Token, Chain } from './types';
 import { CHAINS, DEFAULT_CHAIN } from './chains';
 import { encryptWallet, decryptWallet, hashPassword, verifyPassword, EncryptedWallet } from './crypto-utils';
 import { WebAuthnService } from './webauthn-service';
+import { BiometricStore } from './biometric-store';
 
 export interface WalletState {
   wallet: ethers.HDNodeWallet | null;
@@ -182,51 +183,53 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   unlockWithBiometric: async () => {
     try {
-      const webauthnService = WebAuthnService.getInstance();
-      const credentials = webauthnService.getStoredCredentials();
+      const biometricStore = BiometricStore.getInstance();
       
-      if (credentials.length === 0) {
-        throw new Error('Geen biometrische credentials gevonden');
+      // Check if biometric password is stored
+      if (!biometricStore.hasStoredPassword()) {
+        throw new Error('Geen biometrisch opgeslagen wachtwoord gevonden');
       }
 
-      const result = await webauthnService.authenticate(credentials[0].id);
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Biometrische authenticatie mislukt');
+      // Retrieve password using biometric authentication
+      const password = await biometricStore.retrievePassword();
+      if (!password) {
+        throw new Error('Kon wachtwoord niet ophalen');
       }
 
-      // Unlock wallet with stored password (biometric auth succeeded)
-      const storedHash = localStorage.getItem('password_hash');
-      if (!storedHash) {
-        throw new Error('Geen wachtwoord gevonden voor biometrische unlock');
-      }
-
-      // For biometric unlock, we need to get the password from encrypted storage
-      // This is a simplified approach - in production you'd want more security
+      // Use the retrieved password to unlock the wallet
       const encryptedWalletData = localStorage.getItem('encrypted_wallet');
       if (!encryptedWalletData) {
         throw new Error('Geen versleutelde wallet gevonden');
       }
 
-      // For now, we'll use a simplified approach where biometric auth
-      // allows direct access without re-entering password
-      // In production, you'd want to store a biometric-specific key
-      
-      const { address } = get();
-      if (!address) {
-        throw new Error('Geen wallet adres gevonden');
+      const storedHash = localStorage.getItem('password_hash');
+      if (!storedHash) {
+        throw new Error('Geen wachtwoord hash gevonden');
       }
 
-      // Create a temporary wallet for biometric access
-      const tempWallet = ethers.Wallet.createRandom();
-      
+      // Verify password
+      if (!verifyPassword(password, storedHash)) {
+        throw new Error('Ongeldig wachtwoord');
+      }
+
+      // Decrypt wallet
+      const encryptedWallet: EncryptedWallet = JSON.parse(encryptedWalletData);
+      const mnemonic = decryptWallet(encryptedWallet, password);
+
+      // Import wallet
+      const wallet = ethers.Wallet.fromPhrase(mnemonic);
+      const address = wallet.address;
+
       set({
-        wallet: tempWallet,
+        wallet,
+        address,
+        mnemonic,
         isLocked: false,
         lastActivity: Date.now(),
       });
 
     } catch (error: any) {
+      console.error('Biometric unlock error:', error);
       throw new Error(error.message || 'Biometrische authenticatie mislukt');
     }
   },
@@ -267,6 +270,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   lockWallet: () => {
     set({
       wallet: null,
+      mnemonic: null,
       isLocked: true,
     });
   },
