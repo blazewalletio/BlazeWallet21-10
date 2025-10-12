@@ -235,58 +235,63 @@ export default function Dashboard() {
         <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/95 border-b border-gray-200 shadow-sm">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowChainSelector(true)}
-                  className="flex items-center gap-2 glass-card px-4 py-2 rounded-xl hover:bg-gray-50"
+                  className="flex items-center gap-2 glass-card px-3 sm:px-4 py-2 rounded-xl hover:bg-gray-50 min-w-0"
                 >
                   <div 
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-lg"
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-base sm:text-lg flex-shrink-0"
                     style={{ background: chain.color }}
                   >
                     {chain.icon}
                   </div>
-                  <div className="text-left">
-                    <div className="text-sm font-semibold text-gray-900">{chain.shortName}</div>
-                    <div className="text-xs text-gray-500 font-mono">{formattedAddress}</div>
+                  <div className="text-left min-w-0">
+                    <div className="text-xs sm:text-sm font-semibold text-gray-900">{chain.shortName}</div>
+                    <div className="text-xs text-gray-500 font-mono truncate">{formattedAddress}</div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                 </motion.button>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                {/* Presale button - Hidden on mobile, shown as card below */}
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowPresale(true)}
-                  className="px-3 py-2 rounded-xl flex items-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 shadow-soft"
+                  className="hidden md:flex px-3 py-2 rounded-xl items-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 shadow-soft"
                   title="Join Presale"
                 >
                   <Rocket className="w-5 h-5" />
-                  <span className="text-sm font-semibold hidden sm:inline">Presale</span>
+                  <span className="text-sm font-semibold">Presale</span>
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => fetchData(true)}
                   disabled={isRefreshing}
-                  className="glass-card p-3 rounded-xl hover:bg-gray-50"
+                  className="glass-card p-2.5 sm:p-3 rounded-xl hover:bg-gray-50"
                 >
-                  <RefreshCw className={`w-5 h-5 text-gray-700 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-700 ${isRefreshing ? 'animate-spin' : ''}`} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowSettings(true)}
-                  className="glass-card p-3 rounded-xl hover:bg-gray-50"
+                  className="glass-card p-2.5 sm:p-3 rounded-xl hover:bg-gray-50"
                 >
-                  <Settings className="w-5 h-5 text-gray-700" />
+                  <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => lockWallet()}
-                  className="glass-card p-3 rounded-xl hover:bg-red-50 text-red-600"
+                  onClick={() => {
+                    lockWallet();
+                    // Reload page to show unlock screen
+                    window.location.reload();
+                  }}
+                  className="glass-card p-2.5 sm:p-3 rounded-xl hover:bg-red-50 text-red-600"
                   title="Wallet vergrendelen"
                 >
-                  <LogOut className="w-5 h-5" />
+                  <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
                 </motion.button>
               </div>
             </div>
@@ -419,6 +424,30 @@ export default function Dashboard() {
                     {range.label}
                   </motion.button>
                 ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Presale Card - Mobile Only */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden glass-card card-hover relative overflow-hidden"
+            onClick={() => setShowPresale(true)}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-yellow-500/10" />
+            <div className="relative z-10 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                    <Rocket className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-900 text-lg">BLAZE Presale</div>
+                    <div className="text-sm text-gray-600">Vroege toegang tot tokens</div>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
               </div>
             </div>
           </motion.div>
