@@ -132,15 +132,15 @@ export default function QRLoginModal({ isOpen, onSuccess, onCancel }: QRLoginMod
             </div>
             
             <h2 className="text-2xl font-bold text-white mb-2">
-              {status === 'approved' ? 'Toegang verleend!' : 
-               status === 'expired' ? 'QR code verlopen' :
+              {status === 'approved' ? 'Access granted!' : 
+               status === 'expired' ? 'QR code expired' :
                status === 'error' ? 'Fout opgetreden' :
                'Inloggen met mobiele app'}
             </h2>
             
             <p className="text-slate-400">
-              {status === 'approved' ? 'Je wordt nu ingelogd...' :
-               status === 'expired' ? 'De QR code is verlopen. Genereer een nieuwe.' :
+              {status === 'approved' ? 'Logging you in now...' :
+               status === 'expired' ? 'The QR code has expired. Generate a new one.' :
                status === 'error' ? 'Er is een fout opgetreden.' :
                'Scan de QR code met je BLAZE Wallet mobiele app'}
             </p>
@@ -166,9 +166,9 @@ export default function QRLoginModal({ isOpen, onSuccess, onCancel }: QRLoginMod
                   <span className="font-medium">Stappen:</span>
                 </div>
                 <ol className="text-sm text-blue-300 space-y-1">
-                  <li>1. Open BLAZE Wallet op je telefoon</li>
+                  <li>1. Open BLAZE Wallet on your phone</li>
                   <li>2. Tik op "Desktop Login"</li>
-                  <li>3. Scan deze QR code</li>
+                  <li>3. Scan this QR code</li>
                   <li>4. Bevestig de login op je telefoon</li>
                 </ol>
               </div>
@@ -188,7 +188,7 @@ export default function QRLoginModal({ isOpen, onSuccess, onCancel }: QRLoginMod
               <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-4">
                 <div className="flex items-center space-x-2 text-yellow-400">
                   <AlertCircle className="w-5 h-5" />
-                  <span className="text-sm">QR code is verlopen</span>
+                  <span className="text-sm">QR code has expired</span>
                 </div>
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function QRLoginModal({ isOpen, onSuccess, onCancel }: QRLoginMod
                 className="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
               >
                 <RefreshCw className="w-4 h-4" />
-                <span>Vernieuwen</span>
+                <span>Refresh</span>
               </button>
             )}
             
@@ -220,7 +220,7 @@ export default function QRLoginModal({ isOpen, onSuccess, onCancel }: QRLoginMod
                 className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
               >
                 <RefreshCw className="w-4 h-4" />
-                <span>Nieuwe QR Code</span>
+                <span>New QR Code</span>
               </button>
             )}
 

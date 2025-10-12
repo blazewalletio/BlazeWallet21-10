@@ -74,7 +74,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     Account
                   </h3>
                   <div className="glass-card">
-                    <div className="text-sm text-gray-600 mb-1">Wallet adres</div>
+                    <div className="text-sm text-gray-600 mb-1">Wallet address</div>
                     <div className="font-mono text-sm break-all">{address}</div>
                   </div>
                 </div>
@@ -83,7 +83,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div>
                   <h3 className="text-sm font-semibold text-gray-600 mb-3 flex items-center gap-2">
                     <Key className="w-4 h-4" />
-                    Beveiliging
+                    Security
                   </h3>
                   
                   <div className="glass-card">
@@ -133,7 +133,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           {copied ? (
                             <>
                               <Check className="w-4 h-4" />
-                              Gekopieerd!
+                              Copied!
                             </>
                           ) : (
                             <>

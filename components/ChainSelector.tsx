@@ -41,7 +41,7 @@ export default function ChainSelector({ isOpen, onClose }: ChainSelectorProps) {
           >
             <div className="glass-card rounded-t-3xl p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Kies netwerk</h2>
+                <h2 className="text-2xl font-bold">Choose network</h2>
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}

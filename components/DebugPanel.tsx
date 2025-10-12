@@ -93,7 +93,7 @@ export default function DebugPanel() {
 
           {/* Wallet Address */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-slate-400 text-xs mb-1">Jouw adres</div>
+            <div className="text-slate-400 text-xs mb-1">Your address</div>
             <div className="font-mono text-xs break-all mb-2">{address}</div>
             <div className="flex gap-2">
               <button
@@ -164,9 +164,9 @@ export default function DebugPanel() {
 
           {/* Quick Network Switch */}
           <div className="glass p-3 rounded-lg">
-            <div className="text-slate-400 text-xs mb-2">Stuurde je naar verkeerd netwerk?</div>
+            <div className="text-slate-400 text-xs mb-2">Sent to wrong network?</div>
             <div className="text-xs text-slate-300 mb-2">
-              Click je adres bovenaan om van netwerk te switchen
+              Click your address above to switch networks
             </div>
           </div>
         </div>

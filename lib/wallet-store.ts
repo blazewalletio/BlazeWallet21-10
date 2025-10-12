@@ -140,7 +140,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   unlockWithPassword: async (password: string) => {
     try {
       if (typeof window === 'undefined') {
-        throw new Error('Niet beschikbaar op server');
+        throw new Error('Not available op server');
       }
 
       // Check if password is correct
@@ -193,7 +193,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       // Retrieve password using biometric authentication
       const password = await biometricStore.retrievePassword();
       if (!password) {
-        throw new Error('Kon wachtwoord niet ophalen');
+        throw new Error('Could not retrieve password');
       }
 
       // Use the retrieved password to unlock the wallet

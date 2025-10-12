@@ -147,7 +147,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                             {copied ? (
                               <>
                                 <Check className="w-4 h-4" />
-                                Gekopieerd!
+                                Copied!
                               </>
                             ) : (
                               <>
@@ -170,7 +170,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                       {/* Warning */}
                       <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
                         <p className="text-amber-700 text-sm">
-                          ⚠️ Alleen crypto naar dit adres sturen. Andere assets kunnen verloren gaan.
+                          ⚠️ Only send crypto to this address. Other assets may be lost.
                         </p>
                       </div>
                     </div>

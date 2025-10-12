@@ -118,7 +118,7 @@ export default function PWAInstallPrompt() {
           <div className="space-y-3 mb-4">
             <div className="flex items-center space-x-2 text-sm text-slate-300">
               <Smartphone className="w-4 h-4" />
-              <span>Biometrische beveiliging</span>
+              <span>Biometric security</span>
             </div>
             <div className="flex items-center space-x-2 text-sm text-slate-300">
               <Monitor className="w-4 h-4" />
@@ -149,7 +149,7 @@ export default function PWAInstallPrompt() {
           <div className="mt-3 text-xs text-slate-500 text-center">
             {deviceType === 'mobile' 
               ? 'Tap het installatie-icoon in je browser' 
-              : 'Klik op het installatie-icoon in je browser adresbalk'
+              : 'Click the install icon in your browser address bar'
             }
           </div>
         </div>

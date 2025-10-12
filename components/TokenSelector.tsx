@@ -50,7 +50,7 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
           >
             <div className="glass-card rounded-t-3xl p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Token toevoegen</h2>
+                <h2 className="text-2xl font-bold">Add token</h2>
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
@@ -98,14 +98,14 @@ export default function TokenSelector({ isOpen, onClose }: TokenSelectorProps) {
                 {filteredTokens.length === 0 && (
                   <div className="text-center py-8 text-gray-600">
                     <div className="text-3xl mb-2">🔍</div>
-                    <p className="text-sm">Geen tokens gevonden</p>
+                    <p className="text-sm">No tokens found</p>
                   </div>
                 )}
               </div>
 
               {/* Custom Token Address */}
               <div className="glass-card bg-blue-500/10 border-blue-500/20">
-                <p className="text-blue-700 text-xs mb-2">Custom token contract adres:</p>
+                <p className="text-blue-700 text-xs mb-2">Custom token contract address:</p>
                 <input
                   type="text"
                   value={customAddress}

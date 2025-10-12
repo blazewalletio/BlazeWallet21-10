@@ -46,18 +46,18 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
     setError('');
     
     if (!BlockchainService.isValidAddress(toAddress)) {
-      setError('Ongeldig Ethereum adres');
+      setError('Invalid Ethereum address');
       return;
     }
 
     const amountNum = parseFloat(amount);
     if (isNaN(amountNum) || amountNum <= 0) {
-      setError('Ongeldig bedrag');
+      setError('Invalid amount');
       return;
     }
 
     if (amountNum > parseFloat(balance)) {
-      setError('Onvoldoende saldo');
+      setError('Insufficient balance');
       return;
     }
 
@@ -145,7 +145,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                 <div className="space-y-6">
                   <div>
                     <label className="text-sm text-gray-600 mb-2 block">
-                      Naar adres
+                      To address
                     </label>
                     <input
                       type="text"
@@ -162,7 +162,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                         Bedrag (ETH)
                       </label>
                       <span className="text-sm text-gray-600">
-                        Beschikbaar: {parseFloat(balance).toFixed(6)} ETH
+                        Available: {parseFloat(balance).toFixed(6)} ETH
                       </span>
                     </div>
                     <div className="relative">
@@ -252,7 +252,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                     </div>
                     <div className="h-px bg-slate-700" />
                     <div className="flex justify-between font-semibold text-base">
-                      <span>Totaal</span>
+                      <span>Total</span>
                       <span>{(parseFloat(amount) + parseFloat(estimatedFee)).toFixed(6)} ETH</span>
                     </div>
                   </div>
@@ -284,7 +284,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                 <div className="text-center py-12">
                   <Loader2 className="w-12 h-12 animate-spin text-primary-500 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold mb-2">Versturen...</h3>
-                  <p className="text-gray-600">Je transactie wordt verwerkt</p>
+                  <p className="text-gray-600">Your transaction is being processed</p>
                 </div>
               )}
 
@@ -301,7 +301,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                   </motion.div>
                   <h3 className="text-xl font-semibold mb-2">Verstuurd!</h3>
                   <p className="text-gray-600 mb-6">
-                    Je transactie is succesvol verzonden
+                    Your transaction was sent successfully
                   </p>
                   
                   {txHash && (

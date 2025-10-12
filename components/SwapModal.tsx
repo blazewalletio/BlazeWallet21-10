@@ -99,11 +99,11 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
           outputAmount,
           sourceProvider
         });
-        setError('Geen quote beschikbaar voor dit token pair');
+        setError('No quote available for this token pair');
       }
     } catch (err: any) {
       console.error('Quote error:', err);
-      setError(err.message || 'Fout bij ophalen van quote');
+      setError(err.message || 'Error fetching quote');
     } finally {
       setIsLoadingQuote(false);
     }
@@ -140,7 +140,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         );
 
         if (!txData || !txData.tx) {
-          throw new Error('Kon swap transactie niet ophalen van 1inch');
+          throw new Error('Could not get swap transaction from 1inch');
         }
 
         // Send transaction
@@ -276,7 +276,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
               className="mb-4 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-3"
             >
               <CheckCircle className="w-5 h-5 text-emerald-400" />
-              <p className="text-sm text-emerald-300">Swap succesvol!</p>
+              <p className="text-sm text-emerald-300">Swap successful!</p>
             </motion.div>
           )}
 
@@ -429,7 +429,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
             ) : (
               <>
                 <RefreshCw className="w-5 h-5" />
-                {canSwap() ? 'Swap nu' : 'Niet beschikbaar'}
+                {canSwap() ? 'Swap now' : 'Not available'}
               </>
             )}
           </motion.button>

@@ -6,7 +6,7 @@ import { Lock, TrendingUp, Clock, CheckCircle, ArrowRight } from 'lucide-react';
 import AnimatedNumber from './AnimatedNumber';
 
 export default function VestingDashboard() {
-  // Mock vesting data - zou je ophalen via contract calls
+  // Mock vesting data - would be fetched via contract calls
   const [vestingInfo, setVestingInfo] = useState({
     totalAmount: 120_000_000, // 120M tokens
     releasedAmount: 0,

@@ -309,7 +309,7 @@ export default function Dashboard() {
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <div className="text-sm text-gray-600 mb-2">Portfolio waarde</div>
+                  <div className="text-sm text-gray-600 mb-2">Portfolio value</div>
                   <div className="flex items-center gap-3 mb-2">
                     {showBalance ? (
                       <>
@@ -354,12 +354,12 @@ export default function Dashboard() {
                     )}
                     <span>
                       {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% 
-                      {selectedTimeRange === 1 ? ' afgelopen uur' : 
+                      {selectedTimeRange === 1 ? ' last hour' : 
                        selectedTimeRange === 24 ? ' vandaag' : 
-                       selectedTimeRange === 72 ? ' afgelopen 3 dagen' :
+                       selectedTimeRange === 72 ? ' last 3 days' :
                        selectedTimeRange === 168 ? ' deze week' :
                        selectedTimeRange === 720 ? ' deze maand' :
-                       ' totaal'}
+                       ' total'}
                     </span>
                   </div>
                 </div>
@@ -465,7 +465,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
                 <CreditCard className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Koop</div>
+              <div className="text-sm font-semibold text-gray-900">Buy</div>
             </motion.button>
 
             <motion.button
@@ -479,7 +479,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-2">
                 <ArrowUpRight className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Stuur</div>
+              <div className="text-sm font-semibold text-gray-900">Send</div>
             </motion.button>
 
             <motion.button
@@ -493,7 +493,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2">
                 <ArrowDownLeft className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm font-semibold text-gray-900">Ontvang</div>
+              <div className="text-sm font-semibold text-gray-900">Receive</div>
             </motion.button>
 
             <motion.button
@@ -521,7 +521,7 @@ export default function Dashboard() {
             className="w-full glass-card card-hover p-3 flex items-center justify-center gap-2 mt-3"
           >
             <Plus className="w-4 h-4" />
-            <span className="text-sm font-semibold">Tokens toevoegen</span>
+            <span className="text-sm font-semibold">Add tokens</span>
           </motion.button>
 
           {/* BLAZE Features Section */}
@@ -711,12 +711,12 @@ export default function Dashboard() {
               {tokens.length === 0 && (
                 <div className="text-center py-8 text-slate-400">
                   <div className="text-3xl mb-2">🪙</div>
-                  <p className="text-sm">Nog geen tokens</p>
+                  <p className="text-sm">No tokens yet</p>
                   <button
                     onClick={() => setShowTokenSelector(true)}
                     className="text-primary-400 text-sm mt-2 hover:text-primary-300"
                   >
-                    Token toevoegen
+                    Add token
                   </button>
                 </div>
               )}

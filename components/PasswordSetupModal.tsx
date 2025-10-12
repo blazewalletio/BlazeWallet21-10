@@ -21,10 +21,10 @@ export default function PasswordSetupModal({ isOpen, onComplete }: PasswordSetup
   const { setPassword: setWalletPassword } = useWalletStore();
 
   const validatePassword = (pwd: string) => {
-    if (pwd.length < 8) return 'Wachtwoord moet minimaal 8 karakters zijn';
-    if (!/(?=.*[a-z])/.test(pwd)) return 'Wachtwoord moet minimaal 1 kleine letter bevatten';
-    if (!/(?=.*[A-Z])/.test(pwd)) return 'Wachtwoord moet minimaal 1 hoofdletter bevatten';
-    if (!/(?=.*\d)/.test(pwd)) return 'Wachtwoord moet minimaal 1 cijfer bevatten';
+    if (pwd.length < 8) return 'Password moet minimaal 8 karakters zijn';
+    if (!/(?=.*[a-z])/.test(pwd)) return 'Password moet minimaal 1 kleine letter bevatten';
+    if (!/(?=.*[A-Z])/.test(pwd)) return 'Password moet minimaal 1 hoofdletter bevatten';
+    if (!/(?=.*\d)/.test(pwd)) return 'Password moet minimaal 1 cijfer bevatten';
     return null;
   };
 
@@ -39,7 +39,7 @@ export default function PasswordSetupModal({ isOpen, onComplete }: PasswordSetup
     }
 
     if (password !== confirmPassword) {
-      setError('Wachtwoorden komen niet overeen');
+      setError('Passworden komen niet overeen');
       return;
     }
 
@@ -99,7 +99,7 @@ export default function PasswordSetupModal({ isOpen, onComplete }: PasswordSetup
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">
-              Beveilig je wallet
+              Secure your wallet
             </h2>
             <p className="text-slate-400">
               Stel een wachtwoord in om je wallet te beschermen tegen ongeautoriseerde toegang
@@ -109,7 +109,7 @@ export default function PasswordSetupModal({ isOpen, onComplete }: PasswordSetup
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">
-                Wachtwoord
+                Password
               </label>
               <div className="relative">
                 <input
@@ -185,14 +185,14 @@ export default function PasswordSetupModal({ isOpen, onComplete }: PasswordSetup
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                'Wachtwoord instellen'
+                'Password instellen'
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-xs text-slate-500">
-              Je wachtwoord wordt lokaal versleuteld en opgeslagen. 
+              Your password is encrypted and stored locally. 
               <br />
               Wij hebben geen toegang tot je wachtwoord.
             </p>

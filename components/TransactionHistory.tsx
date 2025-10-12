@@ -75,7 +75,7 @@ export default function TransactionHistory() {
   if (loading) {
     return (
       <div className="glass-card p-6">
-        <h3 className="text-lg font-semibold mb-4">Recente transacties</h3>
+        <h3 className="text-lg font-semibold mb-4">Recent transactions</h3>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse">
@@ -90,11 +90,11 @@ export default function TransactionHistory() {
   if (!transactions || transactions.length === 0) {
     return (
       <div className="glass-card p-6">
-        <h3 className="text-lg font-semibold mb-4">Recente transacties</h3>
+        <h3 className="text-lg font-semibold mb-4">Recent transactions</h3>
         <div className="text-center py-8 text-gray-600">
           <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
-          <p>Nog geen transacties</p>
-          <p className="text-sm mt-1">Je transacties verschijnen hier zodra je ze maakt</p>
+          <p>No transactions yet</p>
+          <p className="text-sm mt-1">Your transactions will appear here once you make them</p>
         </div>
       </div>
     );
@@ -102,7 +102,7 @@ export default function TransactionHistory() {
 
   return (
     <div className="glass-card p-6">
-      <h3 className="text-lg font-semibold mb-4">Recente transacties</h3>
+      <h3 className="text-lg font-semibold mb-4">Recent transactions</h3>
       <div className="space-y-2">
         <AnimatePresence>
           {transactions.map((tx, index) => {
@@ -140,7 +140,7 @@ export default function TransactionHistory() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-semibold">
-                        {tx.isError ? 'Mislukt' : isSent ? 'Verzonden' : 'Ontvangen'}
+                        {tx.isError ? 'Failed' : isSent ? 'Sent' : 'Receiveen'}
                       </span>
                       {!tx.isError && (
                         <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -153,7 +153,7 @@ export default function TransactionHistory() {
                       <button
                         onClick={() => copyHash(tx.hash)}
                         className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Kopieer transaction hash"
+                        title="Copy transaction hash"
                       >
                         {copiedHash === tx.hash ? (
                           <Check className="w-3 h-3 text-emerald-400" />
@@ -184,7 +184,7 @@ export default function TransactionHistory() {
                       rel="noopener noreferrer"
                       className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1 justify-end mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <span>Bekijk</span>
+                      <span>View</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>

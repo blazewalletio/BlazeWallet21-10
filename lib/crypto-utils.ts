@@ -70,7 +70,7 @@ export function decryptWallet(encryptedWallet: EncryptedWallet, password: string
     
     return mnemonic;
   } catch (error) {
-    throw new Error('Ongeldig wachtwoord of beschadigde data');
+    throw new Error('Invalid password or corrupted data');
   }
 }
 

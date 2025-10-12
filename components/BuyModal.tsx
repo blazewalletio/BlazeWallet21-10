@@ -62,7 +62,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                         <CreditCard className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <h2 className="text-xl font-semibold">Koop crypto</h2>
+                        <h2 className="text-xl font-semibold">Buy crypto</h2>
                         <p className="text-xs text-gray-400">
                           Met iDEAL, creditcard of bankoverschrijving
                         </p>
@@ -97,7 +97,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
 
             {/* Popular Assets */}
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-600 mb-3">Populaire crypto</h3>
+              <h3 className="text-sm font-semibold text-gray-600 mb-3">Popular crypto</h3>
               <div className="grid grid-cols-2 gap-3">
                 {supportedAssets.slice(0, 6).map((currencyCode) => {
                   const displayName = MoonPayService.getDisplayName(currencyCode);
@@ -114,7 +114,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                         </div>
                         <div>
                           <p className="font-semibold">{displayName}</p>
-                          <p className="text-xs text-gray-600">Kopen</p>
+                          <p className="text-xs text-gray-600">Buy</p>
                         </div>
                       </div>
                     </motion.button>
@@ -151,7 +151,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
                 <div className="text-sm">
                   <p className="text-blue-300 font-medium mb-1">Powered by MoonPay</p>
                   <p className="text-gray-600 text-xs">
-                    Wereldwijd vertrouwde fiat-naar-crypto service. Crypto wordt direct naar je BLAZE Wallet gestuurd.
+                    Globally trusted fiat-to-crypto service. Crypto is sent directly to your BLAZE Wallet.
                     Fees: ~4.5% per transactie.
                   </p>
                 </div>
@@ -165,7 +165,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
               className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
             >
               <CreditCard className="w-5 h-5" />
-              Start kopen
+              Start buying
               <ExternalLink className="w-4 h-4" />
             </motion.button>
 

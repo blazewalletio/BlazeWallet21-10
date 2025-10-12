@@ -51,7 +51,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       window.location.reload();
       
     } catch (err) {
-      setError('Ongeldige recovery phrase. Controleer je invoer.');
+      setError('Invalid recovery phrase. Check your input.');
     }
   };
 
@@ -142,14 +142,14 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 onClick={handleCreateWallet}
                 className="w-full btn-primary py-4 text-lg"
               >
-                Nieuwe wallet aanmaken
+                Create new wallet
               </button>
               <button
                 onClick={() => setStep('import')}
                 className="w-full btn-secondary py-4 text-lg"
               >
                 <Download className="w-5 h-5 inline mr-2" />
-                Wallet importeren
+                Import wallet
               </button>
             </div>
           </motion.div>
@@ -166,7 +166,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-2">Je recovery phrase</h2>
               <p className="text-slate-400">
-                Bewaar deze 12 woorden veilig. Je hebt ze nodig om je wallet te herstellen.
+                Save these 12 words safely. You need them to recover your wallet.
               </p>
             </div>
 
@@ -190,7 +190,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 {copied ? (
                   <>
                     <Check className="w-4 h-4" />
-                    Gekopieerd!
+                    Copied!
                   </>
                 ) : (
                   <>
@@ -203,7 +203,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
             <div className="glass-card bg-amber-500/10 border-amber-500/20">
               <p className="text-amber-200 text-sm">
-                <strong>Belangrijk:</strong> Schrijf deze woorden op papier en bewaar ze op een veilige plek. 
+                <strong>Important:</strong> Write these words on paper and store them in a safe place. 
                 Deel ze nooit met anderen. Als je ze verliest, verlies je toegang tot je wallet.
               </p>
             </div>
@@ -228,7 +228,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-2">Verificatie</h2>
               <p className="text-slate-400">
-                Vul de juiste woorden in om te bevestigen dat je ze hebt opgeschreven.
+                Fill in the correct words to confirm you have written them down.
               </p>
             </div>
 
@@ -276,7 +276,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             className="max-w-md w-full space-y-6"
           >
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Wallet importeren</h2>
+              <h2 className="text-3xl font-bold mb-2">Import wallet</h2>
               <p className="text-slate-400">
                 Vul je 12-woorden recovery phrase in om je wallet te herstellen.
               </p>

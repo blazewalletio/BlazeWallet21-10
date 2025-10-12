@@ -47,7 +47,7 @@ export default function BiometricAuthModal({
 
   const handleBiometricAuth = async () => {
     if (!isSupported || !isAvailable) {
-      setError('Biometrische authenticatie is niet beschikbaar op dit apparaat');
+      setError('Biometric authentication is not available on this device');
       return;
     }
 
@@ -152,10 +152,10 @@ export default function BiometricAuthModal({
             <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-4 mb-4">
               <div className="flex items-center space-x-2 text-red-400">
                 <AlertCircle className="w-5 h-5" />
-                <span className="text-sm font-medium">WebAuthn niet ondersteund</span>
+                <span className="text-sm font-medium">WebAuthn not supported</span>
               </div>
               <p className="text-sm text-red-300 mt-1">
-                Biometrische authenticatie is niet beschikbaar in deze browser.
+                Biometric authentication is not available in this browser.
               </p>
             </div>
           )}
@@ -164,7 +164,7 @@ export default function BiometricAuthModal({
             <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-4 mb-4">
               <div className="flex items-center space-x-2 text-yellow-400">
                 <AlertCircle className="w-5 h-5" />
-                <span className="text-sm font-medium">Biometrie niet beschikbaar</span>
+                <span className="text-sm font-medium">Biometrics not available</span>
               </div>
               <p className="text-sm text-yellow-300 mt-1">
                 Dit apparaat ondersteunt geen vingerafdruk of Face ID authenticatie.
@@ -186,7 +186,7 @@ export default function BiometricAuthModal({
               <div className="flex items-center space-x-2 text-green-400">
                 <CheckCircle className="w-5 h-5" />
                 <span className="text-sm">
-                  {mode === 'register' ? 'Biometrie succesvol ingesteld!' : 'Toegang verleend!'}
+                  {mode === 'register' ? 'Biometrics successfully set up!' : 'Access granted!'}
                 </span>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function BiometricAuthModal({
           <div className="mt-6 text-center">
             <div className="flex items-center justify-center space-x-2 text-slate-400 text-sm">
               <Shield className="w-4 h-4" />
-              <span>Je biometrische data blijft veilig op dit apparaat</span>
+              <span>Your biometric data stays secure on this device</span>
             </div>
           </div>
         </motion.div>

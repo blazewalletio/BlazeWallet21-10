@@ -122,7 +122,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                   className="space-y-6"
                 >
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Selecteer bedrag</h3>
+                    <h3 className="text-lg font-semibold mb-4">Select amount</h3>
                     <div className="grid grid-cols-3 gap-3">
                       {PRESET_AMOUNTS_EUR.map((amt) => (
                         <motion.button
@@ -142,7 +142,7 @@ export default function QuickPayModal({ isOpen, onClose }: QuickPayModalProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-sm text-gray-600 mb-2">Of custom bedrag</h3>
+                    <h3 className="text-sm text-gray-600 mb-2">Or custom amount</h3>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-gray-600">
                         €
