@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Shield, Key, Trash2, Download, 
-  Eye, EyeOff, Copy, Check, Bell, Moon, Sun 
+  Eye, EyeOff, Copy, Check, Bell, Moon, Sun, Globe 
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
+import { localeNames, localeFlags, type Locale } from '@/lib/useTranslation';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -18,6 +19,26 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [showMnemonic, setShowMnemonic] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState<Locale>('en');
+
+  // Load saved locale on mount
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('app_locale') as Locale;
+      if (saved && Object.keys(localeNames).includes(saved)) {
+        setCurrentLocale(saved);
+      }
+    }
+  });
+
+  const handleLocaleChange = (newLocale: Locale) => {
+    setCurrentLocale(newLocale);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('app_locale', newLocale);
+      // Reload page to apply new language
+      window.location.reload();
+    }
+  };
 
   const copyMnemonic = () => {
     if (mnemonic) {
@@ -76,6 +97,36 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <div className="glass-card">
                     <div className="text-sm text-gray-600 mb-1">Wallet address</div>
                     <div className="font-mono text-sm break-all">{address}</div>
+                  </div>
+                </div>
+
+                {/* Language Selection */}
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <Globe className="w-4 h-4" />
+                    Language
+                  </h3>
+                  <div className="glass-card space-y-2">
+                    {(Object.keys(localeNames) as Locale[]).map((lang) => (
+                      <motion.button
+                        key={lang}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleLocaleChange(lang)}
+                        className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
+                          currentLocale === lang
+                            ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white'
+                            : 'bg-white/50 hover:bg-white/80'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{localeFlags[lang]}</span>
+                          <span className="font-medium">{localeNames[lang]}</span>
+                        </div>
+                        {currentLocale === lang && (
+                          <Check className="w-5 h-5" />
+                        )}
+                      </motion.button>
+                    ))}
                   </div>
                 </div>
 

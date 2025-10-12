@@ -1,0 +1,128 @@
+{
+  "auth": {
+    "unlockWallet": "Desbloquear billetera",
+    "enterPassword": "Ingresa tu contraseña para acceder a tu billetera",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "unlock": "Desbloquear",
+    "fingerprintFaceId": "Huella dactilar / Face ID",
+    "recoverPhrase": "Recuperar con frase de recuperación",
+    "encryptedLocal": "Tu billetera está cifrada y almacenada en este dispositivo.",
+    "passwordNotSent": "Tu contraseña nunca se envía a nuestros servidores.",
+    "tooManyAttempts": "Demasiados intentos fallidos. Usa tu frase de recuperación para empezar de nuevo.",
+    "invalidPassword": "Contraseña inválida. Intento {count}/3",
+    "biometricFailed": "Autenticación biométrica fallida",
+    "secureWallet": "Asegura tu billetera",
+    "passwordStored": "Tu contraseña se cifra y almacena localmente.",
+    "biometricSecurity": "Seguridad biométrica"
+  },
+  "onboarding": {
+    "createWallet": "Crear nueva billetera",
+    "importWallet": "Importar billetera",
+    "copied": "¡Copiado!",
+    "saveWords": "Guarda estas 12 palabras de forma segura. Las necesitarás para recuperar tu billetera.",
+    "important": "Importante:",
+    "writeDown": "Escribe estas palabras en papel y guárdalas en un lugar seguro.",
+    "invalidPhrase": "Frase de recuperación inválida. Verifica tu entrada."
+  },
+  "dashboard": {
+    "portfolioValue": "Valor del portafolio",
+    "buy": "Comprar",
+    "send": "Enviar",
+    "receive": "Recibir",
+    "swap": "Intercambiar",
+    "addTokens": "Añadir tokens",
+    "lastHour": " última hora",
+    "last3Days": " últimos 3 días",
+    "total": " total",
+    "noTokens": "Sin tokens aún"
+  },
+  "transaction": {
+    "recentTransactions": "Transacciones recientes",
+    "noTransactions": "Sin transacciones aún",
+    "transactionsAppear": "Tus transacciones aparecerán aquí una vez que las hagas",
+    "copyHash": "Copiar hash de transacción",
+    "view": "Ver",
+    "failed": "Fallido",
+    "sent": "Enviado",
+    "received": "Recibido",
+    "processing": "Tu transacción está siendo procesada",
+    "sentSuccessfully": "Tu transacción fue enviada exitosamente"
+  },
+  "send": {
+    "toAddress": "A dirección",
+    "available": "Disponible:",
+    "total": "Total",
+    "invalidAddress": "Dirección Ethereum inválida",
+    "invalidAmount": "Cantidad inválida",
+    "insufficientBalance": "Saldo insuficiente"
+  },
+  "swap": {
+    "swapNow": "Intercambiar ahora",
+    "notAvailable": "No disponible",
+    "noQuote": "No hay cotización disponible para este par de tokens",
+    "errorFetchingQuote": "Error al obtener cotización",
+    "couldNotGetTransaction": "No se pudo obtener la transacción de intercambio de 1inch",
+    "swapSuccessful": "¡Intercambio exitoso!"
+  },
+  "settings": {
+    "security": "Seguridad",
+    "walletAddress": "Dirección de billetera"
+  },
+  "buy": {
+    "buyCrypto": "Comprar cripto",
+    "popularCrypto": "Cripto popular",
+    "startBuying": "Empezar a comprar",
+    "trustedService": "Servicio fiat-a-cripto de confianza mundial. Las criptomonedas se envían directamente a tu BLAZE Wallet."
+  },
+  "tokens": {
+    "addToken": "Añadir token",
+    "noTokensFound": "No se encontraron tokens",
+    "customTokenAddress": "Dirección de contrato de token personalizado:",
+    "chooseNetwork": "Elegir red"
+  },
+  "qr": {
+    "refresh": "Actualizar",
+    "newQrCode": "Nuevo código QR",
+    "qrExpired": "Código QR caducado",
+    "qrExpiredMessage": "El código QR ha caducado. Genera uno nuevo.",
+    "qrHasExpired": "El código QR ha caducado",
+    "openOnPhone": "Abre BLAZE Wallet en tu teléfono",
+    "scanQr": "Escanea este código QR",
+    "loggingIn": "Iniciando sesión ahora..."
+  },
+  "biometric": {
+    "notAvailable": "La autenticación biométrica no está disponible en este dispositivo",
+    "notAvailableBrowser": "La autenticación biométrica no está disponible en este navegador.",
+    "biometricsNotAvailable": "Biometría no disponible",
+    "setupSuccessful": "¡Biometría configurada exitosamente!",
+    "accessGranted": "¡Acceso concedido!",
+    "dataSecure": "Tus datos biométricos permanecen seguros en este dispositivo",
+    "webauthnNotSupported": "WebAuthn no soportado"
+  },
+  "quickPay": {
+    "selectAmount": "Seleccionar cantidad",
+    "customAmount": "O cantidad personalizada"
+  },
+  "receive": {
+    "onlyCrypto": "Solo envía cripto a esta dirección. Otros activos pueden perderse."
+  },
+  "debug": {
+    "yourAddress": "Tu dirección",
+    "wrongNetwork": "¿Enviaste a la red equivocada?",
+    "clickToSwitch": "Haz clic en tu dirección arriba para cambiar de red"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "continue": "Continuar",
+    "save": "Guardar"
+  }
+}
+

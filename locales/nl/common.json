@@ -1,0 +1,128 @@
+{
+  "auth": {
+    "unlockWallet": "Ontgrendel wallet",
+    "enterPassword": "Voer je wachtwoord in om toegang te krijgen tot je wallet",
+    "password": "Wachtwoord",
+    "passwordPlaceholder": "Voer je wachtwoord in",
+    "unlock": "Ontgrendelen",
+    "fingerprintFaceId": "Vingerafdruk / Face ID",
+    "recoverPhrase": "Herstel met recovery phrase",
+    "encryptedLocal": "Je wallet is versleuteld opgeslagen op dit apparaat.",
+    "passwordNotSent": "Je wachtwoord wordt niet naar onze servers verzonden.",
+    "tooManyAttempts": "Te veel mislukte pogingen. Gebruik je recovery phrase om opnieuw te beginnen.",
+    "invalidPassword": "Ongeldig wachtwoord. Poging {count}/3",
+    "biometricFailed": "Biometrische authenticatie mislukt",
+    "secureWallet": "Beveilig je wallet",
+    "passwordStored": "Je wachtwoord wordt lokaal versleuteld en opgeslagen.",
+    "biometricSecurity": "Biometrische beveiliging"
+  },
+  "onboarding": {
+    "createWallet": "Nieuwe wallet aanmaken",
+    "importWallet": "Wallet importeren",
+    "copied": "Gekopieerd!",
+    "saveWords": "Bewaar deze 12 woorden veilig. Je hebt ze nodig om je wallet te herstellen.",
+    "important": "Belangrijk:",
+    "writeDown": "Schrijf deze woorden op papier en bewaar ze op een veilige plek.",
+    "invalidPhrase": "Ongeldige recovery phrase. Controleer je invoer."
+  },
+  "dashboard": {
+    "portfolioValue": "Portfolio waarde",
+    "buy": "Koop",
+    "send": "Stuur",
+    "receive": "Ontvang",
+    "swap": "Swap",
+    "addTokens": "Tokens toevoegen",
+    "lastHour": " afgelopen uur",
+    "last3Days": " afgelopen 3 dagen",
+    "total": " totaal",
+    "noTokens": "Nog geen tokens"
+  },
+  "transaction": {
+    "recentTransactions": "Recente transacties",
+    "noTransactions": "Nog geen transacties",
+    "transactionsAppear": "Je transacties verschijnen hier zodra je ze maakt",
+    "copyHash": "Kopieer transaction hash",
+    "view": "Bekijk",
+    "failed": "Mislukt",
+    "sent": "Verzonden",
+    "received": "Ontvangen",
+    "processing": "Je transactie wordt verwerkt",
+    "sentSuccessfully": "Je transactie is succesvol verzonden"
+  },
+  "send": {
+    "toAddress": "Naar adres",
+    "available": "Beschikbaar:",
+    "total": "Totaal",
+    "invalidAddress": "Ongeldig Ethereum adres",
+    "invalidAmount": "Ongeldig bedrag",
+    "insufficientBalance": "Onvoldoende saldo"
+  },
+  "swap": {
+    "swapNow": "Swap nu",
+    "notAvailable": "Niet beschikbaar",
+    "noQuote": "Geen quote beschikbaar voor dit token pair",
+    "errorFetchingQuote": "Fout bij ophalen van quote",
+    "couldNotGetTransaction": "Kon swap transactie niet ophalen van 1inch",
+    "swapSuccessful": "Swap succesvol!"
+  },
+  "settings": {
+    "security": "Beveiliging",
+    "walletAddress": "Wallet adres"
+  },
+  "buy": {
+    "buyCrypto": "Koop crypto",
+    "popularCrypto": "Populaire crypto",
+    "startBuying": "Start kopen",
+    "trustedService": "Wereldwijd vertrouwde fiat-naar-crypto service. Crypto wordt direct naar je BLAZE Wallet gestuurd."
+  },
+  "tokens": {
+    "addToken": "Token toevoegen",
+    "noTokensFound": "Geen tokens gevonden",
+    "customTokenAddress": "Custom token contract adres:",
+    "chooseNetwork": "Kies netwerk"
+  },
+  "qr": {
+    "refresh": "Vernieuwen",
+    "newQrCode": "Nieuwe QR Code",
+    "qrExpired": "QR code verlopen",
+    "qrExpiredMessage": "De QR code is verlopen. Genereer een nieuwe.",
+    "qrHasExpired": "QR code is verlopen",
+    "openOnPhone": "Open BLAZE Wallet op je telefoon",
+    "scanQr": "Scan deze QR code",
+    "loggingIn": "Je wordt nu ingelogd..."
+  },
+  "biometric": {
+    "notAvailable": "Biometrische authenticatie is niet beschikbaar op dit apparaat",
+    "notAvailableBrowser": "Biometrische authenticatie is niet beschikbaar in deze browser.",
+    "biometricsNotAvailable": "Biometrie niet beschikbaar",
+    "setupSuccessful": "Biometrie succesvol ingesteld!",
+    "accessGranted": "Toegang verleend!",
+    "dataSecure": "Je biometrische data blijft veilig op dit apparaat",
+    "webauthnNotSupported": "WebAuthn niet ondersteund"
+  },
+  "quickPay": {
+    "selectAmount": "Selecteer bedrag",
+    "customAmount": "Of custom bedrag"
+  },
+  "receive": {
+    "onlyCrypto": "Alleen crypto naar dit adres sturen. Andere assets kunnen verloren gaan."
+  },
+  "debug": {
+    "yourAddress": "Jouw adres",
+    "wrongNetwork": "Stuurde je naar verkeerd netwerk?",
+    "clickToSwitch": "Click je adres bovenaan om van netwerk te switchen"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Fout",
+    "success": "Succes",
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "close": "Sluiten",
+    "back": "Terug",
+    "next": "Volgende",
+    "continue": "Doorgaan",
+    "save": "Opslaan"
+  }
+}
+
