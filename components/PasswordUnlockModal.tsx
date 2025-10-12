@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Shield, AlertCircle, Fingerprint } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
@@ -18,6 +18,15 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
   const [error, setError] = useState('');
   const [attempts, setAttempts] = useState(0);
   const { unlockWithPassword } = useWalletStore();
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+
+  // Check if biometric is available on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const enabled = localStorage.getItem('biometric_enabled') === 'true';
+      setBiometricAvailable(enabled);
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,9 +50,17 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
   };
 
   const handleBiometricAuth = async () => {
-    // Placeholder for biometric authentication
-    // In a real implementation, this would use WebAuthn API
-    alert('Biometrische authenticatie komt binnenkort beschikbaar!');
+    setIsLoading(true);
+    setError('');
+    try {
+      const { unlockWithBiometric } = useWalletStore.getState();
+      await unlockWithBiometric();
+      onComplete();
+    } catch (error: any) {
+      setError(error.message || 'Biometrische authenticatie mislukt');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -118,15 +135,18 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
               )}
             </button>
 
-            {/* Biometric Authentication Button */}
-            <button
-              type="button"
-              onClick={handleBiometricAuth}
-              className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
-            >
-              <Fingerprint className="w-5 h-5" />
-              <span>Vingerafdruk / Face ID</span>
-            </button>
+            {/* Biometric Authentication Button - Only show if enabled */}
+            {biometricAvailable && (
+              <button
+                type="button"
+                onClick={handleBiometricAuth}
+                disabled={isLoading}
+                className="w-full bg-slate-800 hover:bg-slate-700 disabled:bg-slate-700 disabled:cursor-not-allowed border border-slate-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
+              >
+                <Fingerprint className="w-5 h-5" />
+                <span>Vingerafdruk / Face ID</span>
+              </button>
+            )}
           </form>
 
           <div className="mt-6 text-center">

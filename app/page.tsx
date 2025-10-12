@@ -65,19 +65,11 @@ export default function Home() {
           
           // Check device and authentication method
           console.log('🔍 Auth flow decision:', { biometricEnabled, isMobile });
-          if (biometricEnabled && isMobile) {
-            // Try biometric authentication first on mobile
-            console.log('📱 Mobile with biometric - showing biometric auth');
-            setShowBiometricAuth(true);
-          } else if (!isMobile) {
-            // Desktop users get QR login option
-            console.log('🖥️ Desktop - showing QR login');
-            setShowQRLogin(true);
-          } else {
-            // Fallback to password
-            console.log('🔑 Fallback to password unlock');
-            setShowPasswordUnlock(true);
-          }
+          
+          // Always show password unlock modal first
+          // It has biometric button built-in for convenience
+          console.log('🔑 Showing password unlock modal');
+          setShowPasswordUnlock(true);
         } else {
           // Wallet exists but no password set - check for old unencrypted mnemonic
           const storedMnemonic = localStorage.getItem('wallet_mnemonic');
@@ -190,31 +182,19 @@ export default function Home() {
             }}
           />
           
-          {/* Biometric Authentication Modal */}
-          <BiometricAuthModal
-            isOpen={showBiometricAuth}
-            mode="authenticate"
-            username="BLAZE User"
-            onSuccess={() => {
-              setShowBiometricAuth(false);
-            }}
-            onCancel={() => {
-              setShowBiometricAuth(false);
-              setShowPasswordUnlock(true);
-            }}
-          />
-          
-          {/* QR Login Modal */}
-          <QRLoginModal
-            isOpen={showQRLogin}
-            onSuccess={() => {
-              setShowQRLogin(false);
-            }}
-            onCancel={() => {
-              setShowQRLogin(false);
-              setShowPasswordUnlock(true);
-            }}
-          />
+          {/* QR Login Modal - Only show on desktop */}
+          {!isMobile && (
+            <QRLoginModal
+              isOpen={showQRLogin}
+              onSuccess={() => {
+                setShowQRLogin(false);
+              }}
+              onCancel={() => {
+                setShowQRLogin(false);
+                setShowPasswordUnlock(true);
+              }}
+            />
+          )}
           
           {/* Password Unlock Modal */}
           <PasswordUnlockModal
