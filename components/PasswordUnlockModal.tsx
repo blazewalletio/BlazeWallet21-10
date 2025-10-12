@@ -22,9 +22,26 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
 
   // Check if biometric is available on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const enabled = localStorage.getItem('biometric_enabled') === 'true';
-      setBiometricAvailable(enabled);
+    const checkBiometric = async () => {
+      if (typeof window !== 'undefined') {
+        // Check both localStorage flag and if credentials/password are stored
+        const enabled = localStorage.getItem('biometric_enabled') === 'true';
+        const hasStoredPassword = localStorage.getItem('biometric_protected_password') !== null;
+        
+        // Also check for WebAuthn credentials
+        const credentialsStr = localStorage.getItem('webauthn_credentials');
+        const hasCredentials = !!(credentialsStr && JSON.parse(credentialsStr).length > 0);
+        
+        console.log('🔍 Biometric check:', { enabled, hasStoredPassword, hasCredentials });
+        
+        // Show biometric button if enabled AND (has stored password OR has credentials)
+        const available = enabled && (hasStoredPassword || hasCredentials);
+        setBiometricAvailable(available);
+      }
+    };
+    
+    if (isOpen) {
+      checkBiometric();
     }
   }, [isOpen]);
 
