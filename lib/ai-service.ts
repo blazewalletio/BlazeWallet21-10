@@ -25,17 +25,28 @@ class AIService {
   private conversationHistory: Array<{ role: string; content: string }> = [];
 
   setApiKey(key: string) {
+    console.log('🔑 Setting API key...', key.substring(0, 8) + '...');
     this.apiKey = key;
     if (typeof window !== 'undefined') {
       localStorage.setItem('ai_api_key', key);
+      console.log('✅ API key saved to localStorage');
     }
   }
 
   getApiKey(): string | null {
-    if (this.apiKey) return this.apiKey;
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('ai_api_key');
+    if (this.apiKey) {
+      console.log('🔑 Using in-memory API key:', this.apiKey.substring(0, 8) + '...');
+      return this.apiKey;
     }
+    if (typeof window !== 'undefined') {
+      const storedKey = localStorage.getItem('ai_api_key');
+      if (storedKey) {
+        console.log('🔑 Loaded API key from localStorage:', storedKey.substring(0, 8) + '...');
+        this.apiKey = storedKey; // Cache it
+        return storedKey;
+      }
+    }
+    console.log('❌ No API key found');
     return null;
   }
 
@@ -198,14 +209,15 @@ class AIService {
 
   private async processWithOpenAI(input: string, context: any): Promise<AIResponse> {
     try {
+      console.log('🤖 Processing command with OpenAI...');
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.getApiKey()}`,
         },
         body: JSON.stringify({
-          model: 'gpt-4',
+          model: 'gpt-4o-mini', // Changed to more cost-effective model
           messages: [
             {
               role: 'system',
@@ -219,7 +231,29 @@ class AIService {
         }),
       });
 
+      console.log('📡 OpenAI command response status:', response.status);
+
+      if (!response.ok) {
+        console.error('❌ OpenAI API error:', response.status, response.statusText);
+        if (response.status === 401) {
+          throw new Error('API key is ongeldig. Controleer je OpenAI API key.');
+        } else if (response.status === 429) {
+          throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
+        } else if (response.status === 404) {
+          throw new Error('OpenAI API endpoint niet gevonden. Controleer je API key.');
+        } else {
+          throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        }
+      }
+
       const data = await response.json();
+      console.log('✅ OpenAI command response data:', data);
+
+      if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+        console.error('❌ Invalid OpenAI response structure:', data);
+        throw new Error('OpenAI gaf een onverwacht antwoord.');
+      }
+
       const result = JSON.parse(data.choices[0].message.content);
 
       return {
@@ -465,6 +499,13 @@ class AIService {
     try {
       // Add to conversation history
       this.conversationHistory.push({ role: 'user', content: message });
+      
+      // Check if we have an API key
+      const apiKey = this.getApiKey();
+      if (!apiKey) {
+        console.log('❌ No API key available for chat');
+        return 'Ik kan je vraag niet beantwoorden zonder OpenAI API key. Stel deze in bij Settings → AI Configuration.';
+      }
 
       // Common crypto questions (works offline)
       const commonQuestions: { [key: string]: string } = {
@@ -486,15 +527,16 @@ class AIService {
       }
 
       // If we have API key, use OpenAI
-      if (this.apiKey) {
+      if (apiKey) {
+        console.log('🤖 Making OpenAI API call...');
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.apiKey}`,
+            Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
-            model: 'gpt-4',
+            model: 'gpt-4o-mini', // Changed to more cost-effective model
             messages: [
               {
                 role: 'system',
@@ -510,7 +552,29 @@ class AIService {
           }),
         });
 
+        console.log('📡 OpenAI response status:', response.status);
+
+        if (!response.ok) {
+          console.error('❌ OpenAI API error:', response.status, response.statusText);
+          if (response.status === 401) {
+            return 'API key is ongeldig. Controleer je OpenAI API key in de instellingen.';
+          } else if (response.status === 429) {
+            return 'Te veel requests. Wacht even en probeer opnieuw.';
+          } else if (response.status === 404) {
+            return 'OpenAI API endpoint niet gevonden. Controleer je API key.';
+          } else {
+            return `OpenAI API error: ${response.status} ${response.statusText}`;
+          }
+        }
+
         const data = await response.json();
+        console.log('✅ OpenAI response data:', data);
+
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+          console.error('❌ Invalid OpenAI response structure:', data);
+          return 'OpenAI gaf een onverwacht antwoord. Probeer opnieuw.';
+        }
+
         const assistantMessage = data.choices[0].message.content;
         
         this.conversationHistory.push({ role: 'assistant', content: assistantMessage });
