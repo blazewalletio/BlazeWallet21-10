@@ -21,9 +21,28 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   const { createWallet, importWallet } = useWalletStore();
 
   const handleCreateWallet = async () => {
-    const phrase = await createWallet();
-    setMnemonic(phrase);
-    setStep('mnemonic');
+    try {
+      setError('');
+      const phrase = await createWallet();
+      setMnemonic(phrase);
+      setStep('mnemonic');
+      
+      console.log('🔄 New wallet created successfully, setting flags for password setup');
+      
+      // Set flags to indicate we just created a new wallet without password
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('wallet_just_created', 'true');
+        console.log('✅ Set wallet_just_created flag');
+        
+        // Also set a more direct flag
+        localStorage.setItem('force_password_setup', 'true');
+        console.log('✅ Set force_password_setup flag');
+      }
+      
+    } catch (err) {
+      console.error('Error creating wallet:', err);
+      setError('Er ging iets fout bij het aanmaken van de wallet.');
+    }
   };
 
   const handleImportWallet = async () => {

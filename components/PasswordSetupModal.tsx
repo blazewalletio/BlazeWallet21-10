@@ -54,9 +54,10 @@ export default function PasswordSetupModal({ isOpen, onComplete }: PasswordSetup
       await biometricStore.storePassword(password);
       console.log('✅ Password stored for biometric access');
       
-      // Clear import flags
+      // Clear flags
       if (typeof window !== 'undefined') {
         localStorage.removeItem('wallet_just_imported');
+        localStorage.removeItem('wallet_just_created');
         localStorage.removeItem('force_password_setup');
       }
       

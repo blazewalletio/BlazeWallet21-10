@@ -69,7 +69,9 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     if (typeof window !== 'undefined') {
       localStorage.setItem('wallet_address', wallet.address);
       localStorage.setItem('current_chain', DEFAULT_CHAIN);
-      // Mnemonic will be stored encrypted when user sets password
+      // Also store mnemonic temporarily until password is set
+      localStorage.setItem('wallet_mnemonic', mnemonic);
+      console.log('✅ New wallet created, mnemonic stored temporarily');
     }
 
     return mnemonic;
@@ -113,29 +115,46 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   setPassword: async (password: string) => {
     let { mnemonic, address } = get();
     
+    console.log('🔐 setPassword called - checking state:', { 
+      hasMnemonic: !!mnemonic, 
+      hasAddress: !!address,
+      mnemonicLength: mnemonic?.length || 0 
+    });
+    
     // If mnemonic is not in state, try to get it from localStorage
-    // This happens when the page was reloaded after wallet import
+    // This happens when the page was reloaded after wallet import OR new wallet creation
     if (!mnemonic && typeof window !== 'undefined') {
       console.log('🔍 Mnemonic not in state, checking localStorage...');
       const storedMnemonic = localStorage.getItem('wallet_mnemonic');
       if (storedMnemonic) {
-        console.log('✅ Found mnemonic in localStorage');
+        console.log('✅ Found mnemonic in localStorage:', storedMnemonic.substring(0, 20) + '...');
         mnemonic = storedMnemonic;
         // Also restore the wallet object if needed
         if (!address) {
           const wallet = ethers.Wallet.fromPhrase(storedMnemonic);
           address = wallet.address;
           set({ wallet, address, mnemonic: storedMnemonic });
+          console.log('✅ Restored wallet from localStorage');
         }
+      } else {
+        console.log('❌ No mnemonic found in localStorage');
       }
     }
     
     if (!mnemonic || !address) {
-      console.error('❌ No mnemonic or address found:', { mnemonic: !!mnemonic, address: !!address });
+      console.error('❌ No mnemonic or address found:', { 
+        mnemonic: !!mnemonic, 
+        address: !!address,
+        localStorageKeys: typeof window !== 'undefined' ? Object.keys(localStorage) : []
+      });
       throw new Error('Geen wallet gevonden om te versleutelen');
     }
 
-    console.log('🔐 Encrypting wallet with password...');
+    console.log('🔐 Encrypting wallet with password...', { 
+      address: address.substring(0, 10) + '...',
+      mnemonicWords: mnemonic.split(' ').length 
+    });
+    
     // Encrypt the mnemonic with the password
     const encryptedWallet = encryptWallet(mnemonic, password);
     const passwordHash = hashPassword(password);
