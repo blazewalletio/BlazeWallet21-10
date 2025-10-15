@@ -43,6 +43,7 @@ import AIRiskScanner from './AIRiskScanner';
 import AIPortfolioAdvisor from './AIPortfolioAdvisor';
 import AIGasOptimizer from './AIGasOptimizer';
 import AIConversationalAssistant from './AIConversationalAssistant';
+import AIBrainAssistant from './AIBrainAssistant';
 import AISettingsModal from './AISettingsModal';
 import { Sparkles, Shield, Brain, MessageSquare } from 'lucide-react';
 
@@ -98,6 +99,7 @@ export default function Dashboard() {
   const [showAIPortfolioAdvisor, setShowAIPortfolioAdvisor] = useState(false);
   const [showAIGasOptimizer, setShowAIGasOptimizer] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showAIBrain, setShowAIBrain] = useState(false);
   const [showAISettings, setShowAISettings] = useState(false);
 
   const { t } = useTranslation();
@@ -633,14 +635,14 @@ export default function Dashboard() {
                 {/* AI Brain - All Features */}
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAIChat(true)}
+                  onClick={() => setShowAIBrain(true)}
                   className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20"
                 >
                   <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center mb-3">
                     <Brain className="w-5 h-5 text-white" />
                   </div>
                   <div className="font-semibold mb-1">AI Brain</div>
-                  <div className="text-xs text-slate-400">Alles in één chat</div>
+                  <div className="text-xs text-slate-400">Alles in één interface</div>
                 </motion.button>
               </div>
             </div>
@@ -904,6 +906,27 @@ export default function Dashboard() {
         {showAIChat && (
           <AIConversationalAssistant
             onClose={() => setShowAIChat(false)}
+            context={{
+              balance: balance || '0',
+              tokens: tokens,
+              address: address || '',
+              chain: currentChain,
+              totalValue: totalValueUSD,
+            }}
+          />
+        )}
+
+        {showAIBrain && (
+          <AIBrainAssistant
+            onClose={() => setShowAIBrain(false)}
+            onOpenFeature={(feature) => {
+              setShowAIBrain(false);
+              if (feature === 'assistant') setShowAIAssistant(true);
+              else if (feature === 'scanner') setShowAIRiskScanner(true);
+              else if (feature === 'advisor') setShowAIPortfolioAdvisor(true);
+              else if (feature === 'optimizer') setShowAIGasOptimizer(true);
+              else if (feature === 'chat') setShowAIChat(true);
+            }}
             context={{
               balance: balance || '0',
               tokens: tokens,
