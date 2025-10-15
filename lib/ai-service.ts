@@ -317,10 +317,19 @@ class AIService {
 
         if (!response.ok) {
           console.error('❌ OpenAI API error:', response.status, response.statusText);
+          
+          // Parse error response
+          const errorData = await response.json().catch(() => ({}));
+          
           if (response.status === 401) {
             throw new Error('API key is ongeldig. Controleer je OpenAI API key.');
           } else if (response.status === 429) {
-            throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
+            // Check if it's a quota error
+            if (errorData.error?.code === 'insufficient_quota') {
+              throw new Error('Je OpenAI account heeft geen credits meer. Voeg een betaalmethod toe of upgrade je plan op platform.openai.com/account/billing');
+            } else {
+              throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
+            }
           } else if (response.status === 404) {
             throw new Error('OpenAI API endpoint niet gevonden. Controleer je API key.');
           } else {
@@ -660,10 +669,19 @@ class AIService {
 
           if (!response.ok) {
             console.error('❌ OpenAI API error:', response.status, response.statusText);
+            
+            // Parse error response
+            const errorData = await response.json().catch(() => ({}));
+            
             if (response.status === 401) {
               throw new Error('API key is ongeldig. Controleer je OpenAI API key in de instellingen.');
             } else if (response.status === 429) {
-              throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
+              // Check if it's a quota error
+              if (errorData.error?.code === 'insufficient_quota') {
+                throw new Error('Je OpenAI account heeft geen credits meer. Voeg een betaalmethod toe of upgrade je plan op platform.openai.com/account/billing');
+              } else {
+                throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
+              }
             } else if (response.status === 404) {
               throw new Error('OpenAI API endpoint niet gevonden. Controleer je API key.');
             } else {
