@@ -24,9 +24,9 @@ class AIService {
   private apiKey: string | null = null;
   private conversationHistory: Array<{ role: string; content: string }> = [];
   private lastApiCall: number = 0;
-  private readonly RATE_LIMIT_MS = 2000; // 2 seconds between calls
+  private readonly RATE_LIMIT_MS = 5000; // 5 seconds between calls (increased)
   private retryCount: number = 0;
-  private readonly MAX_RETRIES = 3;
+  private readonly MAX_RETRIES = 2; // Reduced retries to avoid long waits
 
   setApiKey(key: string) {
     console.log('🔑 Setting API key...', key.substring(0, 8) + '...');
@@ -68,20 +68,45 @@ class AIService {
     return true;
   }
 
+  private isRecentFailure(): boolean {
+    // Check if we had a recent 429 error within the last 30 seconds
+    const recentFailure = localStorage.getItem('ai_recent_429');
+    if (recentFailure) {
+      const failureTime = parseInt(recentFailure);
+      const now = Date.now();
+      if (now - failureTime < 30000) { // 30 seconds
+        console.log('🚫 Recent 429 error detected, waiting longer...');
+        return true;
+      } else {
+        localStorage.removeItem('ai_recent_429');
+      }
+    }
+    return false;
+  }
+
+  private recordFailure(): void {
+    localStorage.setItem('ai_recent_429', Date.now().toString());
+  }
+
   private async sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  private async retryWithBackoff<T>(fn: () => Promise<T>, maxRetries: number = 3): Promise<T> {
+  private async retryWithBackoff<T>(fn: () => Promise<T>, maxRetries: number = 2): Promise<T> {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         return await fn();
       } catch (error: any) {
-        if (error.message?.includes('Te veel requests') && attempt < maxRetries) {
-          const backoffMs = Math.pow(2, attempt) * 1000; // Exponential backoff: 2s, 4s, 8s
-          console.log(`⏳ Retry ${attempt}/${maxRetries} in ${backoffMs/1000}s...`);
-          await this.sleep(backoffMs);
-          continue;
+        if (error.message?.includes('Te veel requests')) {
+          // Record the failure for future calls
+          this.recordFailure();
+          
+          if (attempt < maxRetries) {
+            const backoffMs = Math.pow(2, attempt + 2) * 1000; // Exponential backoff: 8s, 16s
+            console.log(`⏳ Retry ${attempt}/${maxRetries} in ${backoffMs/1000}s...`);
+            await this.sleep(backoffMs);
+            continue;
+          }
         }
         throw error;
       }
@@ -227,15 +252,23 @@ class AIService {
 
       // If no pattern match and API key available, use OpenAI
       if (this.apiKey) {
-        if (this.checkRateLimit()) {
-          return await this.processWithOpenAI(input, context);
-        } else {
+        if (!this.checkRateLimit()) {
           return {
             success: false,
             message: 'Te veel requests. Wacht even en probeer opnieuw.',
             confidence: 0,
           };
         }
+        
+        if (this.isRecentFailure()) {
+          return {
+            success: false,
+            message: 'OpenAI API heeft recent te veel requests gehad. Wacht even voordat je opnieuw probeert.',
+            confidence: 0,
+          };
+        }
+        
+        return await this.processWithOpenAI(input, context);
       }
 
       // No match and no API
@@ -562,6 +595,11 @@ class AIService {
         return 'Te veel requests. Wacht even en probeer opnieuw.';
       }
 
+      // Check for recent failures
+      if (this.isRecentFailure()) {
+        return 'OpenAI API heeft recent te veel requests gehad. Wacht even voordat je opnieuw probeert.';
+      }
+
       // Common crypto questions (works offline)
       const commonQuestions: { [key: string]: string } = {
         'wat is gas': 'Gas zijn de transactiekosten op Ethereum. Het is de prijs die je betaalt aan miners/validators om je transactie te verwerken. Gemeten in gwei (1 gwei = 0.000000001 ETH).',
@@ -570,6 +608,15 @@ class AIService {
         'wat is impermanent loss': 'Impermanent loss treedt op bij liquidity pools wanneer de prijs van je tokens verandert vergeleken met toen je ze toevoegde. Het heet "impermanent" omdat het pas definitief is als je je tokens terugtrekt.',
         'waarom lukt mijn swap niet': 'Mogelijke redenen: 1) Te weinig ETH voor gas, 2) Slippage te laag ingesteld, 3) Token heeft te weinig liquiditeit, of 4) Je moet het token eerst approven.',
         'wat is een smart contract': 'Een smart contract is code die automatisch wordt uitgevoerd op de blockchain. Het zijn de "apps" van crypto - zoals Uniswap voor swaps of Aave voor lending.',
+        'hoe werkt defi': 'DeFi (Decentralized Finance) zijn financiële diensten zonder banken. Je kunt lenen, uitlenen, swappen en verdienen via smart contracts op de blockchain.',
+        'wat is yield farming': 'Yield farming is het verdienen van rewards door je tokens te staken in liquidity pools. Je krijgt tokens als beloning voor het beschikbaar stellen van liquiditeit.',
+        'wat is staking': 'Staking is het vergrendelen van je tokens om het netwerk te beveiligen. Je krijgt rewards als beloning voor het deelnemen aan consensus.',
+        'wat zijn nfts': 'NFTs (Non-Fungible Tokens) zijn unieke digitale items op de blockchain. Ze kunnen kunst, muziek, games of andere digitale assets vertegenwoordigen.',
+        'hoe koop ik crypto': 'Je kunt crypto kopen op exchanges zoals Coinbase, Binance of Kraken. Gebruik altijd een betrouwbare exchange en bewaar je crypto veilig.',
+        'wat is een wallet': 'Een crypto wallet is een digitale portemonnee om je cryptocurrency op te slaan. Het bevat je private keys waarmee je toegang hebt tot je crypto.',
+        'wat is bitcoin': 'Bitcoin is de eerste en grootste cryptocurrency. Het is een digitale munt die werkt zonder centrale bank en wordt gebruikt als store of value.',
+        'wat is ethereum': 'Ethereum is een blockchain platform waarop smart contracts draaien. Het is de basis voor veel DeFi apps, NFTs en andere blockchain projecten.',
+        'wat zijn altcoins': 'Altcoins zijn alle cryptocurrencies behalve Bitcoin. Populaire altcoins zijn Ethereum, Cardano, Solana en Polygon.',
       };
 
       const lowerMessage = message.toLowerCase();
@@ -647,9 +694,17 @@ class AIService {
 
       // No API key available
       return 'Ik kan je vraag niet beantwoorden zonder OpenAI API key. Stel deze in bij Settings → AI Configuration.';
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
-      return 'Sorry, er ging iets fout. Probeer het opnieuw.';
+      
+      // Provide helpful fallback responses when OpenAI is unavailable
+      if (error.message?.includes('Te veel requests')) {
+        return 'OpenAI API heeft momenteel te veel requests. Probeer het over een paar minuten opnieuw, of stel je vraag anders.';
+      } else if (error.message?.includes('API key')) {
+        return 'Er is een probleem met de OpenAI API key. Controleer de instellingen.';
+      } else {
+        return 'Sorry, er ging iets fout. Probeer het opnieuw of stel een eenvoudigere vraag.';
+      }
     }
   }
 
