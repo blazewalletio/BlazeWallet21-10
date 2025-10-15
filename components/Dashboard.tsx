@@ -38,6 +38,13 @@ import PremiumBadge, { PremiumCard } from './PremiumBadge';
 import PresaleDashboard from './PresaleDashboard';
 import VestingDashboard from './VestingDashboard';
 import { getPortfolioHistory } from '@/lib/portfolio-history';
+import AITransactionAssistant from './AITransactionAssistant';
+import AIRiskScanner from './AIRiskScanner';
+import AIPortfolioAdvisor from './AIPortfolioAdvisor';
+import AIGasOptimizer from './AIGasOptimizer';
+import AIConversationalAssistant from './AIConversationalAssistant';
+import AISettingsModal from './AISettingsModal';
+import { Sparkles, Shield, Brain, MessageSquare } from 'lucide-react';
 
 export default function Dashboard() {
   const { 
@@ -84,6 +91,14 @@ export default function Dashboard() {
   const [change24h, setChange24h] = useState(2.5);
   const [chartData, setChartData] = useState<number[]>([]);
   const [selectedTimeRange, setSelectedTimeRange] = useState<number | null>(24); // Default: 24 hours
+  
+  // AI Features state
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [showAIRiskScanner, setShowAIRiskScanner] = useState(false);
+  const [showAIPortfolioAdvisor, setShowAIPortfolioAdvisor] = useState(false);
+  const [showAIGasOptimizer, setShowAIGasOptimizer] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [showAISettings, setShowAISettings] = useState(false);
 
   const { t } = useTranslation();
   const chain = CHAINS[currentChain];
@@ -526,6 +541,111 @@ export default function Dashboard() {
             <span className="text-sm font-semibold">Add tokens</span>
           </motion.button>
 
+          {/* AI Tools Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+            className="glass-card mt-4 relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 blur-3xl" />
+            <div className="relative z-10">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-500" />
+                  AI Tools
+                </h3>
+                <button
+                  onClick={() => setShowAISettings(true)}
+                  className="text-xs text-purple-500 hover:text-purple-600 flex items-center gap-1"
+                >
+                  <Settings className="w-3 h-3" />
+                  Configureer
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {/* AI Transaction Assistant */}
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowAIAssistant(true)}
+                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mb-3">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="font-semibold mb-1">AI Assistent</div>
+                  <div className="text-xs text-slate-400">Natuurlijke taal transacties</div>
+                </motion.button>
+
+                {/* AI Risk Scanner */}
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowAIRiskScanner(true)}
+                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center mb-3">
+                    <Shield className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="font-semibold mb-1">Scam Detector</div>
+                  <div className="text-xs text-slate-400">Real-time risico scanning</div>
+                </motion.button>
+
+                {/* AI Portfolio Advisor */}
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowAIPortfolioAdvisor(true)}
+                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center mb-3">
+                    <PieChart className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="font-semibold mb-1">Portfolio Advisor</div>
+                  <div className="text-xs text-slate-400">Gepersonaliseerde tips</div>
+                </motion.button>
+
+                {/* AI Gas Optimizer */}
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowAIGasOptimizer(true)}
+                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mb-3">
+                    <Zap className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="font-semibold mb-1">Gas Optimizer</div>
+                  <div className="text-xs text-slate-400">Bespaar op gas fees</div>
+                </motion.button>
+
+                {/* AI Chat Assistant */}
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowAIChat(true)}
+                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center mb-3">
+                    <MessageSquare className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="font-semibold mb-1">Crypto Expert</div>
+                  <div className="text-xs text-slate-400">24/7 AI support</div>
+                </motion.button>
+
+                {/* AI Brain - All Features */}
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowAIChat(true)}
+                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center mb-3">
+                    <Brain className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="font-semibold mb-1">AI Brain</div>
+                  <div className="text-xs text-slate-400">Alles in één chat</div>
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+
           {/* BLAZE Features Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -739,6 +859,65 @@ export default function Dashboard() {
       <TokenSelector isOpen={showTokenSelector} onClose={() => setShowTokenSelector(false)} />
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
       <QuickPayModal isOpen={showQuickPay} onClose={() => setShowQuickPay(false)} />
+      
+      {/* AI Feature Modals */}
+      <AnimatePresence>
+        {showAIAssistant && (
+          <AITransactionAssistant
+            onClose={() => setShowAIAssistant(false)}
+            context={{
+              balance: balance || '0',
+              tokens: tokens,
+              address: address || '',
+              chain: currentChain,
+            }}
+            onExecuteAction={(action) => {
+              // Handle action execution
+              if (action.type === 'send') {
+                setShowSendModal(true);
+              } else if (action.type === 'swap') {
+                setShowSwapModal(true);
+              }
+            }}
+          />
+        )}
+
+        {showAIRiskScanner && (
+          <AIRiskScanner onClose={() => setShowAIRiskScanner(false)} />
+        )}
+
+        {showAIPortfolioAdvisor && (
+          <AIPortfolioAdvisor
+            onClose={() => setShowAIPortfolioAdvisor(false)}
+            tokens={tokens}
+            totalValue={totalValueUSD}
+          />
+        )}
+
+        {showAIGasOptimizer && (
+          <AIGasOptimizer
+            onClose={() => setShowAIGasOptimizer(false)}
+            currentGasPrice={30} // TODO: Get real gas price from chain
+          />
+        )}
+
+        {showAIChat && (
+          <AIConversationalAssistant
+            onClose={() => setShowAIChat(false)}
+            context={{
+              balance: balance || '0',
+              tokens: tokens,
+              address: address || '',
+              chain: currentChain,
+              totalValue: totalValueUSD,
+            }}
+          />
+        )}
+
+        {showAISettings && (
+          <AISettingsModal onClose={() => setShowAISettings(false)} />
+        )}
+      </AnimatePresence>
       
       {/* BLAZE Feature Pages */}
       <AnimatePresence>
