@@ -111,12 +111,31 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   },
 
   setPassword: async (password: string) => {
-    const { mnemonic, address } = get();
+    let { mnemonic, address } = get();
+    
+    // If mnemonic is not in state, try to get it from localStorage
+    // This happens when the page was reloaded after wallet import
+    if (!mnemonic && typeof window !== 'undefined') {
+      console.log('🔍 Mnemonic not in state, checking localStorage...');
+      const storedMnemonic = localStorage.getItem('wallet_mnemonic');
+      if (storedMnemonic) {
+        console.log('✅ Found mnemonic in localStorage');
+        mnemonic = storedMnemonic;
+        // Also restore the wallet object if needed
+        if (!address) {
+          const wallet = ethers.Wallet.fromPhrase(storedMnemonic);
+          address = wallet.address;
+          set({ wallet, address, mnemonic: storedMnemonic });
+        }
+      }
+    }
     
     if (!mnemonic || !address) {
+      console.error('❌ No mnemonic or address found:', { mnemonic: !!mnemonic, address: !!address });
       throw new Error('Geen wallet gevonden om te versleutelen');
     }
 
+    console.log('🔐 Encrypting wallet with password...');
     // Encrypt the mnemonic with the password
     const encryptedWallet = encryptWallet(mnemonic, password);
     const passwordHash = hashPassword(password);
@@ -126,6 +145,10 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       localStorage.setItem('encrypted_wallet', JSON.stringify(encryptedWallet));
       localStorage.setItem('password_hash', passwordHash);
       localStorage.setItem('has_password', 'true');
+      
+      // Now that we have encrypted storage, remove the unencrypted mnemonic
+      localStorage.removeItem('wallet_mnemonic');
+      console.log('✅ Wallet encrypted and unencrypted mnemonic removed');
     }
 
     set({
