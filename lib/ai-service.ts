@@ -23,6 +23,10 @@ export interface TransactionIntent {
 class AIService {
   private apiKey: string | null = null;
   private conversationHistory: Array<{ role: string; content: string }> = [];
+  private lastApiCall: number = 0;
+  private readonly RATE_LIMIT_MS = 2000; // 2 seconds between calls
+  private retryCount: number = 0;
+  private readonly MAX_RETRIES = 3;
 
   setApiKey(key: string) {
     console.log('🔑 Setting API key...', key.substring(0, 8) + '...');
@@ -48,6 +52,41 @@ class AIService {
     }
     console.log('❌ No API key found');
     return null;
+  }
+
+  private checkRateLimit(): boolean {
+    const now = Date.now();
+    const timeSinceLastCall = now - this.lastApiCall;
+    
+    if (timeSinceLastCall < this.RATE_LIMIT_MS) {
+      const waitTime = this.RATE_LIMIT_MS - timeSinceLastCall;
+      console.log(`⏰ Rate limit: please wait ${Math.ceil(waitTime / 1000)} seconds`);
+      return false;
+    }
+    
+    this.lastApiCall = now;
+    return true;
+  }
+
+  private async sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private async retryWithBackoff<T>(fn: () => Promise<T>, maxRetries: number = 3): Promise<T> {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await fn();
+      } catch (error: any) {
+        if (error.message?.includes('Te veel requests') && attempt < maxRetries) {
+          const backoffMs = Math.pow(2, attempt) * 1000; // Exponential backoff: 2s, 4s, 8s
+          console.log(`⏳ Retry ${attempt}/${maxRetries} in ${backoffMs/1000}s...`);
+          await this.sleep(backoffMs);
+          continue;
+        }
+        throw error;
+      }
+    }
+    throw new Error('Max retries exceeded');
   }
 
   // Parse natural language transaction commands
@@ -188,7 +227,15 @@ class AIService {
 
       // If no pattern match and API key available, use OpenAI
       if (this.apiKey) {
-        return await this.processWithOpenAI(input, context);
+        if (this.checkRateLimit()) {
+          return await this.processWithOpenAI(input, context);
+        } else {
+          return {
+            success: false,
+            message: 'Te veel requests. Wacht even en probeer opnieuw.',
+            confidence: 0,
+          };
+        }
       }
 
       // No match and no API
@@ -210,61 +257,64 @@ class AIService {
   private async processWithOpenAI(input: string, context: any): Promise<AIResponse> {
     try {
       console.log('🤖 Processing command with OpenAI...');
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.getApiKey()}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini', // Changed to more cost-effective model
-          messages: [
-            {
-              role: 'system',
-              content: `Je bent een AI assistent voor BlazeWallet. Parse user commands and extract transaction intent.
-              Context: Balance: ${context.balance}, Chain: ${context.chain}
-              Return JSON: { "type": "send|swap|info", "params": {...}, "message": "explanation" }`,
-            },
-            { role: 'user', content: input },
-          ],
-          temperature: 0.3,
-        }),
-      });
+      
+      return await this.retryWithBackoff(async () => {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.getApiKey()}`,
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini', // Changed to more cost-effective model
+            messages: [
+              {
+                role: 'system',
+                content: `Je bent een AI assistent voor BlazeWallet. Parse user commands and extract transaction intent.
+                Context: Balance: ${context.balance}, Chain: ${context.chain}
+                Return JSON: { "type": "send|swap|info", "params": {...}, "message": "explanation" }`,
+              },
+              { role: 'user', content: input },
+            ],
+            temperature: 0.3,
+          }),
+        });
 
-      console.log('📡 OpenAI command response status:', response.status);
+        console.log('📡 OpenAI command response status:', response.status);
 
-      if (!response.ok) {
-        console.error('❌ OpenAI API error:', response.status, response.statusText);
-        if (response.status === 401) {
-          throw new Error('API key is ongeldig. Controleer je OpenAI API key.');
-        } else if (response.status === 429) {
-          throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
-        } else if (response.status === 404) {
-          throw new Error('OpenAI API endpoint niet gevonden. Controleer je API key.');
-        } else {
-          throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        if (!response.ok) {
+          console.error('❌ OpenAI API error:', response.status, response.statusText);
+          if (response.status === 401) {
+            throw new Error('API key is ongeldig. Controleer je OpenAI API key.');
+          } else if (response.status === 429) {
+            throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
+          } else if (response.status === 404) {
+            throw new Error('OpenAI API endpoint niet gevonden. Controleer je API key.');
+          } else {
+            throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+          }
         }
-      }
 
-      const data = await response.json();
-      console.log('✅ OpenAI command response data:', data);
+        const data = await response.json();
+        console.log('✅ OpenAI command response data:', data);
 
-      if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-        console.error('❌ Invalid OpenAI response structure:', data);
-        throw new Error('OpenAI gaf een onverwacht antwoord.');
-      }
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+          console.error('❌ Invalid OpenAI response structure:', data);
+          throw new Error('OpenAI gaf een onverwacht antwoord.');
+        }
 
-      const result = JSON.parse(data.choices[0].message.content);
+        const result = JSON.parse(data.choices[0].message.content);
 
-      return {
-        success: true,
-        message: result.message,
-        action: {
-          type: result.type,
-          params: result.params,
-        },
-        confidence: 0.95,
-      };
+        return {
+          success: true,
+          message: result.message,
+          action: {
+            type: result.type,
+            params: result.params,
+          },
+          confidence: 0.95,
+        };
+      });
     } catch (error) {
       console.error('OpenAI error:', error);
       throw error;
@@ -507,6 +557,11 @@ class AIService {
         return 'Ik kan je vraag niet beantwoorden zonder OpenAI API key. Stel deze in bij Settings → AI Configuration.';
       }
 
+      // Check rate limit
+      if (!this.checkRateLimit()) {
+        return 'Te veel requests. Wacht even en probeer opnieuw.';
+      }
+
       // Common crypto questions (works offline)
       const commonQuestions: { [key: string]: string } = {
         'wat is gas': 'Gas zijn de transactiekosten op Ethereum. Het is de prijs die je betaalt aan miners/validators om je transactie te verwerken. Gemeten in gwei (1 gwei = 0.000000001 ETH).',
@@ -529,62 +584,65 @@ class AIService {
       // If we have API key, use OpenAI
       if (apiKey) {
         console.log('🤖 Making OpenAI API call...');
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini', // Changed to more cost-effective model
-            messages: [
-              {
-                role: 'system',
-                content: `Je bent een behulpzame crypto expert assistent in BlazeWallet. 
-                Geef duidelijke, korte antwoorden in het Nederlands (tenzij de gebruiker Engels spreekt).
-                Focus op praktisch advies. Noem nooit dat je een AI bent.
-                Context: ${JSON.stringify(context || {})}`,
-              },
-              ...this.conversationHistory,
-            ],
-            temperature: 0.7,
-            max_tokens: 200,
-          }),
-        });
+        
+        return await this.retryWithBackoff(async () => {
+          const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o-mini', // Changed to more cost-effective model
+              messages: [
+                {
+                  role: 'system',
+                  content: `Je bent een behulpzame crypto expert assistent in BlazeWallet. 
+                  Geef duidelijke, korte antwoorden in het Nederlands (tenzij de gebruiker Engels spreekt).
+                  Focus op praktisch advies. Noem nooit dat je een AI bent.
+                  Context: ${JSON.stringify(context || {})}`,
+                },
+                ...this.conversationHistory,
+              ],
+              temperature: 0.7,
+              max_tokens: 200,
+            }),
+          });
 
-        console.log('📡 OpenAI response status:', response.status);
+          console.log('📡 OpenAI response status:', response.status);
 
-        if (!response.ok) {
-          console.error('❌ OpenAI API error:', response.status, response.statusText);
-          if (response.status === 401) {
-            return 'API key is ongeldig. Controleer je OpenAI API key in de instellingen.';
-          } else if (response.status === 429) {
-            return 'Te veel requests. Wacht even en probeer opnieuw.';
-          } else if (response.status === 404) {
-            return 'OpenAI API endpoint niet gevonden. Controleer je API key.';
-          } else {
-            return `OpenAI API error: ${response.status} ${response.statusText}`;
+          if (!response.ok) {
+            console.error('❌ OpenAI API error:', response.status, response.statusText);
+            if (response.status === 401) {
+              throw new Error('API key is ongeldig. Controleer je OpenAI API key in de instellingen.');
+            } else if (response.status === 429) {
+              throw new Error('Te veel requests. Wacht even en probeer opnieuw.');
+            } else if (response.status === 404) {
+              throw new Error('OpenAI API endpoint niet gevonden. Controleer je API key.');
+            } else {
+              throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+            }
           }
-        }
 
-        const data = await response.json();
-        console.log('✅ OpenAI response data:', data);
+          const data = await response.json();
+          console.log('✅ OpenAI response data:', data);
 
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-          console.error('❌ Invalid OpenAI response structure:', data);
-          return 'OpenAI gaf een onverwacht antwoord. Probeer opnieuw.';
-        }
+          if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+            console.error('❌ Invalid OpenAI response structure:', data);
+            throw new Error('OpenAI gaf een onverwacht antwoord. Probeer opnieuw.');
+          }
 
-        const assistantMessage = data.choices[0].message.content;
-        
-        this.conversationHistory.push({ role: 'assistant', content: assistantMessage });
-        
-        // Keep conversation history manageable
-        if (this.conversationHistory.length > 20) {
-          this.conversationHistory = this.conversationHistory.slice(-10);
-        }
+          const assistantMessage = data.choices[0].message.content;
+          
+          this.conversationHistory.push({ role: 'assistant', content: assistantMessage });
+          
+          // Keep conversation history manageable
+          if (this.conversationHistory.length > 20) {
+            this.conversationHistory = this.conversationHistory.slice(-10);
+          }
 
-        return assistantMessage;
+          return assistantMessage;
+        });
       }
 
       // No API key available
