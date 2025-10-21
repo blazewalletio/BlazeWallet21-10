@@ -315,6 +315,8 @@ export default function Dashboard() {
           activeTab={activeTab} 
           onTabChange={setActiveTab} 
         />
+      </div>
+
       {/* Modals */}
       <BuyModal isOpen={showBuyModal} onClose={() => setShowBuyModal(false)} />
       <SendModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} />
