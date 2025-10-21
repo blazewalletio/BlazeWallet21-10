@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useWalletStore } from '@/lib/wallet-store';
 import Onboarding from '@/components/Onboarding';
-import Dashboard from '@/components/Dashboard';
+import DashboardTabs from '@/components/DashboardTabs';
 import SplashScreen from '@/components/SplashScreen';
 import PasswordSetupModal from '@/components/PasswordSetupModal';
 import PasswordUnlockModal from '@/components/PasswordUnlockModal';
@@ -149,7 +149,7 @@ export default function Home() {
         <Onboarding onComplete={() => setHasWallet(true)} />
       ) : (
         <>
-          <Dashboard />
+          <DashboardTabs />
           
           {/* PWA Install Prompt */}
           <PWAInstallPrompt />
