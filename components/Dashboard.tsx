@@ -3,10 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowUpRight, ArrowDownLeft, ArrowLeft, RefreshCw, Settings, 
-  TrendingUp, Eye, EyeOff, Plus, Zap, ChevronRight,
-  Repeat, Wallet as WalletIcon, TrendingDown, PieChart, Rocket, CreditCard,
-  Lock, Gift, Vote, Users, Palette, LogOut
+  RefreshCw, ChevronRight, LogOut, ArrowLeft, Zap
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { useTranslation } from '@/lib/useTranslation';
@@ -14,30 +11,23 @@ import { BlockchainService } from '@/lib/blockchain';
 import { TokenService } from '@/lib/token-service';
 import { PriceService } from '@/lib/price-service';
 import { CHAINS, POPULAR_TOKENS } from '@/lib/chains';
-import { Token } from '@/lib/types';
 import SendModal from './SendModal';
 import ReceiveModal from './ReceiveModal';
 import SwapModal from './SwapModal';
 import BuyModal from './BuyModal';
 import ChainSelector from './ChainSelector';
 import TokenSelector from './TokenSelector';
-import PortfolioChart from './PortfolioChart';
 import SettingsModal from './SettingsModal';
-import DebugPanel from './DebugPanel';
-import AnimatedNumber from './AnimatedNumber';
 import QuickPayModal from './QuickPayModal';
+import DebugPanel from './DebugPanel';
 import FounderDeploy from './FounderDeploy';
-import TransactionHistory from './TransactionHistory';
+import VestingDashboard from './VestingDashboard';
 import StakingDashboard from './StakingDashboard';
 import GovernanceDashboard from './GovernanceDashboard';
 import LaunchpadDashboard from './LaunchpadDashboard';
-import ReferralDashboard from './ReferralDashboard';
-import NFTMintDashboard from './NFTMintDashboard';
-import CashbackTracker from './CashbackTracker';
-import PremiumBadge, { PremiumCard } from './PremiumBadge';
-import PresaleDashboard from './PresaleDashboard';
-import VestingDashboard from './VestingDashboard';
 import { getPortfolioHistory } from '@/lib/portfolio-history';
+import BottomNavigation, { TabType } from './BottomNavigation';
+import TabContent from './TabContent';
 
 export default function Dashboard() {
   const { 
@@ -61,7 +51,10 @@ export default function Dashboard() {
   // Check if current wallet is a founder/developer
   const isFounder = address && founderAddresses.includes(address.toLowerCase());
   
-  const [showBalance, setShowBalance] = useState(true);
+  // Bottom Navigation State
+  const [activeTab, setActiveTab] = useState<TabType>('wallet');
+  
+  // Modal States
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showReceiveModal, setShowReceiveModal] = useState(false);
@@ -72,18 +65,16 @@ export default function Dashboard() {
   const [showSettings, setShowSettings] = useState(false);
   const [showQuickPay, setShowQuickPay] = useState(false);
   const [showFounderDeploy, setShowFounderDeploy] = useState(false);
+  const [showVesting, setShowVesting] = useState(false);
   const [showStaking, setShowStaking] = useState(false);
   const [showGovernance, setShowGovernance] = useState(false);
   const [showLaunchpad, setShowLaunchpad] = useState(false);
-  const [showReferrals, setShowReferrals] = useState(false);
-  const [showNFTMint, setShowNFTMint] = useState(false);
-  const [showCashback, setShowCashback] = useState(false);
-  const [showPresale, setShowPresale] = useState(false);
-  const [showVesting, setShowVesting] = useState(false);
+  
+  // Data States
   const [totalValueUSD, setTotalValueUSD] = useState(0);
   const [change24h, setChange24h] = useState(2.5);
   const [chartData, setChartData] = useState<number[]>([]);
-  const [selectedTimeRange, setSelectedTimeRange] = useState<number | null>(24); // Default: 24 hours
+  const [selectedTimeRange, setSelectedTimeRange] = useState<number | null>(24);
 
   const { t } = useTranslation();
   const chain = CHAINS[currentChain];
@@ -258,16 +249,6 @@ export default function Dashboard() {
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                {/* Presale button - Hidden on mobile, shown as card below */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowPresale(true)}
-                  className="hidden md:flex px-3 py-2 rounded-xl items-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:from-orange-600 hover:to-yellow-600 shadow-soft"
-                  title="Join Presale"
-                >
-                  <Rocket className="w-5 h-5" />
-                  <span className="text-sm font-semibold">Presale</span>
-                </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => fetchData(true)}
@@ -275,13 +256,6 @@ export default function Dashboard() {
                   className="glass-card p-2.5 sm:p-3 rounded-xl hover:bg-gray-50"
                 >
                   <RefreshCw className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-700 ${isRefreshing ? 'animate-spin' : ''}`} />
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowSettings(true)}
-                  className="glass-card p-2.5 sm:p-3 rounded-xl hover:bg-gray-50"
-                >
-                  <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
@@ -300,435 +274,30 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-          {/* Portfolio Value Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass-card relative overflow-hidden card-3d subtle-shimmer"
-          >
-            <div className="absolute inset-0 bg-gradient-primary opacity-5 animate-gradient" />
-            <div className="relative z-10">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex-1">
-                  <div className="text-sm text-gray-600 mb-2">Portfolio value</div>
-                  <div className="flex items-center gap-3 mb-2">
-                    {showBalance ? (
-                      <>
-                        <h2 className="text-4xl md:text-5xl font-bold">
-                          <AnimatedNumber 
-                            value={totalValueUSD} 
-                            decimals={2} 
-                            prefix="$"
-                          />
-                        </h2>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-500">{balance} {chain.nativeCurrency.symbol}</div>
-                          <div className="text-xs text-gray-400">Native balance</div>
-                        </div>
-                        <motion.button
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => setShowBalance(false)}
-                          className="text-gray-500 hover:text-gray-700"
-                        >
-                          <Eye className="w-5 h-5" />
-                        </motion.button>
-                      </>
-                    ) : (
-                      <>
-                        <h2 className="text-4xl md:text-5xl font-bold">••••••</h2>
-                        <motion.button
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => setShowBalance(true)}
-                          className="text-gray-500 hover:text-gray-700"
-                        >
-                          <EyeOff className="w-5 h-5" />
-                        </motion.button>
-                      </>
-                    )}
-                  </div>
-                  
-                  <div className={`flex items-center gap-2 text-sm ${isPositiveChange ? 'text-emerald-600' : 'text-rose-600'}`}>
-                    {isPositiveChange ? (
-                      <TrendingUp className="w-4 h-4" />
-                    ) : (
-                      <TrendingDown className="w-4 h-4" />
-                    )}
-                    <span>
-                      {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% 
-                      {selectedTimeRange === 1 ? t("dashboard.lastHour") : 
-                       selectedTimeRange === 24 ? ' vandaag' : 
-                       selectedTimeRange === 72 ? t("dashboard.last3Days") :
-                       selectedTimeRange === 168 ? ' deze week' :
-                       selectedTimeRange === 720 ? ' deze maand' :
-                       t("dashboard.total")}
-                    </span>
-                  </div>
-                </div>
-              </div>
+        {/* Tab Content */}
+        <TabContent
+          activeTab={activeTab}
+          tokens={tokens}
+          totalValueUSD={totalValueUSD}
+          change24h={change24h}
+          chartData={chartData}
+          selectedTimeRange={selectedTimeRange}
+          setSelectedTimeRange={setSelectedTimeRange}
+          setShowSendModal={setShowSendModal}
+          setShowReceiveModal={setShowReceiveModal}
+          setShowSwapModal={setShowSwapModal}
+          setShowBuyModal={setShowBuyModal}
+          setShowTokenSelector={setShowTokenSelector}
+          setShowQuickPay={setShowQuickPay}
+          fetchData={() => fetchData(true)}
+          isRefreshing={isRefreshing}
+        />
 
-              {/* Mini Chart - Real Data */}
-              <div className="h-20 flex items-end gap-1 mb-4">
-                {chartData.length > 0 ? (
-                  // Show real portfolio history
-                  (() => {
-                    const minValue = Math.min(...chartData);
-                    const maxValue = Math.max(...chartData);
-                    const range = maxValue - minValue || 1; // Avoid division by zero
-                    
-                    return chartData.map((value, i) => {
-                      const heightPercent = ((value - minValue) / range) * 80 + 20;
-                      return (
-                        <motion.div
-                          key={i}
-                          initial={{ height: 0 }}
-                          animate={{ height: `${heightPercent}%` }}
-                          transition={{ delay: i * 0.03, duration: 0.5 }}
-                          className={`flex-1 rounded-t ${isPositiveChange ? 'bg-emerald-400/40' : 'bg-rose-400/40'}`}
-                        />
-                      );
-                    });
-                  })()
-                ) : (
-                  // Placeholder while loading data
-                  Array.from({ length: 20 }).map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ height: 0 }}
-                      animate={{ height: '50%' }}
-                      transition={{ delay: i * 0.05, duration: 0.5 }}
-                      className="flex-1 rounded-t bg-gray-300/40"
-                    />
-                  ))
-                )}
-              </div>
-
-              {/* Time Range Selector */}
-              <div className="flex gap-2 flex-wrap">
-                {[
-                  { label: '1u', hours: 1 },
-                  { label: '1d', hours: 24 },
-                  { label: '3d', hours: 72 },
-                  { label: '1w', hours: 168 },
-                  { label: '1m', hours: 720 },
-                  { label: 'Alles', hours: null },
-                ].map((range) => (
-                  <motion.button
-                    key={range.label}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedTimeRange(range.hours)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                      selectedTimeRange === range.hours
-                        ? 'bg-primary-600 text-white shadow-soft'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {range.label}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Presale Card - Mobile Only */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden glass-card card-hover relative overflow-hidden"
-            onClick={() => setShowPresale(true)}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-yellow-500/10" />
-            <div className="relative z-10 p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center">
-                    <Rocket className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-900 text-lg">BLAZE Presale</div>
-                    <div className="text-sm text-gray-600">Vroege toegang tot tokens</div>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-4 gap-3">
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowBuyModal(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
-                <CreditCard className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Buy</div>
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowSendModal(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-2">
-                <ArrowUpRight className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Send</div>
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowReceiveModal(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2">
-                <ArrowDownLeft className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Receive</div>
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.25 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowSwapModal(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2">
-                <Repeat className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Swap</div>
-            </motion.button>
-          </div>
-
-          {/* Add Tokens Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setShowTokenSelector(true)}
-            className="w-full glass-card card-hover p-3 flex items-center justify-center gap-2 mt-3"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="text-sm font-semibold">Add tokens</span>
-          </motion.button>
-
-          {/* BLAZE Features Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="glass-card"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold flex items-center gap-2">
-                🔥 BLAZE Features
-              </h3>
-              <PremiumBadge isPremium={false} tokenBalance={0} threshold={10000} />
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {/* Staking */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowStaking(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mb-3">
-                  <Lock className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Staking</div>
-                <div className="text-xs text-slate-400">Earn up to 25% APY</div>
-              </motion.button>
-
-              {/* Cashback */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowCashback(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-3">
-                  <Gift className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Cashback</div>
-                <div className="text-xs text-slate-400">2% on all transactions</div>
-              </motion.button>
-
-              {/* Governance */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowGovernance(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-3">
-                  <Vote className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Governance</div>
-                <div className="text-xs text-slate-400">Vote on proposals</div>
-              </motion.button>
-
-              {/* Launchpad */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowLaunchpad(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-3">
-                  <Rocket className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Launchpad</div>
-                <div className="text-xs text-slate-400">Early access to IDOs</div>
-              </motion.button>
-
-              {/* Referrals */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowReferrals(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mb-3">
-                  <Users className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Referrals</div>
-                <div className="text-xs text-slate-400">Earn 50 BLAZE/referral</div>
-              </motion.button>
-
-              {/* NFT Collection */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowNFTMint(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center mb-3">
-                  <Palette className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">NFT Skins</div>
-                <div className="text-xs text-slate-400">Exclusive wallet themes</div>
-              </motion.button>
-
-              {/* Vesting (Founder Only) */}
-              {isFounder && (
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowVesting(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left border-2 border-purple-500/30"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-3">
-                    <Lock className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">Vesting</div>
-                  <div className="text-xs text-slate-400">120M tokens locked</div>
-                </motion.button>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Native Currency */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass-card"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">Assets</h3>
-            </div>
-            
-            <div className="space-y-3">
-              {/* Native Token */}
-              <motion.div
-                whileTap={{ scale: 0.98 }}
-                className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div 
-                    className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
-                    style={{ background: chain.color }}
-                  >
-                    {chain.icon}
-                  </div>
-                  <div>
-                    <div className="font-semibold">{chain.nativeCurrency.name}</div>
-                    <div className="text-sm text-slate-400">
-                      {parseFloat(balance).toFixed(4)} {chain.nativeCurrency.symbol}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold">
-                    ${(parseFloat(balance) * (totalValueUSD > 0 ? totalValueUSD / (parseFloat(balance) + tokens.reduce((sum, t) => sum + parseFloat(t.balance || '0'), 0)) : 0)).toFixed(2)}
-                  </div>
-                  <div className={`text-sm ${isPositiveChange ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}%
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* ERC-20 Tokens */}
-              <AnimatePresence>
-                {tokens.map((token, index) => (
-                  <motion.div
-                    key={token.address}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-600 rounded-full flex items-center justify-center text-xl">
-                        {token.logo || token.symbol[0]}
-                      </div>
-                      <div>
-                        <div className="font-semibold">{token.name}</div>
-                        <div className="text-sm text-slate-400">
-                          {parseFloat(token.balance || '0').toFixed(4)} {token.symbol}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">${token.balanceUSD}</div>
-                      <div className={`text-sm ${(token.change24h || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                        {(token.change24h || 0) >= 0 ? '+' : ''}{(token.change24h || 0).toFixed(2)}%
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {tokens.length === 0 && (
-                <div className="text-center py-8 text-slate-400">
-                  <div className="text-3xl mb-2">🪙</div>
-                  <p className="text-sm">No tokens yet</p>
-                  <button
-                    onClick={() => setShowTokenSelector(true)}
-                    className="text-primary-400 text-sm mt-2 hover:text-primary-300"
-                  >
-                    Add token
-                  </button>
-                </div>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Transaction History */}
-          <TransactionHistory />
-        </div>
-      </div>
+        {/* Bottom Navigation */}
+        <BottomNavigation 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+        />
 
       {/* Modals */}
       <BuyModal isOpen={showBuyModal} onClose={() => setShowBuyModal(false)} />
@@ -807,115 +376,6 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {showNFTMint && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
-          >
-            <div className="max-w-4xl mx-auto p-6">
-              <button
-                onClick={() => setShowNFTMint(false)}
-                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
-              </button>
-              <NFTMintDashboard />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showPresale && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
-          >
-            <div className="max-w-4xl mx-auto p-6">
-              <button
-                onClick={() => setShowPresale(false)}
-                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
-              </button>
-              <PresaleDashboard />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      {/* Full Screen Modals for Dashboards */}
-      <AnimatePresence>
-        {showReferrals && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
-          >
-            <div className="max-w-4xl mx-auto p-6">
-              <button
-                onClick={() => setShowReferrals(false)}
-                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
-              >
-                ← Terug naar Dashboard
-              </button>
-              <ReferralDashboard />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      <AnimatePresence>
-        {showCashback && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
-          >
-            <div className="max-w-4xl mx-auto p-6">
-              <button
-                onClick={() => setShowCashback(false)}
-                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
-              >
-                ← Terug naar Dashboard
-              </button>
-              <CashbackTracker />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showVesting && isFounder && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
-          >
-            <div className="max-w-4xl mx-auto p-6">
-              <button
-                onClick={() => setShowVesting(false)}
-                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
-              </button>
-              <VestingDashboard />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
       {/* Founder Deploy Modal */}
       <AnimatePresence>
         {showFounderDeploy && (
@@ -947,6 +407,28 @@ export default function Dashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {showVesting && isFounder && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-gray-50 overflow-y-auto"
+          >
+            <div className="max-w-4xl mx-auto p-6">
+              <button
+                onClick={() => setShowVesting(false)}
+                className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Terug naar Dashboard
+              </button>
+              <VestingDashboard />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       <DebugPanel />
       
@@ -965,7 +447,3 @@ export default function Dashboard() {
     </>
   );
 }
-
-
-
-
