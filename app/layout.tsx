@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -8,13 +8,6 @@ export const metadata: Metadata = {
   title: "BLAZE Wallet - Secure DeFi Wallet",
   description: "Secure crypto wallet with DeFi features, biometric authentication, and cross-device sync.",
   manifest: "/manifest.json",
-  themeColor: "#f97316",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -29,6 +22,14 @@ export const metadata: Metadata = {
     title: "BLAZE Wallet - Secure DeFi Wallet",
     description: "Secure crypto wallet with DeFi features, biometric authentication, and cross-device sync.",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#f97316",
 };
 
 export default function RootLayout({
