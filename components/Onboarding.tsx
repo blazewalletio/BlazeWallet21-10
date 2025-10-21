@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, CheckCircle2, Copy, Check } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
-import BlazeLogo from './BlazeLogo';
+import BlazeLogoImage from './BlazeLogoImage';
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -129,8 +129,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 }}
                 className="inline-block"
               >
-                <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center mb-6">
-                <BlazeLogo size={48} />
+                <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center mb-6 p-2">
+                <BlazeLogoImage size={48} />
               </div>
             </motion.div>
 
