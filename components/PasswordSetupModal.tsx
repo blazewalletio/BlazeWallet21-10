@@ -45,17 +45,28 @@ export default function PasswordSetupModal({ isOpen, onComplete }: PasswordSetup
 
     setIsLoading(true);
     try {
+      console.log('🔐 Setting up password...');
       await setWalletPassword(password);
       
+      console.log('💾 Storing password for biometric access...');
       // Also store password for biometric access if available
       const biometricStore = BiometricStore.getInstance();
       await biometricStore.storePassword(password);
       console.log('✅ Password stored for biometric access');
       
+      // Clear flags
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('wallet_just_imported');
+        localStorage.removeItem('wallet_just_created');
+        localStorage.removeItem('force_password_setup');
+      }
+      
+      console.log('✅ Password setup complete!');
       onComplete();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Password setup error:', error);
-      setError('Er is een fout opgetreden. Probeer opnieuw.');
+      const errorMessage = error?.message || 'Er is een fout opgetreden. Probeer opnieuw.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

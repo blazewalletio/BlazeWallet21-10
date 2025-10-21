@@ -28,6 +28,14 @@ import LaunchpadDashboard from './LaunchpadDashboard';
 import { getPortfolioHistory } from '@/lib/portfolio-history';
 import BottomNavigation, { TabType } from './BottomNavigation';
 import TabContent from './TabContent';
+import AITransactionAssistant from './AITransactionAssistant';
+import AIRiskScanner from './AIRiskScanner';
+import AIPortfolioAdvisor from './AIPortfolioAdvisor';
+import AIGasOptimizer from './AIGasOptimizer';
+import AIConversationalAssistant from './AIConversationalAssistant';
+import AIBrainAssistant from './AIBrainAssistant';
+import AISettingsModal from './AISettingsModal';
+import { Sparkles, Shield, Brain, MessageSquare } from 'lucide-react';
 
 export default function Dashboard() {
   const { 
@@ -74,7 +82,16 @@ export default function Dashboard() {
   const [totalValueUSD, setTotalValueUSD] = useState(0);
   const [change24h, setChange24h] = useState(2.5);
   const [chartData, setChartData] = useState<number[]>([]);
-  const [selectedTimeRange, setSelectedTimeRange] = useState<number | null>(24);
+  const [selectedTimeRange, setSelectedTimeRange] = useState<number | null>(24); // Default: 24 hours
+  
+  // AI Features state
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [showAIRiskScanner, setShowAIRiskScanner] = useState(false);
+  const [showAIPortfolioAdvisor, setShowAIPortfolioAdvisor] = useState(false);
+  const [showAIGasOptimizer, setShowAIGasOptimizer] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [showAIBrain, setShowAIBrain] = useState(false);
+  const [showAISettings, setShowAISettings] = useState(false);
 
   const { t } = useTranslation();
   const chain = CHAINS[currentChain];
@@ -298,7 +315,6 @@ export default function Dashboard() {
           activeTab={activeTab} 
           onTabChange={setActiveTab} 
         />
-
       {/* Modals */}
       <BuyModal isOpen={showBuyModal} onClose={() => setShowBuyModal(false)} />
       <SendModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} />
@@ -308,6 +324,86 @@ export default function Dashboard() {
       <TokenSelector isOpen={showTokenSelector} onClose={() => setShowTokenSelector(false)} />
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
       <QuickPayModal isOpen={showQuickPay} onClose={() => setShowQuickPay(false)} />
+      
+      {/* AI Feature Modals */}
+      <AnimatePresence>
+        {showAIAssistant && (
+          <AITransactionAssistant
+            onClose={() => setShowAIAssistant(false)}
+            context={{
+              balance: balance || '0',
+              tokens: tokens,
+              address: address || '',
+              chain: currentChain,
+            }}
+            onExecuteAction={(action) => {
+              // Handle action execution
+              if (action.type === 'send') {
+                setShowSendModal(true);
+              } else if (action.type === 'swap') {
+                setShowSwapModal(true);
+              }
+            }}
+          />
+        )}
+
+        {showAIRiskScanner && (
+          <AIRiskScanner onClose={() => setShowAIRiskScanner(false)} />
+        )}
+
+        {showAIPortfolioAdvisor && (
+          <AIPortfolioAdvisor
+            onClose={() => setShowAIPortfolioAdvisor(false)}
+            tokens={tokens}
+            totalValue={totalValueUSD}
+          />
+        )}
+
+        {showAIGasOptimizer && (
+          <AIGasOptimizer
+            onClose={() => setShowAIGasOptimizer(false)}
+            currentGasPrice={30} // TODO: Get real gas price from chain
+          />
+        )}
+
+        {showAIChat && (
+          <AIConversationalAssistant
+            onClose={() => setShowAIChat(false)}
+            context={{
+              balance: balance || '0',
+              tokens: tokens,
+              address: address || '',
+              chain: currentChain,
+              totalValue: totalValueUSD,
+            }}
+          />
+        )}
+
+        {showAIBrain && (
+          <AIBrainAssistant
+            onClose={() => setShowAIBrain(false)}
+            onOpenFeature={(feature) => {
+              setShowAIBrain(false);
+              if (feature === 'assistant') setShowAIAssistant(true);
+              else if (feature === 'scanner') setShowAIRiskScanner(true);
+              else if (feature === 'advisor') setShowAIPortfolioAdvisor(true);
+              else if (feature === 'optimizer') setShowAIGasOptimizer(true);
+              else if (feature === 'chat') setShowAIChat(true);
+            }}
+            context={{
+              balance: balance || '0',
+              tokens: tokens,
+              address: address || '',
+              chain: currentChain,
+              totalValue: totalValueUSD,
+            }}
+          />
+        )}
+
+        {showAISettings && (
+          <AISettingsModal onClose={() => setShowAISettings(false)} />
+        )}
+      </AnimatePresence>
       
       {/* BLAZE Feature Pages */}
       <AnimatePresence>
