@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Wallet, 
   Sparkles, 
-  Zap, 
+  Flame, 
   History, 
   Settings 
 } from 'lucide-react';
@@ -32,7 +32,7 @@ export default function BottomNavigation({ activeTab, onTabChange }: BottomNavig
     {
       id: 'blaze' as TabType,
       label: 'Blaze',
-      icon: Zap,
+      icon: Flame,
     },
     {
       id: 'history' as TabType,

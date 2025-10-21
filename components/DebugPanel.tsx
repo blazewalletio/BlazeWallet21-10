@@ -44,7 +44,7 @@ export default function DebugPanel() {
       <motion.button
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 left-4 z-50 glass-card p-3 rounded-full shadow-lg hover:bg-white/10"
+        className="fixed bottom-24 left-4 z-50 glass-card p-3 rounded-full shadow-lg hover:bg-white/10"
         title="Debug Panel"
       >
         <Bug className="w-5 h-5 text-primary-400" />
@@ -58,7 +58,7 @@ export default function DebugPanel() {
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
-        className="fixed bottom-4 left-4 z-50 glass-card p-4 rounded-2xl shadow-2xl w-[90vw] max-w-md max-h-[80vh] overflow-y-auto"
+        className="fixed bottom-24 left-4 z-50 glass-card p-4 rounded-2xl shadow-2xl w-[90vw] max-w-md max-h-[80vh] overflow-y-auto"
       >
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
