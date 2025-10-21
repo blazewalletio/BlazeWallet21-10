@@ -1,4 +1,4 @@
-// File: /Users/rickschlimback/Desktop/Crypto wallet app/app/api/prices/route.ts
+// File: /Users/rickschlimback/Desktop/BlazeWallet 21-10/app/api/prices/route.ts
 import * as entry from '../../../../../app/api/prices/route.js'
 import type { NextRequest } from 'next/server.js'
 
