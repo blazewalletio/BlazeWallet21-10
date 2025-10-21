@@ -106,7 +106,13 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-yellow-500/5 to-orange-500/5" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl" />
+      
+      <div className="relative z-10">
       <AnimatePresence mode="wait">
         {step === 'welcome' && (
           <motion.div
@@ -116,61 +122,76 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             exit={{ opacity: 0, y: -20 }}
             className="max-w-md w-full space-y-8"
           >
-            <div className="text-center">
-              <motion.div
-                animate={{ 
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatDelay: 3
-                }}
-                className="inline-block"
-              >
-                <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center mb-6 p-2">
-                <BlazeLogoImage size={48} />
-              </div>
+            {/* Logo Section - No background */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-center"
+            >
+              <BlazeLogoImage size={80} />
             </motion.div>
 
-            <h1 className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 tracking-tight">
-              Blaze
-            </h1>
-            <p className="text-slate-400 text-lg mb-2">
-              Lightning fast crypto
-            </p>
-              <div className="flex gap-4 justify-center text-sm text-slate-500 mb-8">
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  Veilig
-                </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  Snel
-                </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  Mooi
-                </span>
-              </div>
-            </div>
+            {/* Title Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-center"
+            >
+              <h1 className="text-6xl font-bold bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-500 bg-clip-text text-transparent mb-4 tracking-tight">
+                Blaze
+              </h1>
+              <p className="text-slate-300 text-xl font-medium mb-2">
+                Lightning fast crypto
+              </p>
+              <p className="text-slate-400 text-sm">
+                Set your finances ablaze 🔥
+              </p>
+            </motion.div>
 
-            <div className="space-y-4">
+            {/* Features */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex gap-4 justify-center text-sm"
+            >
+              <span className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span className="text-emerald-300 font-medium">Veilig</span>
+              </span>
+              <span className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
+                <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                <span className="text-blue-300 font-medium">Snel</span>
+              </span>
+              <span className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 rounded-full border border-purple-500/20">
+                <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                <span className="text-purple-300 font-medium">Mooi</span>
+              </span>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="space-y-4"
+            >
               <button
                 onClick={handleCreateWallet}
-                className="w-full btn-primary py-4 text-lg"
+                className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
               >
                 Create new wallet
               </button>
               <button
                 onClick={() => setStep('import')}
-                className="w-full btn-secondary py-4 text-lg"
+                className="w-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <Download className="w-5 h-5 inline mr-2" />
                 Import wallet
               </button>
-            </div>
+            </motion.div>
           </motion.div>
         )}
 
@@ -335,6 +356,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
