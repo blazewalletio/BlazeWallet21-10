@@ -1,134 +1,114 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Home, 
-  Bot, 
-  Flame, 
+  Wallet, 
+  Sparkles, 
+  Zap, 
   History, 
-  Settings
+  Settings 
 } from 'lucide-react';
 
-export interface NavigationItem {
-  id: string;
-  label: string;
-  icon: React.ComponentType<any>;
-  activeIcon?: React.ComponentType<any>;
-}
-
-const navigationItems: NavigationItem[] = [
-  {
-    id: 'wallet',
-    label: 'Wallet',
-    icon: Home,
-  },
-  {
-    id: 'ai-tools',
-    label: 'AI Tools',
-    icon: Bot,
-  },
-  {
-    id: 'blaze',
-    label: 'Blaze',
-    icon: Flame,
-  },
-  {
-    id: 'history',
-    label: 'History',
-    icon: History,
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
-    icon: Settings,
-  },
-];
+export type TabType = 'wallet' | 'ai' | 'blaze' | 'history' | 'settings';
 
 interface BottomNavigationProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  activeTab: TabType;
+  onTabChange: (tab: TabType) => void;
 }
 
 export default function BottomNavigation({ activeTab, onTabChange }: BottomNavigationProps) {
+  const tabs = [
+    {
+      id: 'wallet' as TabType,
+      label: 'Wallet',
+      icon: Wallet,
+    },
+    {
+      id: 'ai' as TabType,
+      label: 'AI Tools',
+      icon: Sparkles,
+    },
+    {
+      id: 'blaze' as TabType,
+      label: 'Blaze',
+      icon: Zap,
+    },
+    {
+      id: 'history' as TabType,
+      label: 'History',
+      icon: History,
+    },
+    {
+      id: 'settings' as TabType,
+      label: 'Settings',
+      icon: Settings,
+    },
+  ];
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-200/50 safe-area-pb">
-      <div className="max-w-4xl mx-auto px-1">
-        <div className="flex items-center justify-around py-2">
-          {navigationItems.map((item) => {
-            const isActive = activeTab === item.id;
-            const Icon = item.icon;
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-200 shadow-lg">
+      <div className="max-w-4xl mx-auto px-2 py-2">
+        <div className="flex justify-around">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             
             return (
               <motion.button
-                key={item.id}
-                onClick={() => onTabChange(item.id)}
-                className="flex-1 flex flex-col items-center justify-center py-3 px-2 relative"
+                key={tab.id}
+                onClick={() => onTabChange(tab.id)}
+                className={`relative flex flex-col items-center justify-center py-2 px-3 rounded-xl transition-all duration-200 min-w-0 flex-1 ${
+                  isActive 
+                    ? 'text-primary-600' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
                 whileTap={{ scale: 0.95 }}
               >
-                {/* Active indicator */}
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-200/30"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                <div className="relative">
+                  <Icon 
+                    className={`w-5 h-5 transition-colors duration-200 ${
+                      isActive ? 'text-primary-600' : 'text-gray-500'
+                    }`} 
                   />
-                )}
-                
-                {/* Icon */}
-                <div className={`relative z-10 transition-all duration-200 ${
-                  isActive 
-                    ? 'text-orange-500 scale-110' 
-                    : 'text-gray-500 scale-100'
-                }`}>
-                  <Icon className={`w-6 h-6 transition-all duration-200 ${
-                    isActive ? 'text-orange-500' : 'text-gray-400'
-                  }`} />
                   
-                  {/* Special effect for Blaze tab */}
-                  {item.id === 'blaze' && isActive && (
-                    <motion.div
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"
-                      animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.7, 1, 0.7],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  )}
+                  {/* Active indicator */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        className="absolute -top-1 -right-1 w-2 h-2 bg-primary-600 rounded-full"
+                      />
+                    )}
+                  </AnimatePresence>
                 </div>
                 
-                {/* Label */}
-                <span className={`text-xs font-medium mt-1 transition-all duration-200 relative z-10 ${
-                  isActive 
-                    ? 'text-orange-500' 
-                    : 'text-gray-500'
+                <span className={`text-xs font-medium mt-1 transition-colors duration-200 ${
+                  isActive ? 'text-primary-600' : 'text-gray-500'
                 }`}>
-                  {item.label}
+                  {tab.label}
                 </span>
                 
-                {/* Ripple effect on active */}
-                {isActive && (
-                  <motion.div
-                    className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/5 to-red-500/5"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
+                {/* Active background */}
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTab"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="absolute inset-0 bg-primary-50 rounded-xl -z-10"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </AnimatePresence>
               </motion.button>
             );
           })}
         </div>
       </div>
-      
-      {/* Subtle glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-t from-orange-500/5 to-transparent pointer-events-none" />
     </div>
   );
 }
-
-export { navigationItems };
