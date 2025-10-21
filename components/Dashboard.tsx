@@ -46,6 +46,7 @@ import AIConversationalAssistant from './AIConversationalAssistant';
 import AIBrainAssistant from './AIBrainAssistant';
 import AISettingsModal from './AISettingsModal';
 import { Sparkles, Shield, Brain, MessageSquare } from 'lucide-react';
+import BottomNavigation, { TabType } from './BottomNavigation';
 
 export default function Dashboard() {
   const { 
@@ -101,6 +102,9 @@ export default function Dashboard() {
   const [showAIChat, setShowAIChat] = useState(false);
   const [showAIBrain, setShowAIBrain] = useState(false);
   const [showAISettings, setShowAISettings] = useState(false);
+
+  // Bottom navigation state
+  const [activeTab, setActiveTab] = useState<TabType>('wallet');
 
   const { t } = useTranslation();
   const chain = CHAINS[currentChain];
@@ -247,6 +251,606 @@ export default function Dashboard() {
   const formattedAddress = address ? BlockchainService.formatAddress(address) : '';
   const isPositiveChange = change24h >= 0;
 
+  // Render content based on active tab
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'wallet':
+        return renderWalletContent();
+      case 'ai':
+        return renderAIContent();
+      case 'blaze':
+        return renderBlazeContent();
+      case 'history':
+        return renderHistoryContent();
+      case 'settings':
+        return renderSettingsContent();
+      default:
+        return renderWalletContent();
+    }
+  };
+
+  // Wallet tab content
+  const renderWalletContent = () => (
+    <>
+      {/* Portfolio Value Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card relative overflow-hidden card-3d subtle-shimmer"
+      >
+        <div className="absolute inset-0 bg-gradient-primary opacity-5 animate-gradient" />
+        <div className="relative z-10">
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex-1">
+              <div className="text-sm text-gray-600 mb-2">Portfolio value</div>
+              <div className="flex items-center gap-3 mb-2">
+                {showBalance ? (
+                  <>
+                    <h2 className="text-4xl md:text-5xl font-bold">
+                      <AnimatedNumber 
+                        value={totalValueUSD} 
+                        decimals={2} 
+                        prefix="$"
+                      />
+                    </h2>
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500">{balance} {chain.nativeCurrency.symbol}</div>
+                      <div className="text-xs text-gray-400">Native balance</div>
+                    </div>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setShowBalance(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      <Eye className="w-5 h-5" />
+                    </motion.button>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-4xl md:text-5xl font-bold">••••••</h2>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setShowBalance(true)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      <EyeOff className="w-5 h-5" />
+                    </motion.button>
+                  </>
+                )}
+              </div>
+              
+              <div className={`flex items-center gap-2 text-sm ${isPositiveChange ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {isPositiveChange ? (
+                  <TrendingUp className="w-4 h-4" />
+                ) : (
+                  <TrendingDown className="w-4 h-4" />
+                )}
+                <span>
+                  {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% 
+                  {selectedTimeRange === 1 ? t("dashboard.lastHour") : 
+                   selectedTimeRange === 24 ? ' vandaag' : 
+                   selectedTimeRange === 72 ? t("dashboard.last3Days") :
+                   selectedTimeRange === 168 ? ' deze week' :
+                   selectedTimeRange === 720 ? ' deze maand' :
+                   t("dashboard.total")}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Mini Chart - Real Data */}
+          <div className="h-20 flex items-end gap-1 mb-4">
+            {chartData.length > 0 ? (
+              // Show real portfolio history
+              (() => {
+                const minValue = Math.min(...chartData);
+                const maxValue = Math.max(...chartData);
+                const range = maxValue - minValue || 1; // Avoid division by zero
+                
+                return chartData.map((value, i) => {
+                  const heightPercent = ((value - minValue) / range) * 80 + 20;
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ height: 0 }}
+                      animate={{ height: `${heightPercent}%` }}
+                      transition={{ delay: i * 0.03, duration: 0.5 }}
+                      className={`flex-1 rounded-t ${isPositiveChange ? 'bg-emerald-400/40' : 'bg-rose-400/40'}`}
+                    />
+                  );
+                });
+              })()
+            ) : (
+              // Placeholder while loading data
+              Array.from({ length: 20 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ height: 0 }}
+                  animate={{ height: '50%' }}
+                  transition={{ delay: i * 0.05, duration: 0.5 }}
+                  className="flex-1 rounded-t bg-gray-300/40"
+                />
+              ))
+            )}
+          </div>
+
+          {/* Time Range Selector */}
+          <div className="flex gap-2 flex-wrap">
+            {[
+              { label: '1u', hours: 1 },
+              { label: '1d', hours: 24 },
+              { label: '3d', hours: 72 },
+              { label: '1w', hours: 168 },
+              { label: '1m', hours: 720 },
+              { label: 'Alles', hours: null },
+            ].map((range) => (
+              <motion.button
+                key={range.label}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedTimeRange(range.hours)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedTimeRange === range.hours
+                    ? 'bg-primary-600 text-white shadow-soft'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {range.label}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Presale Card - Mobile Only */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="md:hidden glass-card card-hover relative overflow-hidden"
+        onClick={() => setShowPresale(true)}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-yellow-500/10" />
+        <div className="relative z-10 p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                <Rocket className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="font-semibold text-gray-900 text-lg">BLAZE Presale</div>
+                <div className="text-sm text-gray-600">Vroege toegang tot tokens</div>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-4 gap-3">
+        <motion.button
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowBuyModal(true)}
+          className="glass-card card-hover p-4 text-center"
+        >
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
+            <CreditCard className="w-6 h-6 text-white" />
+          </div>
+          <div className="text-sm font-semibold text-gray-900">Buy</div>
+        </motion.button>
+
+        <motion.button
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowSendModal(true)}
+          className="glass-card card-hover p-4 text-center"
+        >
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-2">
+            <ArrowUpRight className="w-6 h-6 text-white" />
+          </div>
+          <div className="text-sm font-semibold text-gray-900">Send</div>
+        </motion.button>
+
+        <motion.button
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowReceiveModal(true)}
+          className="glass-card card-hover p-4 text-center"
+        >
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2">
+            <ArrowDownLeft className="w-6 h-6 text-white" />
+          </div>
+          <div className="text-sm font-semibold text-gray-900">Receive</div>
+        </motion.button>
+
+        <motion.button
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.25 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowSwapModal(true)}
+          className="glass-card card-hover p-4 text-center"
+        >
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2">
+            <Repeat className="w-6 h-6 text-white" />
+          </div>
+          <div className="text-sm font-semibold text-gray-900">Swap</div>
+        </motion.button>
+      </div>
+
+      {/* Add Tokens Button */}
+      <motion.button
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => setShowTokenSelector(true)}
+        className="w-full glass-card card-hover p-3 flex items-center justify-center gap-2 mt-3"
+      >
+        <Plus className="w-4 h-4" />
+        <span className="text-sm font-semibold">Add tokens</span>
+      </motion.button>
+
+      {/* Native Currency */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="glass-card"
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold">Assets</h3>
+        </div>
+        
+        <div className="space-y-3">
+          {/* Native Token */}
+          <motion.div
+            whileTap={{ scale: 0.98 }}
+            className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-4">
+              <div 
+                className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
+                style={{ background: chain.color }}
+              >
+                {chain.icon}
+              </div>
+              <div>
+                <div className="font-semibold">{chain.nativeCurrency.name}</div>
+                <div className="text-sm text-slate-400">
+                  {parseFloat(balance).toFixed(4)} {chain.nativeCurrency.symbol}
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="font-semibold">
+                ${(parseFloat(balance) * (totalValueUSD > 0 ? totalValueUSD / (parseFloat(balance) + tokens.reduce((sum, t) => sum + parseFloat(t.balance || '0'), 0)) : 0)).toFixed(2)}
+              </div>
+              <div className={`text-sm ${isPositiveChange ? 'text-emerald-400' : 'text-rose-400'}`}>
+                {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}%
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ERC-20 Tokens */}
+          <AnimatePresence>
+            {tokens.map((token, index) => (
+              <motion.div
+                key={token.address}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ delay: index * 0.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-600 rounded-full flex items-center justify-center text-xl">
+                    {token.logo || token.symbol[0]}
+                  </div>
+                  <div>
+                    <div className="font-semibold">{token.name}</div>
+                    <div className="text-sm text-slate-400">
+                      {parseFloat(token.balance || '0').toFixed(4)} {token.symbol}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">${token.balanceUSD}</div>
+                  <div className={`text-sm ${(token.change24h || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                    {(token.change24h || 0) >= 0 ? '+' : ''}{(token.change24h || 0).toFixed(2)}%
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {tokens.length === 0 && (
+            <div className="text-center py-8 text-slate-400">
+              <div className="text-3xl mb-2">🪙</div>
+              <p className="text-sm">No tokens yet</p>
+              <button
+                onClick={() => setShowTokenSelector(true)}
+                className="text-primary-400 text-sm mt-2 hover:text-primary-300"
+              >
+                Add token
+              </button>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </>
+  );
+
+  // AI Tools tab content
+  const renderAIContent = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.32 }}
+      className="glass-card mt-4 relative overflow-hidden"
+    >
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 blur-3xl" />
+      <div className="relative z-10">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-purple-500" />
+            AI Tools
+          </h3>
+          <button
+            onClick={() => setShowAISettings(true)}
+            className="text-xs text-purple-500 hover:text-purple-600 flex items-center gap-1"
+          >
+            <Settings className="w-3 h-3" />
+            Configureer
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {/* AI Transaction Assistant */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAIAssistant(true)}
+            className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mb-3">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div className="font-semibold mb-1">AI Assistent</div>
+            <div className="text-xs text-slate-400">Natuurlijke taal transacties</div>
+          </motion.button>
+
+          {/* AI Risk Scanner */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAIRiskScanner(true)}
+            className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center mb-3">
+              <Shield className="w-5 h-5 text-white" />
+            </div>
+            <div className="font-semibold mb-1">Scam Detector</div>
+            <div className="text-xs text-slate-400">Real-time risico scanning</div>
+          </motion.button>
+
+          {/* AI Portfolio Advisor */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAIPortfolioAdvisor(true)}
+            className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center mb-3">
+              <PieChart className="w-5 h-5 text-white" />
+            </div>
+            <div className="font-semibold mb-1">Portfolio Advisor</div>
+            <div className="text-xs text-slate-400">Gepersonaliseerde tips</div>
+          </motion.button>
+
+          {/* AI Gas Optimizer */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAIGasOptimizer(true)}
+            className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mb-3">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div className="font-semibold mb-1">Gas Optimizer</div>
+            <div className="text-xs text-slate-400">Bespaar op gas fees</div>
+          </motion.button>
+
+          {/* AI Chat Assistant */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAIChat(true)}
+            className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center mb-3">
+              <MessageSquare className="w-5 h-5 text-white" />
+            </div>
+            <div className="font-semibold mb-1">Crypto Expert</div>
+            <div className="text-xs text-slate-400">24/7 AI support</div>
+          </motion.button>
+
+          {/* AI Brain - All Features */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAIBrain(true)}
+            className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center mb-3">
+              <Brain className="w-5 h-5 text-white" />
+            </div>
+            <div className="font-semibold mb-1">AI Brain</div>
+            <div className="text-xs text-slate-400">Alles in één interface</div>
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  // Blaze Features tab content
+  const renderBlazeContent = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.35 }}
+      className="glass-card"
+    >
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-semibold flex items-center gap-2">
+          🔥 BLAZE Features
+        </h3>
+        <PremiumBadge isPremium={false} tokenBalance={0} threshold={10000} />
+      </div>
+      
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {/* Staking */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowStaking(true)}
+          className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mb-3">
+            <Lock className="w-5 h-5 text-white" />
+          </div>
+          <div className="font-semibold mb-1">Staking</div>
+          <div className="text-xs text-slate-400">Earn up to 25% APY</div>
+        </motion.button>
+
+        {/* Cashback */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowCashback(true)}
+          className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-3">
+            <Gift className="w-5 h-5 text-white" />
+          </div>
+          <div className="font-semibold mb-1">Cashback</div>
+          <div className="text-xs text-slate-400">2% on all transactions</div>
+        </motion.button>
+
+        {/* Governance */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowGovernance(true)}
+          className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-3">
+            <Vote className="w-5 h-5 text-white" />
+          </div>
+          <div className="font-semibold mb-1">Governance</div>
+          <div className="text-xs text-slate-400">Vote on proposals</div>
+        </motion.button>
+
+        {/* Launchpad */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowLaunchpad(true)}
+          className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-3">
+            <Rocket className="w-5 h-5 text-white" />
+          </div>
+          <div className="font-semibold mb-1">Launchpad</div>
+          <div className="text-xs text-slate-400">Early access to IDOs</div>
+        </motion.button>
+
+        {/* Referrals */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowReferrals(true)}
+          className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mb-3">
+            <Users className="w-5 h-5 text-white" />
+          </div>
+          <div className="font-semibold mb-1">Referrals</div>
+          <div className="text-xs text-slate-400">Earn 50 BLAZE/referral</div>
+        </motion.button>
+
+        {/* NFT Collection */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowNFTMint(true)}
+          className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center mb-3">
+            <Palette className="w-5 h-5 text-white" />
+          </div>
+          <div className="font-semibold mb-1">NFT Skins</div>
+          <div className="text-xs text-slate-400">Exclusive wallet themes</div>
+        </motion.button>
+
+        {/* Vesting (Founder Only) */}
+        {isFounder && (
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowVesting(true)}
+            className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left border-2 border-purple-500/30"
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-3">
+              <Lock className="w-5 h-5 text-white" />
+            </div>
+            <div className="font-semibold mb-1">Vesting</div>
+            <div className="text-xs text-slate-400">120M tokens locked</div>
+          </motion.button>
+        )}
+      </div>
+    </motion.div>
+  );
+
+  // History tab content
+  const renderHistoryContent = () => (
+    <TransactionHistory />
+  );
+
+  // Settings tab content
+  const renderSettingsContent = () => (
+    <div className="space-y-4">
+      <div className="glass-card">
+        <h3 className="text-xl font-semibold mb-4">Wallet settings</h3>
+        <div className="space-y-3">
+          <button
+            onClick={() => setShowSettings(true)}
+            className="w-full p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors text-left"
+          >
+            <div className="flex items-center gap-3">
+              <Settings className="w-5 h-5 text-gray-600" />
+              <div>
+                <div className="font-semibold">General settings</div>
+                <div className="text-sm text-gray-500">Configure wallet preferences</div>
+              </div>
+            </div>
+          </button>
+          
+          <button
+            onClick={() => {
+              lockWallet();
+              window.location.reload();
+            }}
+            className="w-full p-4 rounded-xl border border-gray-200 hover:bg-red-50 transition-colors text-left"
+          >
+            <div className="flex items-center gap-3">
+              <LogOut className="w-5 h-5 text-red-600" />
+              <div>
+                <div className="font-semibold text-red-600">Lock wallet</div>
+                <div className="text-sm text-gray-500">Lock your wallet for security</div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <div className="min-h-screen pb-24">
@@ -317,539 +921,25 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-          {/* Portfolio Value Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass-card relative overflow-hidden card-3d subtle-shimmer"
-          >
-            <div className="absolute inset-0 bg-gradient-primary opacity-5 animate-gradient" />
-            <div className="relative z-10">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex-1">
-                  <div className="text-sm text-gray-600 mb-2">Portfolio value</div>
-                  <div className="flex items-center gap-3 mb-2">
-                    {showBalance ? (
-                      <>
-                        <h2 className="text-4xl md:text-5xl font-bold">
-                          <AnimatedNumber 
-                            value={totalValueUSD} 
-                            decimals={2} 
-                            prefix="$"
-                          />
-                        </h2>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-500">{balance} {chain.nativeCurrency.symbol}</div>
-                          <div className="text-xs text-gray-400">Native balance</div>
-                        </div>
-                        <motion.button
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => setShowBalance(false)}
-                          className="text-gray-500 hover:text-gray-700"
-                        >
-                          <Eye className="w-5 h-5" />
-                        </motion.button>
-                      </>
-                    ) : (
-                      <>
-                        <h2 className="text-4xl md:text-5xl font-bold">••••••</h2>
-                        <motion.button
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => setShowBalance(true)}
-                          className="text-gray-500 hover:text-gray-700"
-                        >
-                          <EyeOff className="w-5 h-5" />
-                        </motion.button>
-                      </>
-                    )}
-                  </div>
-                  
-                  <div className={`flex items-center gap-2 text-sm ${isPositiveChange ? 'text-emerald-600' : 'text-rose-600'}`}>
-                    {isPositiveChange ? (
-                      <TrendingUp className="w-4 h-4" />
-                    ) : (
-                      <TrendingDown className="w-4 h-4" />
-                    )}
-                    <span>
-                      {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% 
-                      {selectedTimeRange === 1 ? t("dashboard.lastHour") : 
-                       selectedTimeRange === 24 ? ' vandaag' : 
-                       selectedTimeRange === 72 ? t("dashboard.last3Days") :
-                       selectedTimeRange === 168 ? ' deze week' :
-                       selectedTimeRange === 720 ? ' deze maand' :
-                       t("dashboard.total")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mini Chart - Real Data */}
-              <div className="h-20 flex items-end gap-1 mb-4">
-                {chartData.length > 0 ? (
-                  // Show real portfolio history
-                  (() => {
-                    const minValue = Math.min(...chartData);
-                    const maxValue = Math.max(...chartData);
-                    const range = maxValue - minValue || 1; // Avoid division by zero
-                    
-                    return chartData.map((value, i) => {
-                      const heightPercent = ((value - minValue) / range) * 80 + 20;
-                      return (
-                        <motion.div
-                          key={i}
-                          initial={{ height: 0 }}
-                          animate={{ height: `${heightPercent}%` }}
-                          transition={{ delay: i * 0.03, duration: 0.5 }}
-                          className={`flex-1 rounded-t ${isPositiveChange ? 'bg-emerald-400/40' : 'bg-rose-400/40'}`}
-                        />
-                      );
-                    });
-                  })()
-                ) : (
-                  // Placeholder while loading data
-                  Array.from({ length: 20 }).map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ height: 0 }}
-                      animate={{ height: '50%' }}
-                      transition={{ delay: i * 0.05, duration: 0.5 }}
-                      className="flex-1 rounded-t bg-gray-300/40"
-                    />
-                  ))
-                )}
-              </div>
-
-              {/* Time Range Selector */}
-              <div className="flex gap-2 flex-wrap">
-                {[
-                  { label: '1u', hours: 1 },
-                  { label: '1d', hours: 24 },
-                  { label: '3d', hours: 72 },
-                  { label: '1w', hours: 168 },
-                  { label: '1m', hours: 720 },
-                  { label: 'Alles', hours: null },
-                ].map((range) => (
-                  <motion.button
-                    key={range.label}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedTimeRange(range.hours)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                      selectedTimeRange === range.hours
-                        ? 'bg-primary-600 text-white shadow-soft'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {range.label}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Presale Card - Mobile Only */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden glass-card card-hover relative overflow-hidden"
-            onClick={() => setShowPresale(true)}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-yellow-500/10" />
-            <div className="relative z-10 p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center">
-                    <Rocket className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-900 text-lg">BLAZE Presale</div>
-                    <div className="text-sm text-gray-600">Vroege toegang tot tokens</div>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-4 gap-3">
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowBuyModal(true)}
-              className="glass-card card-hover p-4 text-center"
+        <div className="max-w-4xl mx-auto px-4 py-6 space-y-6 pb-24">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
             >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-2">
-                <CreditCard className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Buy</div>
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowSendModal(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-2">
-                <ArrowUpRight className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Send</div>
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowReceiveModal(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2">
-                <ArrowDownLeft className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Receive</div>
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.25 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowSwapModal(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2">
-                <Repeat className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Swap</div>
-            </motion.button>
-          </div>
-
-          {/* Add Tokens Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setShowTokenSelector(true)}
-            className="w-full glass-card card-hover p-3 flex items-center justify-center gap-2 mt-3"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="text-sm font-semibold">Add tokens</span>
-          </motion.button>
-
-          {/* AI Tools Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.32 }}
-            className="glass-card mt-4 relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 blur-3xl" />
-            <div className="relative z-10">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-purple-500" />
-                  AI Tools
-                </h3>
-                <button
-                  onClick={() => setShowAISettings(true)}
-                  className="text-xs text-purple-500 hover:text-purple-600 flex items-center gap-1"
-                >
-                  <Settings className="w-3 h-3" />
-                  Configureer
-                </button>
-              </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {/* AI Transaction Assistant */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAIAssistant(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mb-3">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">AI Assistent</div>
-                  <div className="text-xs text-slate-400">Natuurlijke taal transacties</div>
-                </motion.button>
-
-                {/* AI Risk Scanner */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAIRiskScanner(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center mb-3">
-                    <Shield className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">Scam Detector</div>
-                  <div className="text-xs text-slate-400">Real-time risico scanning</div>
-                </motion.button>
-
-                {/* AI Portfolio Advisor */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAIPortfolioAdvisor(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center mb-3">
-                    <PieChart className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">Portfolio Advisor</div>
-                  <div className="text-xs text-slate-400">Gepersonaliseerde tips</div>
-                </motion.button>
-
-                {/* AI Gas Optimizer */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAIGasOptimizer(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mb-3">
-                    <Zap className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">Gas Optimizer</div>
-                  <div className="text-xs text-slate-400">Bespaar op gas fees</div>
-                </motion.button>
-
-                {/* AI Chat Assistant */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAIChat(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center mb-3">
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">Crypto Expert</div>
-                  <div className="text-xs text-slate-400">24/7 AI support</div>
-                </motion.button>
-
-                {/* AI Brain - All Features */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAIBrain(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center mb-3">
-                    <Brain className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">AI Brain</div>
-                  <div className="text-xs text-slate-400">Alles in één interface</div>
-                </motion.button>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* BLAZE Features Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="glass-card"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold flex items-center gap-2">
-                🔥 BLAZE Features
-              </h3>
-              <PremiumBadge isPremium={false} tokenBalance={0} threshold={10000} />
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {/* Staking */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowStaking(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mb-3">
-                  <Lock className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Staking</div>
-                <div className="text-xs text-slate-400">Earn up to 25% APY</div>
-              </motion.button>
-
-              {/* Cashback */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowCashback(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-3">
-                  <Gift className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Cashback</div>
-                <div className="text-xs text-slate-400">2% on all transactions</div>
-              </motion.button>
-
-              {/* Governance */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowGovernance(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-3">
-                  <Vote className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Governance</div>
-                <div className="text-xs text-slate-400">Vote on proposals</div>
-              </motion.button>
-
-              {/* Launchpad */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowLaunchpad(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-3">
-                  <Rocket className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Launchpad</div>
-                <div className="text-xs text-slate-400">Early access to IDOs</div>
-              </motion.button>
-
-              {/* Referrals */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowReferrals(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mb-3">
-                  <Users className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">Referrals</div>
-                <div className="text-xs text-slate-400">Earn 50 BLAZE/referral</div>
-              </motion.button>
-
-              {/* NFT Collection */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowNFTMint(true)}
-                className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center mb-3">
-                  <Palette className="w-5 h-5 text-white" />
-                </div>
-                <div className="font-semibold mb-1">NFT Skins</div>
-                <div className="text-xs text-slate-400">Exclusive wallet themes</div>
-              </motion.button>
-
-              {/* Vesting (Founder Only) */}
-              {isFounder && (
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowVesting(true)}
-                  className="glass p-4 rounded-xl hover:bg-white/10 transition-colors text-left border-2 border-purple-500/30"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-3">
-                    <Lock className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="font-semibold mb-1">Vesting</div>
-                  <div className="text-xs text-slate-400">120M tokens locked</div>
-                </motion.button>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Native Currency */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass-card"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">Assets</h3>
-            </div>
-            
-            <div className="space-y-3">
-              {/* Native Token */}
-              <motion.div
-                whileTap={{ scale: 0.98 }}
-                className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div 
-                    className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
-                    style={{ background: chain.color }}
-                  >
-                    {chain.icon}
-                  </div>
-                  <div>
-                    <div className="font-semibold">{chain.nativeCurrency.name}</div>
-                    <div className="text-sm text-slate-400">
-                      {parseFloat(balance).toFixed(4)} {chain.nativeCurrency.symbol}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold">
-                    ${(parseFloat(balance) * (totalValueUSD > 0 ? totalValueUSD / (parseFloat(balance) + tokens.reduce((sum, t) => sum + parseFloat(t.balance || '0'), 0)) : 0)).toFixed(2)}
-                  </div>
-                  <div className={`text-sm ${isPositiveChange ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}%
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* ERC-20 Tokens */}
-              <AnimatePresence>
-                {tokens.map((token, index) => (
-                  <motion.div
-                    key={token.address}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-600 rounded-full flex items-center justify-center text-xl">
-                        {token.logo || token.symbol[0]}
-                      </div>
-                      <div>
-                        <div className="font-semibold">{token.name}</div>
-                        <div className="text-sm text-slate-400">
-                          {parseFloat(token.balance || '0').toFixed(4)} {token.symbol}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">${token.balanceUSD}</div>
-                      <div className={`text-sm ${(token.change24h || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                        {(token.change24h || 0) >= 0 ? '+' : ''}{(token.change24h || 0).toFixed(2)}%
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {tokens.length === 0 && (
-                <div className="text-center py-8 text-slate-400">
-                  <div className="text-3xl mb-2">🪙</div>
-                  <p className="text-sm">No tokens yet</p>
-                  <button
-                    onClick={() => setShowTokenSelector(true)}
-                    className="text-primary-400 text-sm mt-2 hover:text-primary-300"
-                  >
-                    Add token
-                  </button>
-                </div>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Transaction History */}
-          <TransactionHistory />
+              {renderTabContent()}
+            </motion.div>
+          </AnimatePresence>
         </div>
+
+        {/* Bottom Navigation */}
+        <BottomNavigation 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+        />
       </div>
 
       {/* Modals */}
