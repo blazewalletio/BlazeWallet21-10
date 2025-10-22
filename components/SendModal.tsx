@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, ArrowUpRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, ArrowRight, ArrowUpRight, Loader2, CheckCircle2, Flame } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { BlockchainService } from '@/lib/blockchain';
 import ParticleEffect from './ParticleEffect';
@@ -125,10 +125,10 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                 <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                        <ArrowUpRight className="w-4 h-4 text-white" />
+                      <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center">
+                        <Flame className="w-4 h-4 text-white" />
                       </div>
-                      <h2 className="text-xl font-semibold">Crypto versturen</h2>
+                      <h2 className="text-xl font-semibold">Send crypto</h2>
                     </div>
                     <button
                       onClick={handleClose}
@@ -223,9 +223,9 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                   <button
                     onClick={handleContinue}
                     disabled={!toAddress || !amount}
-                    className="w-full btn-primary py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full py-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-xl font-semibold transition-all"
                   >
-                    Doorgaan
+                    Continue
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>
@@ -266,15 +266,15 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                   <div className="flex gap-3">
                     <button
                       onClick={() => setStep('input')}
-                      className="flex-1 btn-secondary py-4"
+                      className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all"
                     >
-                      Terug
+                      Back
                     </button>
                     <button
                       onClick={handleSend}
-                      className="flex-1 btn-primary py-4"
+                      className="flex-1 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 rounded-xl font-semibold transition-all"
                     >
-                      Verstuur
+                      Send
                     </button>
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
                   >
                     <CheckCircle2 className="w-10 h-10 text-emerald-400" />
                   </motion.div>
-                  <h3 className="text-xl font-semibold mb-2">Verstuurd!</h3>
+                  <h3 className="text-xl font-semibold mb-2">Sent!</h3>
                   <p className="text-gray-600 mb-6">
                     Your transaction was sent successfully
                   </p>
@@ -317,9 +317,9 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
 
                   <button
                     onClick={handleClose}
-                    className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-semibold transition-all"
+                    className="w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 rounded-xl font-semibold transition-all"
                   >
-                    Sluiten
+                    Close
                   </button>
                 </div>
               )}

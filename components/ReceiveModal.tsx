@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Copy, Check, Share2, ArrowDownLeft } from 'lucide-react';
+import { X, Copy, Check, Share2, ArrowDownLeft, Flame } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import QRCode from 'qrcode';
 
@@ -97,10 +97,10 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                 <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                        <ArrowDownLeft className="w-4 h-4 text-white" />
+                      <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center">
+                        <Flame className="w-4 h-4 text-white" />
                       </div>
-                      <h2 className="text-xl font-semibold">Crypto ontvangen</h2>
+                      <h2 className="text-xl font-semibold">Receive crypto</h2>
                     </div>
                     <button
                       onClick={onClose}
@@ -142,7 +142,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                         <div className="flex gap-2">
                           <button
                             onClick={copyAddress}
-                            className="flex-1 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 py-2 px-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                           >
                             {copied ? (
                               <>
@@ -152,7 +152,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                             ) : (
                               <>
                                 <Copy className="w-4 h-4" />
-                                Kopiëren
+                                Copy
                               </>
                             )}
                           </button>
@@ -162,7 +162,7 @@ export default function ReceiveModal({ isOpen, onClose }: ReceiveModalProps) {
                             className="flex-1 py-2 px-4 glass-card hover:bg-white/10 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                           >
                             <Share2 className="w-4 h-4" />
-                            Delen
+                            Share
                           </button>
                         </div>
                       </div>
