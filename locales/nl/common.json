@@ -23,7 +23,13 @@
     "saveWords": "Bewaar deze 12 woorden veilig. Je hebt ze nodig om je wallet te herstellen.",
     "important": "Belangrijk:",
     "writeDown": "Schrijf deze woorden op papier en bewaar ze op een veilige plek.",
-    "invalidPhrase": "Ongeldige recovery phrase. Controleer je invoer."
+    "invalidPhrase": "Ongeldige recovery phrase. Controleer je invoer.",
+    "welcomeTitle": "Welkom bij",
+    "welcomeSubtitle": "Bliksemsnelle crypto",
+    "welcomeTagline": "Steek je financiën in brand 🔥",
+    "secure": "Veilig",
+    "fast": "Snel",
+    "smart": "Slim"
   },
   "dashboard": {
     "portfolioValue": "Portfolio waarde",
@@ -35,7 +41,15 @@
     "lastHour": " afgelopen uur",
     "last3Days": " afgelopen 3 dagen",
     "total": " totaal",
-    "noTokens": "Nog geen tokens"
+    "noTokens": "Nog geen tokens",
+    "nativeBalance": "Native saldo"
+  },
+  "navigation": {
+    "wallet": "Wallet",
+    "aiTools": "AI Tools",
+    "blaze": "Blaze",
+    "history": "Geschiedenis",
+    "settings": "Instellingen"
   },
   "transaction": {
     "recentTransactions": "Recente transacties",

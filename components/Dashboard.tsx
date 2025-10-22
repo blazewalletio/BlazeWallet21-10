@@ -282,7 +282,7 @@ export default function Dashboard() {
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <div className="text-sm text-gray-600 mb-2">Portfolio value</div>
+                  <div className="text-sm text-gray-600 mb-2">{t('dashboard.portfolioValue')}</div>
                   <div className="flex items-center gap-3 mb-2">
                     {showBalance ? (
                       <>
@@ -295,7 +295,7 @@ export default function Dashboard() {
                         </h2>
                         <div className="text-right">
                           <div className="text-sm text-gray-500">{balance} {chain.nativeCurrency.symbol}</div>
-                          <div className="text-xs text-gray-400">Native balance</div>
+                          <div className="text-xs text-gray-400">{t('dashboard.nativeBalance')}</div>
                         </div>
                         <motion.button
                           whileTap={{ scale: 0.9 }}

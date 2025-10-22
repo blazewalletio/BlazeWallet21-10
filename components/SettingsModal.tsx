@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Shield, Key, Trash2, Download, 
   Eye, EyeOff, Copy, Check, Bell, Moon, Sun, Globe 
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
-import { localeNames, localeFlags, type Locale } from '@/lib/useTranslation';
+import { localeNames, localeFlags, type Locale, useTranslation } from '@/lib/useTranslation';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -16,20 +16,21 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { mnemonic, resetWallet, address } = useWalletStore();
+  const { t } = useTranslation();
   const [showMnemonic, setShowMnemonic] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [currentLocale, setCurrentLocale] = useState<Locale>('en');
 
   // Load saved locale on mount
-  useState(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('app_locale') as Locale;
       if (saved && Object.keys(localeNames).includes(saved)) {
         setCurrentLocale(saved);
       }
     }
-  });
+  }, []);
 
   const handleLocaleChange = (newLocale: Locale) => {
     setCurrentLocale(newLocale);
@@ -104,7 +105,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div>
                   <h3 className="text-sm font-semibold text-gray-600 mb-3 flex items-center gap-2">
                     <Globe className="w-4 h-4" />
-                    Language
+                    {t('settings.language')}
                   </h3>
                   <div className="glass-card space-y-2">
                     {(Object.keys(localeNames) as Locale[]).map((lang) => (

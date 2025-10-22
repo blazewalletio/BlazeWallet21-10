@@ -6,10 +6,12 @@ import nlTranslations from '../locales/nl/common.json';
 import esTranslations from '../locales/es/common.json';
 import deTranslations from '../locales/de/common.json';
 import frTranslations from '../locales/fr/common.json';
+import zhTranslations from '../locales/zh/common.json';
+import koTranslations from '../locales/ko/common.json';
 
-export type Locale = 'en' | 'nl' | 'es' | 'de' | 'fr';
+export type Locale = 'en' | 'nl' | 'es' | 'de' | 'fr' | 'zh' | 'ko';
 
-export const locales: Locale[] = ['en', 'nl', 'es', 'de', 'fr'];
+export const locales: Locale[] = ['en', 'nl', 'es', 'de', 'fr', 'zh', 'ko'];
 
 export const localeNames: Record<Locale, string> = {
   en: 'English',
@@ -17,6 +19,8 @@ export const localeNames: Record<Locale, string> = {
   es: 'Español',
   de: 'Deutsch',
   fr: 'Français',
+  zh: '中文',
+  ko: '한국어',
 };
 
 export const localeFlags: Record<Locale, string> = {
@@ -25,6 +29,8 @@ export const localeFlags: Record<Locale, string> = {
   es: '🇪🇸',
   de: '🇩🇪',
   fr: '🇫🇷',
+  zh: '🇨🇳',
+  ko: '🇰🇷',
 };
 
 const translations: Record<Locale, any> = {
@@ -33,6 +39,8 @@ const translations: Record<Locale, any> = {
   es: esTranslations,
   de: deTranslations,
   fr: frTranslations,
+  zh: zhTranslations,
+  ko: koTranslations,
 };
 
 let globalLocale: Locale = 'en';
@@ -50,6 +58,8 @@ export function getLocale(): Locale {
     if (browserLang.startsWith('es')) return 'es';
     if (browserLang.startsWith('de')) return 'de';
     if (browserLang.startsWith('fr')) return 'fr';
+    if (browserLang.startsWith('zh')) return 'zh';
+    if (browserLang.startsWith('ko')) return 'ko';
   }
   return 'en';
 }

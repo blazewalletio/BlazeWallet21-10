@@ -23,7 +23,13 @@
     "saveWords": "Guarda estas 12 palabras de forma segura. Las necesitarás para recuperar tu billetera.",
     "important": "Importante:",
     "writeDown": "Escribe estas palabras en papel y guárdalas en un lugar seguro.",
-    "invalidPhrase": "Frase de recuperación inválida. Verifica tu entrada."
+    "invalidPhrase": "Frase de recuperación inválida. Verifica tu entrada.",
+    "welcomeTitle": "Bienvenido a",
+    "welcomeSubtitle": "Cripto ultrarrápida",
+    "welcomeTagline": "Enciende tus finanzas 🔥",
+    "secure": "Seguro",
+    "fast": "Rápido",
+    "smart": "Inteligente"
   },
   "dashboard": {
     "portfolioValue": "Valor del portafolio",
@@ -35,7 +41,15 @@
     "lastHour": " última hora",
     "last3Days": " últimos 3 días",
     "total": " total",
-    "noTokens": "Sin tokens aún"
+    "noTokens": "Sin tokens aún",
+    "nativeBalance": "Saldo nativo"
+  },
+  "navigation": {
+    "wallet": "Billetera",
+    "aiTools": "Herramientas IA",
+    "blaze": "Blaze",
+    "history": "Historial",
+    "settings": "Configuración"
   },
   "transaction": {
     "recentTransactions": "Transacciones recientes",

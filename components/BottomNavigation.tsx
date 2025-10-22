@@ -9,6 +9,7 @@ import {
   History, 
   Settings 
 } from 'lucide-react';
+import { useTranslation } from '@/lib/useTranslation';
 
 export type TabType = 'wallet' | 'ai' | 'blaze' | 'history' | 'settings';
 
@@ -18,30 +19,32 @@ interface BottomNavigationProps {
 }
 
 export default function BottomNavigation({ activeTab, onTabChange }: BottomNavigationProps) {
+  const { t } = useTranslation();
+  
   const tabs = [
     {
       id: 'wallet' as TabType,
-      label: 'Wallet',
+      label: t('navigation.wallet'),
       icon: Wallet,
     },
     {
       id: 'ai' as TabType,
-      label: 'AI Tools',
+      label: t('navigation.aiTools'),
       icon: Sparkles,
     },
     {
       id: 'blaze' as TabType,
-      label: 'Blaze',
+      label: t('navigation.blaze'),
       icon: Flame,
     },
     {
       id: 'history' as TabType,
-      label: 'History',
+      label: t('navigation.history'),
       icon: History,
     },
     {
       id: 'settings' as TabType,
-      label: 'Settings',
+      label: t('navigation.settings'),
       icon: Settings,
     },
   ];

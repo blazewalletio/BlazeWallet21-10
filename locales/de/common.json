@@ -23,7 +23,13 @@
     "saveWords": "Bewahren Sie diese 12 Wörter sicher auf. Sie benötigen sie, um Ihre Wallet wiederherzustellen.",
     "important": "Wichtig:",
     "writeDown": "Schreiben Sie diese Wörter auf Papier und bewahren Sie sie an einem sicheren Ort auf.",
-    "invalidPhrase": "Ungültige Wiederherstellungsphrase. Überprüfen Sie Ihre Eingabe."
+    "invalidPhrase": "Ungültige Wiederherstellungsphrase. Überprüfen Sie Ihre Eingabe.",
+    "welcomeTitle": "Willkommen bei",
+    "welcomeSubtitle": "Blitzschnelle Krypto",
+    "welcomeTagline": "Entfachen Sie Ihre Finanzen 🔥",
+    "secure": "Sicher",
+    "fast": "Schnell",
+    "smart": "Intelligent"
   },
   "dashboard": {
     "portfolioValue": "Portfolio-Wert",
@@ -35,7 +41,15 @@
     "lastHour": " letzte Stunde",
     "last3Days": " letzten 3 Tage",
     "total": " gesamt",
-    "noTokens": "Noch keine Tokens"
+    "noTokens": "Noch keine Tokens",
+    "nativeBalance": "Native Balance"
+  },
+  "navigation": {
+    "wallet": "Wallet",
+    "aiTools": "KI-Tools",
+    "blaze": "Blaze",
+    "history": "Verlauf",
+    "settings": "Einstellungen"
   },
   "transaction": {
     "recentTransactions": "Letzte Transaktionen",

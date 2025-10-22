@@ -23,7 +23,13 @@
     "saveWords": "Save these 12 words safely. You need them to recover your wallet.",
     "important": "Important:",
     "writeDown": "Write these words on paper and store them in a safe place.",
-    "invalidPhrase": "Invalid recovery phrase. Check your input."
+    "invalidPhrase": "Invalid recovery phrase. Check your input.",
+    "welcomeTitle": "Welcome to",
+    "welcomeSubtitle": "Lightning fast crypto",
+    "welcomeTagline": "Set your finances ablaze 🔥",
+    "secure": "Secure",
+    "fast": "Fast",
+    "smart": "Smart"
   },
   "dashboard": {
     "portfolioValue": "Portfolio value",
@@ -35,7 +41,15 @@
     "lastHour": " last hour",
     "last3Days": " last 3 days",
     "total": " total",
-    "noTokens": "No tokens yet"
+    "noTokens": "No tokens yet",
+    "nativeBalance": "Native balance"
+  },
+  "navigation": {
+    "wallet": "Wallet",
+    "aiTools": "AI Tools",
+    "blaze": "Blaze",
+    "history": "History",
+    "settings": "Settings"
   },
   "transaction": {
     "recentTransactions": "Recent transactions",

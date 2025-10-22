@@ -23,7 +23,13 @@
     "saveWords": "Sauvegardez ces 12 mots en toute sécurité. Vous en aurez besoin pour récupérer votre portefeuille.",
     "important": "Important:",
     "writeDown": "Écrivez ces mots sur papier et conservez-les dans un endroit sûr.",
-    "invalidPhrase": "Phrase de récupération invalide. Vérifiez votre saisie."
+    "invalidPhrase": "Phrase de récupération invalide. Vérifiez votre saisie.",
+    "welcomeTitle": "Bienvenue sur",
+    "welcomeSubtitle": "Crypto ultra-rapide",
+    "welcomeTagline": "Enflammez vos finances 🔥",
+    "secure": "Sécurisé",
+    "fast": "Rapide",
+    "smart": "Intelligent"
   },
   "dashboard": {
     "portfolioValue": "Valeur du portefeuille",
@@ -35,7 +41,15 @@
     "lastHour": " dernière heure",
     "last3Days": " 3 derniers jours",
     "total": " total",
-    "noTokens": "Pas encore de tokens"
+    "noTokens": "Pas encore de tokens",
+    "nativeBalance": "Solde natif"
+  },
+  "navigation": {
+    "wallet": "Portefeuille",
+    "aiTools": "Outils IA",
+    "blaze": "Blaze",
+    "history": "Historique",
+    "settings": "Paramètres"
   },
   "transaction": {
     "recentTransactions": "Transactions récentes",

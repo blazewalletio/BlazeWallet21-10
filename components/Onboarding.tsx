@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, CheckCircle2, Copy, Check } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
+import { useTranslation } from '@/lib/useTranslation';
 import BlazeLogoImage from './BlazeLogoImage';
 
 interface OnboardingProps {
@@ -19,6 +20,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   const [error, setError] = useState<string>('');
 
   const { createWallet, importWallet } = useWalletStore();
+  const { t } = useTranslation();
 
   const handleCreateWallet = async () => {
     try {
@@ -135,10 +137,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                     Blaze
                   </h1>
                   <p className="text-gray-600 text-2xl font-medium mb-3">
-                    Lightning fast crypto
+                    {t('onboarding.welcomeSubtitle')}
                   </p>
                   <p className="text-gray-500 text-lg">
-                    Set your finances ablaze 🔥
+                    {t('onboarding.welcomeTagline')}
                   </p>
                 </motion.div>
               </div>
@@ -153,15 +155,15 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 <div className="flex justify-center gap-6">
                   <div className="flex items-center gap-3 px-6 py-3 bg-emerald-50 rounded-2xl border border-emerald-200">
                     <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    <span className="text-emerald-700 font-semibold text-lg">Secure</span>
+                    <span className="text-emerald-700 font-semibold text-lg">{t('onboarding.secure')}</span>
                   </div>
                   <div className="flex items-center gap-3 px-6 py-3 bg-blue-50 rounded-2xl border border-blue-200">
                     <CheckCircle2 className="w-5 h-5 text-blue-500" />
-                    <span className="text-blue-700 font-semibold text-lg">Fast</span>
+                    <span className="text-blue-700 font-semibold text-lg">{t('onboarding.fast')}</span>
                   </div>
                   <div className="flex items-center gap-3 px-6 py-3 bg-purple-50 rounded-2xl border border-purple-200">
                     <CheckCircle2 className="w-5 h-5 text-purple-500" />
-                    <span className="text-purple-700 font-semibold text-lg">Smart</span>
+                    <span className="text-purple-700 font-semibold text-lg">{t('onboarding.smart')}</span>
                   </div>
                 </div>
               </motion.div>
@@ -177,14 +179,14 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                   onClick={handleCreateWallet}
                   className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold py-5 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] text-xl"
                 >
-                  Create new wallet
+                  {t('onboarding.createWallet')}
                 </button>
                 <button
                   onClick={() => setStep('import')}
                   className="w-full bg-white/90 backdrop-blur-sm border-2 border-gray-200 text-gray-700 font-bold py-5 px-8 rounded-2xl hover:bg-white hover:border-gray-300 hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-xl"
                 >
                   <Download className="w-6 h-6 inline mr-3" />
-                  Import wallet
+                  {t('onboarding.importWallet')}
                 </button>
               </motion.div>
             </motion.div>
