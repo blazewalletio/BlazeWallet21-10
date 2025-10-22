@@ -90,8 +90,8 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
                     <h3 className="font-semibold text-gray-900">OpenAI API Key</h3>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Voor geavanceerde AI functies (conversational assistant en verbeterde command parsing).
-                    Basis features werken zonder API key.
+                    For advanced AI functions (conversational assistant and improved command parsing).
+                    Basic features work without API key.
                   </p>
                   
                   <div className="relative">
@@ -117,7 +117,7 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
                   {hasExistingKey && (
                     <div className="flex items-center gap-2 text-sm text-green-600">
                       <CheckCircle className="w-4 h-4" />
-                      <span>API key is opgeslagen</span>
+                      <span>API key is saved</span>
                     </div>
                   )}
                 </div>
@@ -126,13 +126,13 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
                 <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
                   <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-blue-600" />
-                    Hoe krijg ik een API key?
+                    How do I get an API key?
                   </h4>
                   <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside">
-                    <li>Ga naar <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">platform.openai.com/api-keys</a></li>
-                    <li>Maak een account aan (of log in)</li>
-                    <li>Klik op &quot;Create new secret key&quot;</li>
-                    <li>Kopieer de key en plak deze hier</li>
+                    <li>Go to <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">platform.openai.com/api-keys</a></li>
+                    <li>Create an account (or log in)</li>
+                    <li>Click on "Create new secret key"</li>
+                    <li>Copy the key and paste it here</li>
                   </ol>
                 </div>
 
@@ -159,7 +159,7 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
                     <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 border border-gray-200">
                       <span className="text-sm text-gray-700">Conversational AI</span>
                       <span className={`text-xs font-medium ${hasExistingKey ? 'text-green-600' : 'text-yellow-600'}`}>
-                        {hasExistingKey ? '✓ Volledig actief' : '⚠ Basis mode (API key nodig)'}
+                        {hasExistingKey ? '✓ Fully active' : '⚠ Basic mode (API key needed)'}
                       </span>
                     </div>
                   </div>
@@ -169,8 +169,8 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
                 <div className="p-4 rounded-xl bg-purple-50 border border-purple-200">
                   <h4 className="text-sm font-medium text-gray-900 mb-2">🔒 Privacy</h4>
                   <p className="text-xs text-gray-700">
-                    Je API key wordt alleen lokaal opgeslagen in je browser. 
-                    We versturen nooit je private keys of gevoelige wallet data naar AI services.
+                    Your API key is only stored locally in your browser. 
+                    We never send your private keys or sensitive wallet data to AI services.
                   </p>
                 </div>
               </div>
@@ -181,14 +181,14 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
                   onClick={onClose}
                   className="flex-1 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium transition-colors"
                 >
-                  Sluiten
+                  Close
                 </button>
                 {apiKey && (
                   <button
                     onClick={handleClear}
                     className="px-4 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-medium transition-colors"
                   >
-                    Verwijder key
+                    Remove key
                   </button>
                 )}
                 <button
@@ -199,10 +199,10 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
                   {saved ? (
                     <>
                       <CheckCircle className="w-4 h-4" />
-                      Opgeslagen!
+                      Saved!
                     </>
                   ) : (
-                    'Opslaan'
+                    'Save'
                   )}
                 </button>
               </div>

@@ -43,7 +43,7 @@ export default function BlazeTab() {
     {
       id: 'presale',
       title: 'BLAZE Presale',
-      description: 'Vroege toegang tot tokens',
+      description: 'Early access to tokens',
       icon: Rocket,
       gradient: 'from-orange-500 to-yellow-500',
       badge: 'Live',

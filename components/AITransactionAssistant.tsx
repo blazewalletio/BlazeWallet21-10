@@ -26,10 +26,10 @@ export default function AITransactionAssistant({
   const [response, setResponse] = useState<any>(null);
 
   const examples = [
-    "Stuur 50 USDC naar 0x...",
-    "Swap 1 ETH naar USDC",
-    "Wat is mijn grootste holding?",
-    "Swap al mijn USDT naar ETH",
+    "Send 50 USDC to 0x...",
+    "Swap 1 ETH to USDC",
+    "What is my biggest holding?",
+    "Swap all my USDT to ETH",
   ];
 
   const handleSubmit = async () => {
@@ -44,7 +44,7 @@ export default function AITransactionAssistant({
     } catch (error) {
       setResponse({
         success: false,
-        message: 'Er ging iets fout. Probeer het opnieuw.',
+        message: 'Something went wrong. Please try again.',
         confidence: 0,
       });
     } finally {
@@ -103,7 +103,7 @@ export default function AITransactionAssistant({
                 {/* Examples */}
                 {!response && (
                   <div className="space-y-2">
-                    <p className="text-sm text-gray-600 font-medium">Probeer bijvoorbeeld:</p>
+                    <p className="text-sm text-gray-600 font-medium">Try for example:</p>
                     <div className="space-y-2">
                       {examples.map((example, i) => (
                         <button
@@ -126,7 +126,7 @@ export default function AITransactionAssistant({
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-                      placeholder="Typ je commando..."
+                      placeholder="Type your command..."
                       className="w-full px-4 py-3 pr-12 rounded-xl bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                       disabled={loading}
                     />

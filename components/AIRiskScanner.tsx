@@ -28,9 +28,9 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
     } catch (error) {
       setResult({
         risk: 'critical',
-        warnings: ['Kon scan niet voltooien'],
+        warnings: ['Could not complete scan'],
         score: 0,
-        details: 'Er ging iets fout tijdens de scan.',
+        details: 'Something went wrong during the scan.',
       });
     } finally {
       setLoading(false);
@@ -128,7 +128,7 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    Wallet adres
+                    Wallet address
                   </button>
                 </div>
 
@@ -139,7 +139,7 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleScan()}
-                    placeholder="0x... adres om te scannen"
+                    placeholder="0x... address to scan"
                     className="w-full px-4 py-3 pr-12 rounded-xl bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
                     disabled={loading}
                   />
@@ -171,10 +171,10 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
                           {getRiskIcon(result.risk)}
                         </div>
                         <h3 className={`text-2xl font-bold uppercase ${getRiskColor(result.risk)}`}>
-                          {result.risk === 'low' && 'Laag risico'}
-                          {result.risk === 'medium' && 'Gemiddeld risico'}
-                          {result.risk === 'high' && 'Hoog risico'}
-                          {result.risk === 'critical' && 'Kritiek risico'}
+                          {result.risk === 'low' && 'Low risk'}
+                          {result.risk === 'medium' && 'Medium risk'}
+                          {result.risk === 'high' && 'High risk'}
+                          {result.risk === 'critical' && 'Critical risk'}
                         </h3>
                         <p className="text-sm text-gray-700 mt-2">{result.details}</p>
                       </div>
@@ -182,7 +182,7 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
                       {/* Score */}
                       <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-gray-600 font-medium">Veiligheids score</span>
+                          <span className="text-sm text-gray-600 font-medium">Security score</span>
                           <span className="text-lg font-bold text-gray-900">{result.score}/100</span>
                         </div>
                         <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
@@ -220,8 +220,8 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
                 {!result && !loading && (
                   <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
                     <p className="text-sm text-gray-700">
-                      💡 <strong>Tip:</strong> Scan altijd nieuwe contracts voordat je ermee interacteert.
-                      Deze tool controleert op bekende scam patronen en rode vlaggen.
+                      💡 <strong>Tip:</strong> Always scan new contracts before interacting with them.
+                      This tool checks for known scam patterns and red flags.
                     </p>
                   </div>
                 )}
@@ -243,7 +243,7 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
                     }}
                     className="flex-1 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
                   >
-                    Nieuwe scan
+                    New scan
                   </button>
                 )}
               </div>
