@@ -49,12 +49,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     try {
       setError('');
       await importWallet(importInput.trim());
+      setStep('welcome');
+      onComplete();
       
-      // After importing wallet, we need to set a password
-      // Force the password setup modal to show immediately
-      console.log('🔄 Wallet imported successfully, forcing password setup');
+      console.log('🔄 Wallet imported successfully, setting flags for password setup');
       
-      // Set a flag to indicate we just imported a wallet without password
+      // Set flags to indicate we just imported a wallet without password
       if (typeof window !== 'undefined') {
         localStorage.setItem('wallet_just_imported', 'true');
         console.log('✅ Set wallet_just_imported flag');
@@ -64,303 +64,273 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         console.log('✅ Set force_password_setup flag');
       }
       
-      // Don't call onComplete() - we need to stay in onboarding to show password modal
-      // Instead, trigger a page reload to force the main app to detect the flags
-      console.log('🔄 Reloading page to trigger password setup');
-      window.location.reload();
-      
     } catch (err) {
-      setError('Invalid recovery phrase. Check your input.');
+      console.error('Error importing wallet:', err);
+      setError('Ongeldige recovery phrase. Controleer de woorden en probeer opnieuw.');
     }
   };
 
-  const copyToClipboard = () => {
+  const handleVerifyMnemonic = () => {
+    const words = Object.values(verifyWords);
+    if (words.length !== 12 || words.some(word => !word.trim())) {
+      setError('Vul alle 12 woorden in.');
+      return;
+    }
+    
+    const userPhrase = words.join(' ');
+    if (userPhrase !== mnemonic) {
+      setError('De woorden komen niet overeen. Probeer opnieuw.');
+      return;
+    }
+    
+    setStep('welcome');
+    onComplete();
+  };
+
+  const copyMnemonic = () => {
     navigator.clipboard.writeText(mnemonic);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const mnemonicWords = mnemonic.split(' ');
-  const wordsToVerify = [2, 6, 10]; // Verify 3rd, 7th, and 11th word
-
-  const handleVerify = () => {
-    const isValid = wordsToVerify.every(
-      (index) => verifyWords[index] === mnemonicWords[index]
-    );
-    
-    if (isValid) {
-      // Set flag to indicate we just created a wallet without password
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('wallet_just_created', 'true');
-        localStorage.setItem('force_password_setup', 'true');
-        console.log('✅ Set wallet_just_created and force_password_setup flags');
-      }
-      
-      // Don't call onComplete() - we need to reload to show password modal
-      // Instead, trigger a page reload to force the main app to detect the flags
-      console.log('🔄 Reloading page to trigger password setup');
-      window.location.reload();
-    } else {
-      setError('Onjuiste woorden. Probeer het opnieuw.');
-    }
-  };
+  const words = mnemonic.split(' ');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/30 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-yellow-500/5 to-orange-500/5" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 via-yellow-500/3 to-orange-500/3" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl" />
       
       <div className="relative z-10">
-      <AnimatePresence mode="wait">
-        {step === 'welcome' && (
-          <motion.div
-            key="welcome"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="max-w-md w-full space-y-8"
-          >
-            {/* Logo Section - No background */}
+        <AnimatePresence mode="wait">
+          {step === 'welcome' && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-center"
-            >
-              <BlazeLogoImage size={80} />
-            </motion.div>
-
-            {/* Title Section */}
-            <motion.div
+              key="welcome"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-center"
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-md w-full space-y-8"
             >
-              <h1 className="text-6xl font-bold bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-500 bg-clip-text text-transparent mb-4 tracking-tight">
-                Blaze
-              </h1>
-              <p className="text-slate-300 text-xl font-medium mb-2">
-                Lightning fast crypto
-              </p>
-              <p className="text-slate-400 text-sm">
-                Set your finances ablaze 🔥
-              </p>
-            </motion.div>
-
-            {/* Features */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex gap-4 justify-center text-sm"
-            >
-              <span className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span className="text-emerald-300 font-medium">Veilig</span>
-              </span>
-              <span className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20">
-                <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                <span className="text-blue-300 font-medium">Snel</span>
-              </span>
-              <span className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 rounded-full border border-purple-500/20">
-                <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                <span className="text-purple-300 font-medium">Mooi</span>
-              </span>
-            </motion.div>
-
-            {/* Action Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="space-y-4"
-            >
-              <button
-                onClick={handleCreateWallet}
-                className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+              {/* Logo Section */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-center"
               >
-                Create new wallet
-              </button>
-              <button
-                onClick={() => setStep('import')}
-                className="w-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]"
+                <BlazeLogoImage size={80} />
+              </motion.div>
+
+              {/* Title Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-center"
               >
-                <Download className="w-5 h-5 inline mr-2" />
-                Import wallet
-              </button>
+                <h1 className="text-6xl font-bold bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-600 bg-clip-text text-transparent mb-4 tracking-tight">
+                  Blaze
+                </h1>
+                <p className="text-gray-600 text-xl font-medium mb-2">
+                  Lightning fast crypto
+                </p>
+                <p className="text-gray-500 text-sm">
+                  Set your finances ablaze 🔥
+                </p>
+              </motion.div>
+
+              {/* Features */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="flex gap-4 justify-center text-sm"
+              >
+                <span className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span className="text-emerald-700 font-medium">Veilig</span>
+                </span>
+                <span className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full border border-blue-200">
+                  <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                  <span className="text-blue-700 font-medium">Snel</span>
+                </span>
+                <span className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-full border border-purple-200">
+                  <CheckCircle2 className="w-4 h-4 text-purple-500" />
+                  <span className="text-purple-700 font-medium">Mooi</span>
+                </span>
+              </motion.div>
+
+              {/* Action Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="space-y-4"
+              >
+                <button
+                  onClick={handleCreateWallet}
+                  className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                >
+                  Create new wallet
+                </button>
+                <button
+                  onClick={() => setStep('import')}
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-700 font-semibold py-4 px-6 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                >
+                  <Download className="w-5 h-5 inline mr-2" />
+                  Import wallet
+                </button>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          )}
 
-        {step === 'mnemonic' && (
-          <motion.div
-            key="mnemonic"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="max-w-2xl w-full space-y-6"
-          >
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Je recovery phrase</h2>
-              <p className="text-slate-400">
-                Save these 12 words safely. You need them to recover your wallet.
-              </p>
-            </div>
-
-            <div className="glass-card">
-              <div className="grid grid-cols-3 gap-3 mb-6">
-                {mnemonicWords.map((word, index) => (
-                  <div
-                    key={index}
-                    className="glass p-3 rounded-lg text-center"
-                  >
-                    <div className="text-xs text-slate-500 mb-1">{index + 1}</div>
-                    <div className="font-mono text-slate-200">{word}</div>
-                  </div>
-                ))}
+          {step === 'import' && (
+            <motion.div
+              key="import"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="max-w-md w-full space-y-6"
+            >
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Import Wallet</h2>
+                <p className="text-gray-600">Enter your 12-word recovery phrase</p>
               </div>
 
-              <button
-                onClick={copyToClipboard}
-                className="w-full btn-secondary py-3 flex items-center justify-center gap-2"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    Kopieer alle woorden
-                  </>
+              <div className="space-y-4">
+                <textarea
+                  value={importInput}
+                  onChange={(e) => setImportInput(e.target.value)}
+                  placeholder="Enter your 12-word recovery phrase..."
+                  className="w-full h-32 p-4 border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+                
+                {error && (
+                  <div className="text-red-600 text-sm text-center">{error}</div>
                 )}
-              </button>
-            </div>
 
-            <div className="glass-card bg-amber-500/10 border-amber-500/20">
-              <p className="text-amber-200 text-sm">
-                <strong>Important:</strong> Write these words on paper and store them in a safe place. 
-                Deel ze nooit met anderen. Als je ze verliest, verlies je toegang tot je wallet.
-              </p>
-            </div>
-
-            <button
-              onClick={() => setStep('verify')}
-              className="w-full btn-primary py-4 text-lg"
-            >
-              Ik heb ze opgeschreven →
-            </button>
-          </motion.div>
-        )}
-
-        {step === 'verify' && (
-          <motion.div
-            key="verify"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="max-w-md w-full space-y-6"
-          >
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Verificatie</h2>
-              <p className="text-slate-400">
-                Fill in the correct words to confirm you have written them down.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {wordsToVerify.map((index) => (
-                <div key={index} className="space-y-2">
-                  <label className="text-sm text-slate-400">
-                    Woord #{index + 1}
-                  </label>
-                  <input
-                    type="text"
-                    value={verifyWords[index] || ''}
-                    onChange={(e) =>
-                      setVerifyWords({ ...verifyWords, [index]: e.target.value.toLowerCase() })
-                    }
-                    className="input-field"
-                    placeholder="Vul het woord in"
-                    autoComplete="off"
-                  />
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setStep('welcome')}
+                    className="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 px-4 rounded-xl hover:bg-gray-200 transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={handleImportWallet}
+                    className="flex-1 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300"
+                  >
+                    Import
+                  </button>
                 </div>
-              ))}
-            </div>
-
-            {error && (
-              <div className="glass-card bg-rose-500/10 border-rose-500/20">
-                <p className="text-rose-700 text-sm">{error}</p>
               </div>
-            )}
+            </motion.div>
+          )}
 
-            <button
-              onClick={handleVerify}
-              className="w-full btn-primary py-4 text-lg"
+          {step === 'mnemonic' && (
+            <motion.div
+              key="mnemonic"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="max-w-2xl w-full space-y-6"
             >
-              Verifieer en start
-            </button>
-          </motion.div>
-        )}
-
-        {step === 'import' && (
-          <motion.div
-            key="import"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="max-w-md w-full space-y-6"
-          >
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Import wallet</h2>
-              <p className="text-slate-400">
-                Vul je 12-woorden recovery phrase in om je wallet te herstellen.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <textarea
-                value={importInput}
-                onChange={(e) => setImportInput(e.target.value)}
-                className="input-field min-h-[120px] font-mono text-sm"
-                placeholder="word1 word2 word3 ..."
-                autoComplete="off"
-              />
-            </div>
-
-            {error && (
-              <div className="glass-card bg-rose-500/10 border-rose-500/20">
-                <p className="text-rose-700 text-sm">{error}</p>
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Save Your Recovery Phrase</h2>
+                <p className="text-gray-600">Write down these 12 words in order. Store them safely!</p>
               </div>
-            )}
 
-            <div className="space-y-3">
+              <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6">
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  {words.map((word, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <span className="text-gray-500 text-sm w-6">{index + 1}.</span>
+                      <span className="font-mono text-sm bg-gray-50 px-2 py-1 rounded">{word}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={copyMnemonic}
+                  className="w-full bg-gray-100 text-gray-700 font-semibold py-3 px-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copied ? 'Copied!' : 'Copy to Clipboard'}
+                </button>
+              </div>
+
+              <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                <p className="text-orange-800 text-sm font-medium mb-2">⚠️ Important Security Notice</p>
+                <ul className="text-orange-700 text-sm space-y-1">
+                  <li>• Never share your recovery phrase with anyone</li>
+                  <li>• Store it offline in a secure location</li>
+                  <li>• Anyone with these words can access your wallet</li>
+                </ul>
+              </div>
+
               <button
-                onClick={handleImportWallet}
-                className="w-full btn-primary py-4 text-lg"
-                disabled={!importInput.trim()}
+                onClick={() => setStep('verify')}
+                className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Importeer wallet
+                I've Saved My Recovery Phrase
               </button>
-              <button
-                onClick={() => setStep('welcome')}
-                className="w-full btn-secondary py-3"
-              >
-                Terug
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+
+          {step === 'verify' && (
+            <motion.div
+              key="verify"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="max-w-2xl w-full space-y-6"
+            >
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Verify Recovery Phrase</h2>
+                <p className="text-gray-600">Enter the words in the correct order to verify</p>
+              </div>
+
+              <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6">
+                <div className="grid grid-cols-3 gap-3">
+                  {Array.from({ length: 12 }, (_, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <span className="text-gray-500 text-sm w-6">{index + 1}.</span>
+                      <input
+                        type="text"
+                        value={verifyWords[index] || ''}
+                        onChange={(e) => setVerifyWords(prev => ({ ...prev, [index]: e.target.value }))}
+                        className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="word"
+                      />
+                    </div>
+                  ))}
+                </div>
+                
+                {error && (
+                  <div className="text-red-600 text-sm text-center mt-4">{error}</div>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setStep('mnemonic')}
+                  className="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 px-4 rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleVerifyMnemonic}
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300"
+                >
+                  Verify
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 }
-
-
-
-

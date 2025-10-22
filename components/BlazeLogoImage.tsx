@@ -92,12 +92,12 @@ export default function BlazeLogoImage({ size = 48, animate = true, className = 
             alt="Blaze Wallet Logo"
             width={size}
             height={size}
-            className="rounded-lg shadow-lg"
+            className="rounded-xl shadow-2xl"
             priority
           />
           
           {/* Subtle overlay for extra glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-yellow-500/10 rounded-lg pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-yellow-500/5 rounded-xl pointer-events-none" />
         </motion.div>
       </motion.div>
     </div>
