@@ -47,8 +47,21 @@ export class TransakService {
       ? this.TRANSAK_URL 
       : this.TRANSAK_STAGING_URL;
 
+    const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '55950bec-d22c-4d0a-937e-7bff2cb26296';
+    
+    // DEBUG: Log all configuration details
+    console.log('🔥 TRANSAK DEBUG INFO:');
+    console.log('Environment:', config.environment || 'PRODUCTION');
+    console.log('Base URL:', baseUrl);
+    console.log('API Key:', apiKey ? `${apiKey.substring(0, 8)}...` : 'MISSING');
+    console.log('Wallet Address:', config.walletAddress);
+    console.log('Currency Code:', config.currencyCode);
+    console.log('Base Currency:', config.baseCurrencyCode);
+    console.log('Theme Color:', config.themeColor);
+    console.log('Network:', this.getTransakNetwork(config.currencyCode));
+
     const params = new URLSearchParams({
-      apiKey: config.apiKey || '55950bec-d22c-4d0a-937e-7bff2cb26296', // Real Transak API key
+      apiKey: apiKey,
       walletAddress: config.walletAddress,
       ...(config.currencyCode && { cryptoCurrencyCode: config.currencyCode }),
       ...(config.baseCurrencyCode && { fiatCurrency: config.baseCurrencyCode }),
@@ -67,6 +80,10 @@ export class TransakService {
     });
 
     const url = `${baseUrl}?${params.toString()}`;
+    
+    // DEBUG: Log the final URL (without API key for security)
+    console.log('Final Transak URL:', url.replace(apiKey, '***API_KEY***'));
+    console.log('Opening Transak widget...');
 
     // Open in new tab - most reliable method
     const width = 500;
@@ -74,11 +91,18 @@ export class TransakService {
     const left = (window.screen.width - width) / 2;
     const top = (window.screen.height - height) / 2;
     
-    window.open(
+    const popup = window.open(
       url,
       'transak',
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
+    
+    // DEBUG: Check if popup opened successfully
+    if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+      console.error('❌ TRANSAK ERROR: Popup blocked! Please allow popups for this site.');
+    } else {
+      console.log('✅ TRANSAK SUCCESS: Popup opened successfully');
+    }
   }
 
   // Get currency code from chain and token symbol
