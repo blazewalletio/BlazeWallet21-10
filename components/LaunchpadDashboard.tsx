@@ -104,7 +104,7 @@ export default function LaunchpadDashboard() {
                     selectedProject.status === 'live'
                       ? 'bg-green-500/20 text-green-400'
                       : selectedProject.status === 'upcoming'
-                      ? 'bg-blue-500/20 text-blue-400'
+                      ? 'bg-orange-500/20 text-orange-400'
                       : 'bg-gray-500/20 text-gray-400'
                   }`}>
                     {selectedProject.status.toUpperCase()}
@@ -303,7 +303,7 @@ export default function LaunchpadDashboard() {
                   project.status === 'live'
                     ? 'bg-green-500/20 text-green-400'
                     : project.status === 'upcoming'
-                    ? 'bg-blue-500/20 text-blue-400'
+                    ? 'bg-orange-500/20 text-orange-400'
                     : 'bg-gray-500/20 text-gray-400'
                 }`}>
                   {project.status.toUpperCase()}

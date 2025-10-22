@@ -163,7 +163,7 @@ export default function GovernanceDashboard() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
-          <Vote className="w-6 h-6 text-purple-400" />
+          <Vote className="w-6 h-6 text-orange-500" />
           Governance
         </h2>
         <p className="text-gray-600">
@@ -345,7 +345,7 @@ export default function GovernanceDashboard() {
                         <h3 className="text-lg font-bold">Proposal #{proposal.id}</h3>
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
                           status === 'active'
-                            ? 'bg-blue-500/20 text-blue-400'
+                            ? 'bg-orange-500/20 text-orange-400'
                             : status === 'executed'
                             ? 'bg-green-500/20 text-green-400'
                             : status === 'ended'
@@ -433,8 +433,8 @@ export default function GovernanceDashboard() {
       {activeTab === 'create' && (
         <div className="bg-white border border-gray-200 rounded-xl p-6">
           <div className="space-y-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-              <p className="text-sm text-blue-700">
+            <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+              <p className="text-sm text-orange-700">
                 💡 Create proposals to improve the BLAZE ecosystem. Proposals require {proposalThreshold} BLAZE tokens to submit and will be active for 7 days.
               </p>
             </div>

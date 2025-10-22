@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { aiService } from '@/lib/ai-service';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, Key, CheckCircle, AlertCircle, Eye, EyeOff, X } from 'lucide-react';
+import { Settings, Key, CheckCircle, AlertCircle, Eye, EyeOff, X, Flame } from 'lucide-react';
 
 interface AISettingsModalProps {
   onClose: () => void;
@@ -60,17 +60,17 @@ export default function AISettingsModal({ onClose }: AISettingsModalProps) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200 shadow-xl pointer-events-auto"
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto glass-card rounded-2xl pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center z-10">
+              <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl flex justify-between items-center z-10">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
-                    <Settings className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-orange-500 to-yellow-500 flex items-center justify-center">
+                    <Flame className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">AI Instellingen</h2>
-                    <p className="text-xs text-gray-600">Configureer je AI functies</p>
+                    <h2 className="text-xl font-bold text-gray-900">AI Settings</h2>
+                    <p className="text-xs text-gray-600">Configure your AI functions</p>
                   </div>
                 </div>
                 <button

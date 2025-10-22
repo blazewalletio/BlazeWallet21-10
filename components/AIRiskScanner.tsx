@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { aiService } from '@/lib/ai-service';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Search, AlertTriangle, CheckCircle, XCircle, Loader2, X } from 'lucide-react';
+import { Shield, Search, AlertTriangle, CheckCircle, XCircle, Loader2, X, Flame } from 'lucide-react';
 
 interface AIRiskScannerProps {
   onClose: () => void;
@@ -85,17 +85,17 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200 shadow-xl pointer-events-auto"
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto glass-card rounded-2xl pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center">
+              <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-orange-500 to-yellow-500 flex items-center justify-center">
+                    <Flame className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">AI Scam Detector</h2>
-                    <p className="text-xs text-gray-600">Scan adressen voor risico's</p>
+                    <h2 className="text-xl font-bold text-gray-900">Scam Detector</h2>
+                    <p className="text-xs text-gray-600">Scan addresses for risks</p>
                   </div>
                 </div>
                 <button
@@ -146,7 +146,7 @@ export default function AIRiskScanner({ onClose, initialAddress = '' }: AIRiskSc
                   <button
                     onClick={handleScan}
                     disabled={loading || !address.trim()}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-transform"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-gradient-to-r from-orange-500 to-yellow-500 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-transform"
                   >
                     {loading ? (
                       <Loader2 className="w-4 h-4 text-white animate-spin" />

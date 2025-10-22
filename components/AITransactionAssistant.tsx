@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { aiService } from '@/lib/ai-service';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, Loader2, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { Sparkles, Send, Loader2, AlertCircle, CheckCircle, X, Flame } from 'lucide-react';
 
 interface AITransactionAssistantProps {
   onClose: () => void;
@@ -77,17 +77,17 @@ export default function AITransactionAssistant({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200 shadow-xl pointer-events-auto"
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto glass-card rounded-2xl pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center">
+              <div className="sticky top-0 glass backdrop-blur-xl border-b border-white/10 px-6 py-4 rounded-t-2xl flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-orange-500 to-yellow-500 flex items-center justify-center">
+                    <Flame className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">AI Transaction Assistent</h2>
-                    <p className="text-xs text-gray-600">Spreek natuurlijk, ik begrijp je</p>
+                    <h2 className="text-xl font-bold text-gray-900">AI Assistant</h2>
+                    <p className="text-xs text-gray-600">Natural language transactions</p>
                   </div>
                 </div>
                 <button
@@ -182,9 +182,9 @@ export default function AITransactionAssistant({
                           {response.success && response.action && response.action.type !== 'none' && (
                             <button
                               onClick={handleExecute}
-                              className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium hover:from-green-600 hover:to-emerald-600 transition-all"
+                              className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-medium hover:from-orange-600 hover:to-yellow-600 transition-all"
                             >
-                              Voer uit
+                              Execute
                             </button>
                           )}
                         </div>
@@ -195,12 +195,12 @@ export default function AITransactionAssistant({
               </div>
 
               {/* Footer */}
-              <div className="p-4 border-t border-gray-200 flex gap-2">
+              <div className="p-4 border-t border-white/10 flex gap-2">
                 <button
                   onClick={onClose}
                   className="flex-1 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium transition-colors"
                 >
-                  Sluiten
+                  Close
                 </button>
                 {response && (
                   <button
@@ -208,9 +208,9 @@ export default function AITransactionAssistant({
                       setResponse(null);
                       setInput('');
                     }}
-                    className="flex-1 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium transition-colors"
+                    className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-medium transition-colors"
                   >
-                    Nieuw commando
+                    New command
                   </button>
                 )}
               </div>
