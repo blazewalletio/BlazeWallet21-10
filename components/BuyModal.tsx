@@ -17,7 +17,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
   const chain = CHAINS[currentChain];
   const supportedAssets = TransakService.getSupportedAssets(chain.id);
 
-  const handleBuy = (currencyCode?: string) => {
+  const handleBuy = async (currencyCode?: string) => {
     if (!address) {
       alert('Please connect your wallet first');
       return;
