@@ -56,7 +56,8 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
           setTimeout(() => onClose(), 500);
         } catch (error) {
           console.error('❌ BUY MODAL ERROR:', error);
-          alert(`Failed to open Transak: ${error.message || 'Unknown error'}`);
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          alert(`Failed to open Transak: ${errorMessage}`);
         }
   };
 
