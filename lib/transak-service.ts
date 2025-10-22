@@ -51,7 +51,7 @@ export class TransakService {
 
   // Create Transak session (NEW METHOD - Required by Transak)
   static async createSession(config: TransakConfig): Promise<TransakSessionResponse> {
-    const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '55950bec-d22c-4d0a-937e-7bff2cb26296';
+    const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || 'pk_test_1234567890abcdef';
     const baseUrl = config.environment === 'PRODUCTION' 
       ? this.API_PRODUCTION_URL 
       : this.API_STAGING_URL;
@@ -130,7 +130,7 @@ export class TransakService {
           ? this.TRANSAK_URL 
           : this.TRANSAK_STAGING_URL;
 
-        const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '55950bec-d22c-4d0a-937e-7bff2cb26296';
+        const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || 'pk_test_1234567890abcdef';
         
         // NEW: Only apiKey and sessionId are allowed in URL
         const url = `${baseUrl}?apiKey=${apiKey}&sessionId=${session.sessionId}`;
@@ -150,7 +150,7 @@ export class TransakService {
           ? this.TRANSAK_URL 
           : this.TRANSAK_STAGING_URL;
 
-        const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '55950bec-d22c-4d0a-937e-7bff2cb26296';
+        const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || 'pk_test_1234567890abcdef';
         
         const params = new URLSearchParams({
           apiKey: apiKey,

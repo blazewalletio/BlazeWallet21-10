@@ -43,7 +43,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             walletAddresses: walletAddresses,
             currencyCode: currencyCode || 'ETH', // Default to ETH if undefined
             baseCurrencyCode: 'EUR', // Default to EUR for Dutch market
-            apiKey: '55950bec-d22c-4d0a-937e-7bff2cb26296', // Real Transak API key
+            apiKey: '55950bec-d22c-4d0a-937e-7bff2cb26296', // Real Transak API key (needs business profile completion)
             environment: 'STAGING', // Try STAGING first to test
             themeColor: '#F97316', // BLAZE orange
             disableWalletAddressForm: true, // Hide wallet address input since we provide it
@@ -57,7 +57,13 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
         } catch (error) {
           console.error('❌ BUY MODAL ERROR:', error);
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-          alert(`Failed to open Transak: ${errorMessage}`);
+          
+          // Check if it's a business profile issue
+          if (errorMessage.includes('Invalid API key') || errorMessage.includes('T-INF-201')) {
+            alert(`Transak Error: Please complete your Business Profile in the Transak Dashboard first.\n\nGo to: dashboard.transak.com/developers\nComplete all 3 steps of "Complete Your Business Profile"`);
+          } else {
+            alert(`Failed to open Transak: ${errorMessage}`);
+          }
         }
   };
 
