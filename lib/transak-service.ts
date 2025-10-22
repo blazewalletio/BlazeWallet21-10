@@ -59,6 +59,7 @@ export class TransakService {
     console.log('🔥 TRANSAK SESSION DEBUG:');
     console.log('API Base URL:', baseUrl);
     console.log('API Key:', apiKey ? `${apiKey.substring(0, 8)}...` : 'MISSING');
+    console.log('Environment:', config.environment);
 
     const sessionData = {
       widgetParams: {
@@ -85,6 +86,8 @@ export class TransakService {
     console.log('Session Data:', JSON.stringify(sessionData, null, 2));
 
     try {
+      console.log('Making request to:', `${baseUrl}/auth/public/v2/session`);
+      
       const response = await fetch(`${baseUrl}/auth/public/v2/session`, {
         method: 'POST',
         headers: {
@@ -94,6 +97,9 @@ export class TransakService {
         },
         body: JSON.stringify(sessionData),
       });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorText = await response.text();
