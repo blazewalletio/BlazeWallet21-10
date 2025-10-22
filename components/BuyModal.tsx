@@ -17,31 +17,41 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
   const chain = CHAINS[currentChain];
   const supportedAssets = MoonPayService.getSupportedAssets(chain.id);
 
-  const handleBuy = (currencyCode?: string) => {
+  const handleBuy = async (currencyCode?: string) => {
     if (!address) return;
 
-    // Show warning for Solana purchases
-    if (currencyCode === 'sol' || currencyCode === 'usdc_sol' || currencyCode === 'usdt_sol') {
-      const confirmed = window.confirm(
-        '⚠️ IMPORTANT: You are about to buy Solana (SOL), but your wallet address is in Ethereum format.\n\n' +
-        'This may cause the SOL to be sent to the wrong address and you may lose your funds.\n\n' +
-        'Do you want to continue anyway?'
-      );
-      
-      if (!confirmed) {
-        return;
+    try {
+      // Create transaction via MoonPay Partner API
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          walletAddress: address,
+          currencyCode: currencyCode,
+          baseCurrencyCode: 'eur',
+          baseCurrencyAmount: 50, // Default amount, user can change in MoonPay
+          externalCustomerId: address, // Use wallet address as customer ID
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create transaction');
       }
+
+      const transaction = await response.json();
+      
+      // Open MoonPay with the created transaction
+      const moonPayUrl = `https://buy.moonpay.com?transactionId=${transaction.id}`;
+      window.open(moonPayUrl, 'moonpay', 'width=500,height=750,resizable=yes,scrollbars=yes');
+
+      // Close modal after opening MoonPay
+      setTimeout(() => onClose(), 500);
+    } catch (error) {
+      console.error('Error creating transaction:', error);
+      alert('Failed to create transaction. Please try again.');
     }
-
-    MoonPayService.openWidget({
-      walletAddress: address,
-      currencyCode: currencyCode,
-      baseCurrencyCode: 'eur', // Default to EUR for Dutch market
-      // apiKey: process.env.NEXT_PUBLIC_MOONPAY_API_KEY, // Add when you have partner account
-    });
-
-    // Close modal after opening MoonPay
-    setTimeout(() => onClose(), 500);
   };
 
   return (
