@@ -123,7 +123,7 @@ export default function TabContent({
               <TrendingDown className="w-4 h-4 text-red-500" />
             )}
             <span className={`text-sm font-medium ${isPositiveChange ? 'text-green-600' : 'text-red-600'}`}>
-              {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% vandaag
+              {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% today
             </span>
           </div>
         </div>

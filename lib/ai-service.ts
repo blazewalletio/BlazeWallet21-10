@@ -211,7 +211,7 @@ class AIService {
 
           return {
             success: true,
-            message: `Ik ga ${intent.amount} ${intent.token} sturen naar ${intent.recipient}. Bevestig de transactie.`,
+            message: `I'm going to send ${intent.amount} ${intent.token} to ${intent.recipient}. Confirm the transaction.`,
             action: {
               type: 'send',
               params: {
@@ -437,15 +437,15 @@ class AIService {
   private getRiskDetails(risk: string, warnings: string[]): string {
     switch (risk) {
       case 'low':
-        return '✅ Dit lijkt een veilige transactie. Je kunt doorgaan.';
+        return '✅ This looks like a safe transaction. You can proceed.';
       case 'medium':
-        return '⚠️ Wees voorzichtig. Controleer het adres dubbel voordat je doorgaat.';
+        return '⚠️ Be careful. Double-check the address before proceeding.';
       case 'high':
-        return '🚨 Hoog risico gedetecteerd! Overweeg deze transactie niet te doen.';
+        return '🚨 High risk detected! Consider not doing this transaction.';
       case 'critical':
-        return '🛑 STOP! Dit is waarschijnlijk een scam of fout adres. Ga NIET door.';
+        return '🛑 STOP! This is probably a scam or wrong address. Do NOT proceed.';
       default:
-        return 'Risico onbekend.';
+        return 'Risk unknown.';
     }
   }
 
@@ -596,36 +596,35 @@ class AIService {
       const apiKey = this.getApiKey();
       if (!apiKey) {
         console.log('❌ No API key available for chat');
-        return 'Ik kan je vraag niet beantwoorden zonder OpenAI API key. Stel deze in bij Settings → AI Configuration.';
+        return 'I cannot answer your question without an OpenAI API key. Set this up in Settings → AI Configuration.';
       }
 
       // Check rate limit
       if (!this.checkRateLimit()) {
-        return 'Te veel requests. Wacht even en probeer opnieuw.';
+        return 'Too many requests. Wait a moment and try again.';
       }
 
       // Check for recent failures
       if (this.isRecentFailure()) {
-        return 'OpenAI API heeft recent te veel requests gehad. Wacht even voordat je opnieuw probeert.';
+        return 'OpenAI API has had too many requests recently. Wait a moment before trying again.';
       }
 
       // Common crypto questions (works offline)
       const commonQuestions: { [key: string]: string } = {
-        'wat is gas': 'Gas zijn de transactiekosten op Ethereum. Het is de prijs die je betaalt aan miners/validators om je transactie te verwerken. Gemeten in gwei (1 gwei = 0.000000001 ETH).',
         'what is gas': 'Gas is the transaction fee on Ethereum. It\'s the price you pay to miners/validators to process your transaction. Measured in gwei (1 gwei = 0.000000001 ETH).',
-        'wat is slippage': 'Slippage is het verschil tussen de verwachte prijs en de werkelijke prijs van een swap. Bij hoge volatiliteit kan de prijs veranderen terwijl je transactie wordt uitgevoerd.',
-        'wat is impermanent loss': 'Impermanent loss treedt op bij liquidity pools wanneer de prijs van je tokens verandert vergeleken met toen je ze toevoegde. Het heet "impermanent" omdat het pas definitief is als je je tokens terugtrekt.',
-        'waarom lukt mijn swap niet': 'Mogelijke redenen: 1) Te weinig ETH voor gas, 2) Slippage te laag ingesteld, 3) Token heeft te weinig liquiditeit, of 4) Je moet het token eerst approven.',
-        'wat is een smart contract': 'Een smart contract is code die automatisch wordt uitgevoerd op de blockchain. Het zijn de "apps" van crypto - zoals Uniswap voor swaps of Aave voor lending.',
-        'hoe werkt defi': 'DeFi (Decentralized Finance) zijn financiële diensten zonder banken. Je kunt lenen, uitlenen, swappen en verdienen via smart contracts op de blockchain.',
-        'wat is yield farming': 'Yield farming is het verdienen van rewards door je tokens te staken in liquidity pools. Je krijgt tokens als beloning voor het beschikbaar stellen van liquiditeit.',
-        'wat is staking': 'Staking is het vergrendelen van je tokens om het netwerk te beveiligen. Je krijgt rewards als beloning voor het deelnemen aan consensus.',
-        'wat zijn nfts': 'NFTs (Non-Fungible Tokens) zijn unieke digitale items op de blockchain. Ze kunnen kunst, muziek, games of andere digitale assets vertegenwoordigen.',
-        'hoe koop ik crypto': 'Je kunt crypto kopen op exchanges zoals Coinbase, Binance of Kraken. Gebruik altijd een betrouwbare exchange en bewaar je crypto veilig.',
-        'wat is een wallet': 'Een crypto wallet is een digitale portemonnee om je cryptocurrency op te slaan. Het bevat je private keys waarmee je toegang hebt tot je crypto.',
-        'wat is bitcoin': 'Bitcoin is de eerste en grootste cryptocurrency. Het is een digitale munt die werkt zonder centrale bank en wordt gebruikt als store of value.',
-        'wat is ethereum': 'Ethereum is een blockchain platform waarop smart contracts draaien. Het is de basis voor veel DeFi apps, NFTs en andere blockchain projecten.',
-        'wat zijn altcoins': 'Altcoins zijn alle cryptocurrencies behalve Bitcoin. Populaire altcoins zijn Ethereum, Cardano, Solana en Polygon.',
+        'what is slippage': 'Slippage is the difference between the expected price and the actual price of a swap. During high volatility, the price can change while your transaction is being executed.',
+        'what is impermanent loss': 'Impermanent loss occurs in liquidity pools when the price of your tokens changes compared to when you added them. It\'s called "impermanent" because it\'s only permanent when you withdraw your tokens.',
+        'why is my swap failing': 'Possible reasons: 1) Not enough ETH for gas, 2) Slippage set too low, 3) Token has insufficient liquidity, or 4) You need to approve the token first.',
+        'what is a smart contract': 'A smart contract is code that automatically executes on the blockchain. They are the "apps" of crypto - like Uniswap for swaps or Aave for lending.',
+        'how does defi work': 'DeFi (Decentralized Finance) are financial services without banks. You can borrow, lend, swap and earn through smart contracts on the blockchain.',
+        'what is yield farming': 'Yield farming is earning rewards by staking your tokens in liquidity pools. You get tokens as rewards for providing liquidity.',
+        'what is staking': 'Staking is locking up your tokens to secure the network. You get rewards as compensation for participating in consensus.',
+        'what are nfts': 'NFTs (Non-Fungible Tokens) are unique digital items on the blockchain. They can represent art, music, games or other digital assets.',
+        'how do i buy crypto': 'You can buy crypto on exchanges like Coinbase, Binance or Kraken. Always use a reputable exchange and store your crypto securely.',
+        'what is a wallet': 'A crypto wallet is a digital wallet to store your cryptocurrency. It contains your private keys that give you access to your crypto.',
+        'what is bitcoin': 'Bitcoin is the first and largest cryptocurrency. It\'s a digital currency that works without a central bank and is used as a store of value.',
+        'what is ethereum': 'Ethereum is a blockchain platform where smart contracts run. It\'s the foundation for many DeFi apps, NFTs and other blockchain projects.',
+        'what are altcoins': 'Altcoins are all cryptocurrencies except Bitcoin. Popular altcoins are Ethereum, Cardano, Solana and Polygon.',
       };
 
       const lowerMessage = message.toLowerCase();
@@ -653,9 +652,9 @@ class AIService {
               messages: [
                 {
                   role: 'system',
-                  content: `Je bent een behulpzame crypto expert assistent in BlazeWallet. 
-                  Geef duidelijke, korte antwoorden in het Nederlands (tenzij de gebruiker Engels spreekt).
-                  Focus op praktisch advies. Noem nooit dat je een AI bent.
+                  content: `You are a helpful crypto expert assistant in BlazeWallet. 
+                  Give clear, short answers in English.
+                  Focus on practical advice. Never mention that you are an AI.
                   Context: ${JSON.stringify(context || {})}`,
                 },
                 ...this.conversationHistory,
@@ -711,7 +710,7 @@ class AIService {
       }
 
       // No API key available
-      return 'Ik kan je vraag niet beantwoorden zonder OpenAI API key. Stel deze in bij Settings → AI Configuration.';
+      return 'I cannot answer your question without an OpenAI API key. Set this up in Settings → AI Configuration.';
     } catch (error: any) {
       console.error('Chat error:', error);
       

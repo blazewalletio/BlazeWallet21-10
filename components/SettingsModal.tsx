@@ -147,7 +147,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
                         <div className="mt-3 glass-card bg-amber-500/10 border-amber-500/20">
                           <p className="text-amber-200 text-xs">
-                            ⚠️ Deel deze woorden nooit met anderen. Ze geven volledige toegang tot je wallet.
+                            ⚠️ Never share these words with anyone. They give full access to your wallet.
                           </p>
                         </div>
                       </motion.div>
@@ -158,7 +158,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 {/* Preferences */}
                 <div>
                   <h3 className="text-sm font-semibold text-gray-600 mb-3">
-                    Voorkeuren
+                    Preferences
                   </h3>
                   
                   <div className="space-y-3">
@@ -214,8 +214,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       className="glass-card bg-rose-500/10 border-rose-500/20"
                     >
                       <p className="text-rose-700 text-sm mb-3">
-                        Weet je het zeker? Deze actie kan niet ongedaan worden gemaakt.
-                        Zorg dat je je recovery phrase hebt!
+                        Are you sure? This action cannot be undone.
+                        Make sure you have your recovery phrase!
                       </p>
                       <div className="flex gap-2">
                         <button

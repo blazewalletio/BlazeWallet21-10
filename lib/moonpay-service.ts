@@ -36,7 +36,7 @@ export class MoonPayService {
       // Customize appearance
       colorCode: '%23F97316', // BLAZE orange
       theme: 'dark',
-      language: 'nl', // Dutch
+      language: 'en', // English
     });
 
     const url = `${this.MOONPAY_URL}?${params.toString()}`;
