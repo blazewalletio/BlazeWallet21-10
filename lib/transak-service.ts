@@ -23,7 +23,7 @@ export interface TransakConfig {
 
 export class TransakService {
   private static readonly TRANSAK_URL = 'https://global.transak.com';
-  private static readonly TRANSAK_STAGING_URL = 'https://staging-global.transak.com';
+  private static readonly TRANSAK_STAGING_URL = 'https://global-stg.transak.com';
 
   // Get supported assets by chain
   static getSupportedAssets(chainId: number): string[] {
@@ -48,17 +48,22 @@ export class TransakService {
       : this.TRANSAK_STAGING_URL;
 
     const params = new URLSearchParams({
-      apiKey: config.apiKey || 'YOUR_API_KEY', // Will be replaced with actual API key
+      apiKey: config.apiKey || '55950bec-d22c-4d0a-937e-7bff2cb26296', // Real Transak API key
       walletAddress: config.walletAddress,
-      ...(config.currencyCode && { defaultCryptoCurrency: config.currencyCode }),
-      ...(config.baseCurrencyCode && { defaultFiatCurrency: config.baseCurrencyCode }),
-      ...(config.themeColor && { themeColor: config.themeColor }),
+      ...(config.currencyCode && { cryptoCurrencyCode: config.currencyCode }),
+      ...(config.baseCurrencyCode && { fiatCurrency: config.baseCurrencyCode }),
+      ...(config.themeColor && { themeColor: config.themeColor.replace('#', '') }),
       ...(config.disableWalletAddressForm && { disableWalletAddressForm: 'true' }),
       ...(config.hideMenu && { hideMenu: 'true' }),
       ...(config.isAutoFillUserData && { isAutoFillUserData: 'true' }),
       ...(config.userData?.firstName && { userData: JSON.stringify(config.userData) }),
       // Multi-chain wallet addresses
       ...(config.walletAddresses && { walletAddresses: JSON.stringify(config.walletAddresses) }),
+      // Additional Transak parameters
+      exchangeScreenTitle: 'Buy Crypto with Blaze Wallet',
+      defaultCryptoCurrency: config.currencyCode || 'ETH',
+      defaultFiatCurrency: config.baseCurrencyCode || 'EUR',
+      network: this.getTransakNetwork(config.currencyCode),
     });
 
     const url = `${baseUrl}?${params.toString()}`;
@@ -158,6 +163,26 @@ export class TransakService {
     }
     
     return addresses;
+  }
+
+  // Get Transak network parameter
+  static getTransakNetwork(currencyCode?: string): string {
+    if (!currencyCode) return 'ethereum';
+    
+    const networkMap: Record<string, string> = {
+      'ETH': 'ethereum',
+      'USDT': 'ethereum',
+      'USDC': 'ethereum',
+      'DAI': 'ethereum',
+      'WBTC': 'ethereum',
+      'LINK': 'ethereum',
+      'MATIC': 'polygon',
+      'BNB': 'bsc',
+      'BUSD': 'bsc',
+      'SOL': 'solana',
+    };
+
+    return networkMap[currencyCode] || 'ethereum';
   }
 
   // Validate wallet address format

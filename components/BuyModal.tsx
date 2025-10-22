@@ -18,7 +18,10 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
   const supportedAssets = TransakService.getSupportedAssets(chain.id);
 
   const handleBuy = (currencyCode?: string) => {
-    if (!address) return;
+    if (!address) {
+      alert('Please connect your wallet first');
+      return;
+    }
 
     // Validate wallet address format for the selected currency
     if (currencyCode && !TransakService.validateWalletAddress(address, currencyCode)) {
@@ -29,21 +32,26 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
     // Create multi-chain wallet addresses for better compatibility
     const walletAddresses = TransakService.createWalletAddresses(address, chain.id);
 
-    TransakService.openWidget({
-      walletAddress: address,
-      walletAddresses: walletAddresses,
-      currencyCode: currencyCode,
-      baseCurrencyCode: 'EUR', // Default to EUR for Dutch market
-      apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY, // Will be set when partner account is approved
-      environment: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'STAGING',
-      themeColor: '#F97316', // BLAZE orange
-      disableWalletAddressForm: true, // Hide wallet address input since we provide it
-      hideMenu: false, // Show Transak menu
-      isAutoFillUserData: false, // Let users fill their own data
-    });
+    try {
+      TransakService.openWidget({
+        walletAddress: address,
+        walletAddresses: walletAddresses,
+        currencyCode: currencyCode,
+        baseCurrencyCode: 'EUR', // Default to EUR for Dutch market
+        apiKey: '55950bec-d22c-4d0a-937e-7bff2cb26296', // Real Transak API key
+        environment: 'PRODUCTION', // Use production environment
+        themeColor: '#F97316', // BLAZE orange
+        disableWalletAddressForm: true, // Hide wallet address input since we provide it
+        hideMenu: false, // Show Transak menu
+        isAutoFillUserData: false, // Let users fill their own data
+      });
 
-    // Close modal after opening Transak
-    setTimeout(() => onClose(), 500);
+      // Close modal after opening Transak
+      setTimeout(() => onClose(), 500);
+    } catch (error) {
+      console.error('Error opening Transak:', error);
+      alert('Failed to open Transak. Please try again.');
+    }
   };
 
   return (
