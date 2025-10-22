@@ -21,15 +21,23 @@ export const PRESALE_CONFIG = {
 // Current environment - CHANGE THIS WHEN GOING TO MAINNET!
 export const CURRENT_PRESALE = PRESALE_CONFIG.testnet; // Change to .mainnet for production
 
+// Mainnet deployment checklist:
+// 1. Deploy contracts to BSC mainnet
+// 2. Update presaleAddress and tokenAddress in mainnet config
+// 3. Change CURRENT_PRESALE to PRESALE_CONFIG.mainnet
+// 4. Test with small amount first
+// 5. Start presale with startPresale() function
+
 // Presale constants
 export const PRESALE_CONSTANTS = {
-  hardCap: 500000, // $500k
-  softCap: 100000, // $100k
+  hardCap: 1000000, // $1M
+  softCap: 200000, // $200k
   minContribution: 100, // $100
   maxContribution: 10000, // $10,000
-  tokenPrice: 0.00417, // $0.00417 per BLAZE
-  launchPrice: 0.01, // $0.01 per BLAZE (2.4x gain)
-  tokensForSale: 120000000, // 120M BLAZE
+  tokenPrice: 0.008333, // $0.008333 per BLAZE
+  launchPrice: 0.02, // $0.02 per BLAZE (2.4x gain)
+  tokensForSale: 120000000, // 120M BLAZE (12% of supply)
+  usdtWallet: '0x4d8eE58154eA6AFCdb52cB1B955A6dabf0A6E289', // USDT presale funds wallet
 };
 
 

@@ -14,7 +14,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  * Total Supply: 1,000,000,000 BLAZE
  * 
  * Distribution:
- * - 12% Presale (120M)
+ * - 12% Presale (120M) - $0.008333 per BLAZE
  * - 18% Liquidity (180M)
  * - 8% Founder Immediate (80M)
  * - 12% Founder Vesting (120M) - 6 months lock

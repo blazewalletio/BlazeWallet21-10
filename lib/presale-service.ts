@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { CURRENT_PRESALE, PRESALE_CONSTANTS } from './presale-config';
+import { priorityListService } from './priority-list-service';
 
 // Simplified ABIs - only functions we need
 const PRESALE_ABI = [
@@ -161,6 +162,21 @@ export class PresaleService {
    */
   async contribute(amountUSD: number): Promise<string> {
     try {
+      // Check if user is eligible to contribute
+      const userAddress = await this.wallet.getAddress();
+      const isInPriorityList = priorityListService.isInPriorityList(userAddress);
+      const isPriorityOnlyPhase = priorityListService.isPriorityOnlyPhase();
+      const isPresaleOpenToAll = priorityListService.isPresaleOpenToAll();
+
+      // Check eligibility based on timing
+      if (isPriorityOnlyPhase && !isInPriorityList) {
+        throw new Error('Presale is currently only open to priority list members. Registration opens November 5, 2025.');
+      }
+
+      if (!isPresaleOpenToAll && !isInPriorityList) {
+        throw new Error('Presale is not open yet. Priority list members get early access.');
+      }
+
       // Convert USD to BNB
       const bnbPrice = await this.getBNBPrice();
       const amountBNB = amountUSD / bnbPrice;
@@ -178,7 +194,9 @@ export class PresaleService {
         amountUSD: amountUSD,
         amountBNB: amountBNB.toFixed(4),
         valueInWei: valueInWei.toString(),
-        presaleAddress: this.presaleContract.target
+        presaleAddress: this.presaleContract.target,
+        isPriorityMember: isInPriorityList,
+        phase: isPriorityOnlyPhase ? 'priority-only' : isPresaleOpenToAll ? 'open-to-all' : 'not-started'
       });
       
       // Encode the function call

@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Rocket, TrendingUp, Users, Clock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Rocket, TrendingUp, Users, Clock, CheckCircle, AlertCircle, Loader2, Crown } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { PresaleService } from '@/lib/presale-service';
 import { PRESALE_CONSTANTS, CURRENT_PRESALE } from '@/lib/presale-config';
 import { CHAINS } from '@/lib/chains';
 import { ethers } from 'ethers';
+import { priorityListService } from '@/lib/priority-list-service';
 
 export default function PresaleDashboard() {
   console.log('🎯 PresaleDashboard component rendered');
@@ -39,6 +40,13 @@ export default function PresaleDashboard() {
     hasClaimed: false,
   });
 
+  const [priorityStatus, setPriorityStatus] = useState({
+    isInPriorityList: false,
+    isRegistrationOpen: false,
+    isPriorityOnlyPhase: false,
+    isPresaleOpenToAll: false,
+  });
+
   const progress = (presaleInfo.totalRaised / presaleInfo.hardCap) * 100;
   const tokensYouGet = parseFloat(contributionAmount || '0') / presaleInfo.tokenPrice;
   
@@ -66,6 +74,19 @@ export default function PresaleDashboard() {
     setError('');
 
     try {
+      // Load priority list status
+      const isInPriorityList = priorityListService.isInPriorityList(address);
+      const isRegistrationOpen = priorityListService.isRegistrationOpen();
+      const isPriorityOnlyPhase = priorityListService.isPriorityOnlyPhase();
+      const isPresaleOpenToAll = priorityListService.isPresaleOpenToAll();
+
+      setPriorityStatus({
+        isInPriorityList,
+        isRegistrationOpen,
+        isPriorityOnlyPhase,
+        isPresaleOpenToAll,
+      });
+
       // Create provider if needed
       let walletWithProvider = wallet;
       
@@ -73,7 +94,9 @@ export default function PresaleDashboard() {
         hasWallet: !!wallet,
         hasAddress: !!address,
         hasProvider: !!walletWithProvider.provider,
-        currentChain: currentChain
+        currentChain: currentChain,
+        isInPriorityList,
+        phase: isPriorityOnlyPhase ? 'priority-only' : isPresaleOpenToAll ? 'open-to-all' : 'not-started'
       });
       if (!walletWithProvider.provider) {
         console.log('🔧 Creating provider for wallet...');
@@ -202,9 +225,38 @@ export default function PresaleDashboard() {
           BLAZE Token Presale
         </h2>
         <p className="text-gray-600">
-          Join the early supporters - 2.4x gain at launch!
+          Join the early supporters - 2.4x gain at launch! ($0.008333 → $0.02)
         </p>
       </div>
+
+      {/* Priority List Status Banner */}
+      {priorityStatus.isRegistrationOpen && (
+        <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4">
+          <div className="flex items-center gap-3">
+            <Crown className="w-5 h-5 text-orange-400" />
+            <div>
+              <h3 className="font-semibold text-orange-400">Priority List Registration Open!</h3>
+              <p className="text-sm text-orange-300">
+                Register now for 48-hour early access to the presale starting November 3, 2025
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {priorityStatus.isPriorityOnlyPhase && (
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+          <div className="flex items-center gap-3">
+            <Crown className="w-5 h-5 text-blue-400" />
+            <div>
+              <h3 className="font-semibold text-blue-400">Priority List Members Only</h3>
+              <p className="text-sm text-blue-300">
+                Presale is currently only open to priority list members. Opens to everyone November 5, 2025
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Status Banner */}
       <div className={`rounded-xl p-4 ${

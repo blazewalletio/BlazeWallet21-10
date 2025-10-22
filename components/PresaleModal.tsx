@@ -301,7 +301,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
                     <Rocket className="w-6 h-6 text-orange-500" />
                     BLAZE Token Presale
                   </h2>
-                  <p className="text-sm text-gray-600 mt-1">Join the early supporters - 2.4x gain at launch!</p>
+                  <p className="text-sm text-gray-600 mt-1">Join the early supporters - 2.4x gain at launch! ($0.008333 → $0.02)</p>
                 </div>
                 <button
                   onClick={onClose}
@@ -454,11 +454,11 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
                         </div>
                         <div className="flex justify-between">
                           <span>Launch Price:</span>
-                          <span className="font-semibold">$0.01</span>
+                          <span className="font-semibold">$0.02</span>
                         </div>
                         <div className="flex justify-between text-green-600 font-semibold">
                           <span>Your Profit at Launch:</span>
-                          <span>+140% (${(tokensYouGet * (0.01 - presaleInfo.tokenPrice)).toFixed(2)})</span>
+                          <span>+140% (${(tokensYouGet * (0.02 - presaleInfo.tokenPrice)).toFixed(2)})</span>
                         </div>
                       </div>
                     </div>
@@ -543,7 +543,7 @@ export default function PresaleModal({ isOpen, onClose }: PresaleModalProps) {
                   <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>2.4x instant gain at launch ($0.00417 → $0.01)</span>
+                      <span>2.4x instant gain at launch ($0.008333 → $0.02)</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />

@@ -16,6 +16,9 @@ async function main() {
     // Operational wallet - will receive 40% of presale funds
     operationalWallet: deployer.address, // Change to operational wallet address
     
+    // USDT wallet - will receive all USDT presale funds
+    usdtWallet: "0x4d8eE58154eA6AFCdb52cB1B955A6dabf0A6E289", // USDT presale funds wallet
+    
     // Wallets for token distribution
     presaleContract: "0x0000000000000000000000000000000000000000", // Will be set after presale deployment
     founderImmediateWallet: deployer.address,
@@ -29,6 +32,7 @@ async function main() {
   console.log("📋 WALLET CONFIGURATION:");
   console.log("- Liquidity Wallet:", config.liquidityWallet);
   console.log("- Operational Wallet:", config.operationalWallet);
+  console.log("- USDT Wallet:", config.usdtWallet);
   console.log("- Founder Immediate:", config.founderImmediateWallet);
   console.log("- Founder Vesting:", config.founderVestingWallet);
   console.log("\n");
@@ -38,7 +42,8 @@ async function main() {
   const BlazePresale = await hre.ethers.getContractFactory("BlazePresale");
   const presale = await BlazePresale.deploy(
     config.liquidityWallet,
-    config.operationalWallet
+    config.operationalWallet,
+    config.usdtWallet
   );
   await presale.waitForDeployment();
   const presaleAddress = await presale.getAddress();
@@ -103,9 +108,10 @@ async function main() {
   console.log("  - 5% Strategic (50M) → Strategic wallet");
 
   console.log("\n🚀 PRESALE DETAILS:");
-  console.log("  - Target: $500,000");
+  console.log("  - Target: $1,000,000");
   console.log("  - Tokens for sale: 120M BLAZE");
-  console.log("  - Price: $0.00417 per BLAZE");
+  console.log("  - Price: $0.008333 per BLAZE");
+  console.log("  - Launch Price: $0.02 per BLAZE");
   console.log("  - Min: $100 | Max: $10,000 per wallet");
   
   console.log("\n💸 FUND DISTRIBUTION:");
@@ -126,7 +132,7 @@ async function main() {
   
   console.log("\n💻 VERIFY COMMAND:");
   console.log(`  npx hardhat verify --network bsc ${tokenAddress} ${config.presaleContract} ${config.liquidityWallet} ${config.founderImmediateWallet} ${config.founderVestingWallet} ${config.communityWallet} ${config.treasuryWallet} ${config.teamWallet} ${config.strategicWallet}`);
-  console.log(`  npx hardhat verify --network bsc ${presaleAddress} ${config.liquidityWallet} ${config.operationalWallet}`);
+  console.log(`  npx hardhat verify --network bsc ${presaleAddress} ${config.liquidityWallet} ${config.operationalWallet} ${config.usdtWallet}`);
   
   console.log("\n");
 }

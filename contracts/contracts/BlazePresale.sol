@@ -10,9 +10,9 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * @dev Handles presale with automatic fund distribution
  * 
  * Presale Details:
- * - Target: $500,000
- * - Price: $0.00417 per BLAZE
- * - Tokens: 120M BLAZE
+ * - Target: $1,000,000
+ * - Price: $0.008333 per BLAZE
+ * - Tokens: 120M BLAZE (12% of supply)
  * - Min contribution: $100 (in BNB)
  * - Max contribution: $10,000 per wallet
  * 
@@ -23,12 +23,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract BlazePresale is Ownable, ReentrancyGuard {
     
     // Presale Parameters (assuming BNB = $600)
-    uint256 public constant HARD_CAP = 833333333333333333333; // ~833.33 BNB = $500k
-    uint256 public constant SOFT_CAP = 166666666666666666666; // ~166.67 BNB = $100k
+    uint256 public constant HARD_CAP = 1666666666666666666666; // ~1666.67 BNB = $1M
+    uint256 public constant SOFT_CAP = 333333333333333333333; // ~333.33 BNB = $200k
     uint256 public constant MIN_CONTRIBUTION = 16666666666666666; // ~0.0167 BNB = $10 (lowered for easier testing)
     uint256 public constant MAX_CONTRIBUTION = 16666666666666666666; // ~16.67 BNB = $10,000
     uint256 public constant TOKENS_FOR_SALE = 120_000_000 * 10**18; // 120M BLAZE
-    uint256 public constant TOKEN_PRICE = 417 * 10**13; // $0.00417 per token = 0.00000695 BNB per token (at $600/BNB)
+    uint256 public constant TOKEN_PRICE = 13888888888888888; // $0.008333 per token = 0.00001389 BNB per token (at $600/BNB)
     
     // Presale State
     bool public presaleActive;
@@ -41,6 +41,7 @@ contract BlazePresale is Ownable, ReentrancyGuard {
     // Wallets
     address public liquidityWallet;
     address public operationalWallet;
+    address public usdtWallet; // USDT presale funds wallet
     address public tokenAddress;
     
     // Participant tracking
@@ -58,13 +59,16 @@ contract BlazePresale is Ownable, ReentrancyGuard {
     
     constructor(
         address _liquidityWallet,
-        address _operationalWallet
+        address _operationalWallet,
+        address _usdtWallet
     ) Ownable(msg.sender) {
         require(_liquidityWallet != address(0), "Invalid liquidity wallet");
         require(_operationalWallet != address(0), "Invalid operational wallet");
+        require(_usdtWallet != address(0), "Invalid USDT wallet");
         
         liquidityWallet = _liquidityWallet;
         operationalWallet = _operationalWallet;
+        usdtWallet = _usdtWallet;
     }
     
     /**
