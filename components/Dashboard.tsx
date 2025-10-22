@@ -9,7 +9,6 @@ import {
   Lock, Gift, Vote, Users, Palette, LogOut
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
-import { useTranslation } from '@/lib/useTranslation';
 import { BlockchainService } from '@/lib/blockchain';
 import { TokenService } from '@/lib/token-service';
 import { PriceService } from '@/lib/price-service';
@@ -106,7 +105,6 @@ export default function Dashboard() {
   // Bottom navigation state
   const [activeTab, setActiveTab] = useState<TabType>('wallet');
 
-  const { t } = useTranslation();
   const chain = CHAINS[currentChain];
   const blockchain = new BlockchainService(currentChain as any);
   const tokenService = new TokenService(chain.rpcUrl);
@@ -282,7 +280,7 @@ export default function Dashboard() {
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <div className="text-sm text-gray-600 mb-2">{t('dashboard.portfolioValue')}</div>
+                  <div className="text-sm text-gray-600 mb-2">Portfolio value</div>
                   <div className="flex items-center gap-3 mb-2">
                     {showBalance ? (
                       <>
@@ -295,7 +293,7 @@ export default function Dashboard() {
                         </h2>
                         <div className="text-right">
                           <div className="text-sm text-gray-500">{balance} {chain.nativeCurrency.symbol}</div>
-                          <div className="text-xs text-gray-400">{t('dashboard.nativeBalance')}</div>
+                          <div className="text-xs text-gray-400">Native balance</div>
                         </div>
                         <motion.button
                           whileTap={{ scale: 0.9 }}
