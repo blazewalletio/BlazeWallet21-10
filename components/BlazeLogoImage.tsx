@@ -61,19 +61,25 @@ export default function BlazeLogoImage({ size = 48, animate = true, className = 
   };
 
   return (
-    <div className={`relative ${className}`}>
-      {/* Glow effect */}
+    <div className={`relative flex items-center justify-center ${className}`}>
+      {/* Glow effect - positioned absolutely */}
       {animate && (
         <motion.div
           variants={glowVariants}
           initial="hidden"
           animate="visible"
-          className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-full blur-lg"
-          style={{ width: size + 20, height: size + 20 }}
+          className="absolute bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-full blur-lg"
+          style={{ 
+            width: size + 30, 
+            height: size + 30,
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
         />
       )}
       
-      {/* Main logo - NO CONTAINER */}
+      {/* Main logo - NO BACKGROUND, NO CONTAINER */}
       <motion.div
         variants={animate ? containerVariants : undefined}
         initial={animate ? "hidden" : undefined}

@@ -115,14 +115,14 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             >
               {/* Header Section - Logo + Title */}
               <div className="text-center mb-12">
-                {/* Logo - Clean and centered */}
+                {/* Logo - Clean and perfectly centered */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="mb-8"
+                  className="mb-8 flex justify-center"
                 >
-                  <BlazeLogoImage size={100} />
+                  <BlazeLogoImage size={120} />
                 </motion.div>
 
                 {/* Title */}
