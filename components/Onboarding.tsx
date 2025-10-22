@@ -131,7 +131,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <h1 className="text-7xl font-bold bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-600 bg-clip-text text-transparent mb-4 tracking-tight">
+                  <h1 className="text-7xl font-bold text-black mb-4 tracking-tight">
                     Blaze
                   </h1>
                   <p className="text-gray-600 text-2xl font-medium mb-3">
@@ -153,15 +153,15 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 <div className="flex justify-center gap-6">
                   <div className="flex items-center gap-3 px-6 py-3 bg-emerald-50 rounded-2xl border border-emerald-200">
                     <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    <span className="text-emerald-700 font-semibold text-lg">Veilig</span>
+                    <span className="text-emerald-700 font-semibold text-lg">Secure</span>
                   </div>
                   <div className="flex items-center gap-3 px-6 py-3 bg-blue-50 rounded-2xl border border-blue-200">
                     <CheckCircle2 className="w-5 h-5 text-blue-500" />
-                    <span className="text-blue-700 font-semibold text-lg">Snel</span>
+                    <span className="text-blue-700 font-semibold text-lg">Fast</span>
                   </div>
                   <div className="flex items-center gap-3 px-6 py-3 bg-purple-50 rounded-2xl border border-purple-200">
                     <CheckCircle2 className="w-5 h-5 text-purple-500" />
-                    <span className="text-purple-700 font-semibold text-lg">Mooi</span>
+                    <span className="text-purple-700 font-semibold text-lg">Smart</span>
                   </div>
                 </div>
               </motion.div>
