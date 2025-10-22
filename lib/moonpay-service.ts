@@ -21,6 +21,8 @@ export class MoonPayService {
       10: ['eth_optimism'], // Optimism
       8453: ['eth_base'], // Base
       11155111: ['eth'], // Sepolia
+      // Solana support
+      101: ['sol', 'usdc_sol', 'usdt_sol'], // Solana
     };
 
     return assetMap[chainId] || [];
@@ -28,8 +30,19 @@ export class MoonPayService {
 
   // Open MoonPay widget in new window
   static openWidget(config: MoonPayConfig) {
+    // Convert wallet address format based on currency
+    let walletAddress = config.walletAddress;
+    
+    // For Solana, we need to ensure the address is in the correct format
+    if (config.currencyCode === 'sol' || config.currencyCode === 'usdc_sol' || config.currencyCode === 'usdt_sol') {
+      // MoonPay expects Solana addresses in base58 format
+      // If the address is an Ethereum address, we need to convert it or use a different approach
+      console.warn('⚠️ Solana purchase detected with Ethereum wallet address. This may cause delivery issues.');
+      console.warn('Consider implementing proper Solana wallet address generation for MoonPay integration.');
+    }
+
     const params = new URLSearchParams({
-      walletAddress: config.walletAddress,
+      walletAddress: walletAddress,
       ...(config.currencyCode && { currencyCode: config.currencyCode }),
       ...(config.baseCurrencyCode && { baseCurrencyCode: config.baseCurrencyCode }),
       ...(config.apiKey && { apiKey: config.apiKey }),
@@ -80,6 +93,10 @@ export class MoonPayService {
       'ETH_OPTIMISM': 'eth_optimism',
       // Base
       'ETH_BASE': 'eth_base',
+      // Solana
+      'SOL': 'sol',
+      'USDC_SOL': 'usdc_sol',
+      'USDT_SOL': 'usdt_sol',
     };
 
     // For native currencies
@@ -89,6 +106,7 @@ export class MoonPayService {
     if (chainId === 42161 && symbol === 'ETH') return 'eth_arbitrum';
     if (chainId === 10 && symbol === 'ETH') return 'eth_optimism';
     if (chainId === 8453 && symbol === 'ETH') return 'eth_base';
+    if (chainId === 101 && symbol === 'SOL') return 'sol';
 
     return codeMap[symbol] || 'eth';
   }
@@ -104,6 +122,9 @@ export class MoonPayService {
       'bnb_bsc': 'BNB',
       'usdt_bsc': 'USDT (BSC)',
       'busd': 'BUSD',
+      'sol': 'Solana',
+      'usdc_sol': 'USDC (Solana)',
+      'usdt_sol': 'USDT (Solana)',
     };
 
     return nameMap[currencyCode] || currencyCode.toUpperCase();

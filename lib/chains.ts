@@ -101,6 +101,20 @@ export const CHAINS: Record<string, Chain> = {
     icon: '🧪',
     isTestnet: true,
   },
+  solana: {
+    id: 101,
+    name: 'Solana',
+    shortName: 'SOL',
+    rpcUrl: 'https://api.mainnet-beta.solana.com',
+    explorerUrl: 'https://explorer.solana.com',
+    nativeCurrency: {
+      name: 'Solana',
+      symbol: 'SOL',
+      decimals: 9,
+    },
+    color: '#9945FF',
+    icon: '◎',
+  },
 };
 
 export const DEFAULT_CHAIN = 'ethereum';

@@ -20,6 +20,19 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
   const handleBuy = (currencyCode?: string) => {
     if (!address) return;
 
+    // Show warning for Solana purchases
+    if (currencyCode === 'sol' || currencyCode === 'usdc_sol' || currencyCode === 'usdt_sol') {
+      const confirmed = window.confirm(
+        '⚠️ IMPORTANT: You are about to buy Solana (SOL), but your wallet address is in Ethereum format.\n\n' +
+        'This may cause the SOL to be sent to the wrong address and you may lose your funds.\n\n' +
+        'Do you want to continue anyway?'
+      );
+      
+      if (!confirmed) {
+        return;
+      }
+    }
+
     MoonPayService.openWidget({
       walletAddress: address,
       currencyCode: currencyCode,
