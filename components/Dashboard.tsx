@@ -325,12 +325,12 @@ export default function Dashboard() {
                     )}
                     <span>
                       {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% 
-                      {selectedTimeRange === 1 ? t("dashboard.lastHour") : 
-                       selectedTimeRange === 24 ? ' vandaag' : 
-                       selectedTimeRange === 72 ? t("dashboard.last3Days") :
-                       selectedTimeRange === 168 ? ' deze week' :
-                       selectedTimeRange === 720 ? ' deze maand' :
-                       t("dashboard.total")}
+                      {selectedTimeRange === 1 ? " last hour" : 
+                       selectedTimeRange === 24 ? " today" : 
+                       selectedTimeRange === 72 ? " last 3 days" :
+                       selectedTimeRange === 168 ? " this week" :
+                       selectedTimeRange === 720 ? " this month" :
+                       " total"}
                     </span>
                   </div>
                 </div>

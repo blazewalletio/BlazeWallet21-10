@@ -8,7 +8,6 @@ import {
   TrendingDown
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
-import { useTranslation } from '@/lib/useTranslation';
 import { BlockchainService } from '@/lib/blockchain';
 import { TokenService } from '@/lib/token-service';
 import { PriceService } from '@/lib/price-service';
@@ -44,7 +43,6 @@ export default function WalletTab() {
   const [chartData, setChartData] = useState<number[]>([]);
   const [selectedTimeRange, setSelectedTimeRange] = useState<number | null>(24);
 
-  const { t } = useTranslation();
   const chain = CHAINS[currentChain];
   const blockchain = new BlockchainService(currentChain as any);
   const tokenService = new TokenService(chain.rpcUrl);
@@ -240,12 +238,12 @@ export default function WalletTab() {
                   )}
                   <span>
                     {isPositiveChange ? '+' : ''}{change24h.toFixed(2)}% 
-                    {selectedTimeRange === 1 ? t("dashboard.lastHour") : 
-                     selectedTimeRange === 24 ? ' vandaag' : 
-                     selectedTimeRange === 72 ? t("dashboard.last3Days") :
-                     selectedTimeRange === 168 ? ' deze week' :
-                     selectedTimeRange === 720 ? ' deze maand' :
-                     t("dashboard.total")}
+                    {selectedTimeRange === 1 ? " last hour" : 
+                     selectedTimeRange === 24 ? " today" : 
+                     selectedTimeRange === 72 ? " last 3 days" :
+                     selectedTimeRange === 168 ? " this week" :
+                     selectedTimeRange === 720 ? " this month" :
+                     " total"}
                   </span>
                 </div>
               </div>

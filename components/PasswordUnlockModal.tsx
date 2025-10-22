@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Shield, AlertCircle, Fingerprint } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
-import { useTranslation } from '@/lib/useTranslation';
 
 interface PasswordUnlockModalProps {
   isOpen: boolean;
@@ -20,7 +19,6 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
   const [attempts, setAttempts] = useState(0);
   const { unlockWithPassword } = useWalletStore();
   const [biometricAvailable, setBiometricAvailable] = useState(false);
-  const { t } = useTranslation();
 
   // Check if biometric is available on mount
   useEffect(() => {
@@ -52,7 +50,7 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
     setError('');
 
     if (attempts >= 3) {
-      setError(t("auth.tooManyAttempts"));
+      setError("Too many failed attempts. Use your recovery phrase to start over.");
       return;
     }
 
@@ -62,7 +60,7 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
       onComplete();
     } catch (error) {
       setAttempts(prev => prev + 1);
-      setError(t("auth.invalidPassword", { count: attempts + 1 }));
+      setError(`Invalid password. Attempt ${attempts + 1}/3`);
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +74,7 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
       await unlockWithBiometric();
       onComplete();
     } catch (error: any) {
-      setError(error.message || t("auth.biometricFailed"));
+      setError(error.message || "Biometric authentication failed");
     } finally {
       setIsLoading(false);
     }
@@ -103,17 +101,17 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">
-              {t("auth.unlockWallet")}
+              Unlock wallet
             </h2>
             <p className="text-slate-400">
-              {t("auth.enterPassword")}
+              Enter your password to access your wallet
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">
-                {t("auth.password")}
+                Password
               </label>
               <div className="relative">
                 <input
@@ -121,7 +119,7 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 pr-12 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  placeholder={t("auth.passwordPlaceholder")}
+                  placeholder="Enter your password"
                   required
                   autoFocus
                 />
@@ -150,7 +148,7 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                t("auth.unlock")
+                "Unlock"
               )}
             </button>
 
@@ -163,7 +161,7 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
                 className="w-full bg-slate-800 hover:bg-slate-700 disabled:bg-slate-700 disabled:cursor-not-allowed border border-slate-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
               >
                 <Fingerprint className="w-5 h-5" />
-                <span>{t("auth.fingerprintFaceId")}</span>
+                <span>Fingerprint / Face ID</span>
               </button>
             )}
           </form>
@@ -173,7 +171,7 @@ export default function PasswordUnlockModal({ isOpen, onComplete, onFallback }: 
               onClick={onFallback}
               className="text-slate-400 hover:text-white text-sm underline"
             >
-              {t("auth.recoverPhrase")}
+              Recover with recovery phrase
             </button>
           </div>
 
