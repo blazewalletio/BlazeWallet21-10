@@ -110,50 +110,93 @@ export class TransakService {
     }
   }
 
-  // Open Transak widget with session (NEW METHOD)
+  // Open Transak widget with session (NEW METHOD with fallback)
   static async openWidget(config: TransakConfig) {
     try {
       console.log('🔥 TRANSAK WIDGET DEBUG: Starting new session-based integration...');
       
-      // Step 1: Create session
-      const session = await this.createSession(config);
-      
-      // Step 2: Open widget with session
-      const baseUrl = config.environment === 'PRODUCTION' 
-        ? this.TRANSAK_URL 
-        : this.TRANSAK_STAGING_URL;
+      // Step 1: Try to create session
+      try {
+        const session = await this.createSession(config);
+        
+        // Step 2: Open widget with session
+        const baseUrl = config.environment === 'PRODUCTION' 
+          ? this.TRANSAK_URL 
+          : this.TRANSAK_STAGING_URL;
 
-      const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '55950bec-d22c-4d0a-937e-7bff2cb26296';
-      
-      // NEW: Only apiKey and sessionId are allowed in URL
-      const url = `${baseUrl}?apiKey=${apiKey}&sessionId=${session.sessionId}`;
-      
-      console.log('Final Transak URL:', url.replace(apiKey, '***API_KEY***'));
-      console.log('Session ID:', session.sessionId);
-      console.log('Opening Transak widget...');
+        const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '55950bec-d22c-4d0a-937e-7bff2cb26296';
+        
+        // NEW: Only apiKey and sessionId are allowed in URL
+        const url = `${baseUrl}?apiKey=${apiKey}&sessionId=${session.sessionId}`;
+        
+        console.log('✅ SESSION SUCCESS - Final Transak URL:', url.replace(apiKey, '***API_KEY***'));
+        console.log('Session ID:', session.sessionId);
+        console.log('Opening Transak widget with session...');
 
-      // Open in new tab - most reliable method
-      const width = 500;
-      const height = 750;
-      const left = (window.screen.width - width) / 2;
-      const top = (window.screen.height - height) / 2;
-      
-      const popup = window.open(
-        url,
-        'transak',
-        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-      );
-      
-      // DEBUG: Check if popup opened successfully
-      if (!popup || popup.closed || typeof popup.closed == 'undefined') {
-        console.error('❌ TRANSAK ERROR: Popup blocked! Please allow popups for this site.');
-        throw new Error('Popup blocked by browser');
-      } else {
-        console.log('✅ TRANSAK SUCCESS: Widget opened with session');
+        this.openPopup(url);
+        return;
+        
+      } catch (sessionError) {
+        console.warn('⚠️ SESSION API FAILED, falling back to legacy method:', sessionError);
+        
+        // FALLBACK: Use legacy method if session creation fails
+        const baseUrl = config.environment === 'PRODUCTION' 
+          ? this.TRANSAK_URL 
+          : this.TRANSAK_STAGING_URL;
+
+        const apiKey = config.apiKey || process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '55950bec-d22c-4d0a-937e-7bff2cb26296';
+        
+        const params = new URLSearchParams({
+          apiKey: apiKey,
+          walletAddress: config.walletAddress,
+          ...(config.currencyCode && { cryptoCurrencyCode: config.currencyCode }),
+          ...(config.baseCurrencyCode && { fiatCurrency: config.baseCurrencyCode }),
+          ...(config.themeColor && { themeColor: config.themeColor.replace('#', '') }),
+          ...(config.disableWalletAddressForm && { disableWalletAddressForm: 'true' }),
+          ...(config.hideMenu && { hideMenu: 'true' }),
+          ...(config.isAutoFillUserData && { isAutoFillUserData: 'true' }),
+          ...(config.userData?.firstName && { userData: JSON.stringify(config.userData) }),
+          // Multi-chain wallet addresses
+          ...(config.walletAddresses && { walletAddresses: JSON.stringify(config.walletAddresses) }),
+          // Additional Transak parameters
+          exchangeScreenTitle: 'Buy Crypto with Blaze Wallet',
+          defaultCryptoCurrency: config.currencyCode || 'ETH',
+          defaultFiatCurrency: config.baseCurrencyCode || 'EUR',
+          network: this.getTransakNetwork(config.currencyCode),
+        });
+
+        const url = `${baseUrl}?${params.toString()}`;
+        
+        console.log('⚠️ FALLBACK - Final Transak URL:', url.replace(apiKey, '***API_KEY***'));
+        console.log('Opening Transak widget with legacy method...');
+
+        this.openPopup(url);
       }
     } catch (error) {
       console.error('❌ TRANSAK WIDGET ERROR:', error);
       throw error;
+    }
+  }
+
+  // Helper method to open popup
+  private static openPopup(url: string) {
+    const width = 500;
+    const height = 750;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    
+    const popup = window.open(
+      url,
+      'transak',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+    
+    // DEBUG: Check if popup opened successfully
+    if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+      console.error('❌ TRANSAK ERROR: Popup blocked! Please allow popups for this site.');
+      throw new Error('Popup blocked by browser');
+    } else {
+      console.log('✅ TRANSAK SUCCESS: Widget opened');
     }
   }
 
