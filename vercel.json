@@ -1,4 +1,5 @@
 {
+  "name": "blaze-wallet",
   "git": {
     "deploymentEnabled": {
       "main": true
