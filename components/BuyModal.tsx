@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, CreditCard, Banknote, ShieldCheck, Zap, ExternalLink } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { CHAINS } from '@/lib/chains';
-import { MoonPayService } from '@/lib/moonpay-service';
+import { TransakService } from '@/lib/transak-service';
 import { useState } from 'react';
 
 interface BuyModalProps {
@@ -15,43 +15,35 @@ interface BuyModalProps {
 export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
   const { address, currentChain } = useWalletStore();
   const chain = CHAINS[currentChain];
-  const supportedAssets = MoonPayService.getSupportedAssets(chain.id);
+  const supportedAssets = TransakService.getSupportedAssets(chain.id);
 
-  const handleBuy = async (currencyCode?: string) => {
+  const handleBuy = (currencyCode?: string) => {
     if (!address) return;
 
-    try {
-      // Create transaction via MoonPay Partner API
-      const response = await fetch('/api/transactions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          walletAddress: address,
-          currencyCode: currencyCode,
-          baseCurrencyCode: 'eur',
-          baseCurrencyAmount: 50, // Default amount, user can change in MoonPay
-          externalCustomerId: address, // Use wallet address as customer ID
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create transaction');
-      }
-
-      const transaction = await response.json();
-      
-      // Open MoonPay with the created transaction
-      const moonPayUrl = `https://buy.moonpay.com?transactionId=${transaction.id}`;
-      window.open(moonPayUrl, 'moonpay', 'width=500,height=750,resizable=yes,scrollbars=yes');
-
-      // Close modal after opening MoonPay
-      setTimeout(() => onClose(), 500);
-    } catch (error) {
-      console.error('Error creating transaction:', error);
-      alert('Failed to create transaction. Please try again.');
+    // Validate wallet address format for the selected currency
+    if (currencyCode && !TransakService.validateWalletAddress(address, currencyCode)) {
+      alert(`⚠️ Invalid wallet address format for ${currencyCode}. Please ensure you're using the correct wallet for this cryptocurrency.`);
+      return;
     }
+
+    // Create multi-chain wallet addresses for better compatibility
+    const walletAddresses = TransakService.createWalletAddresses(address, chain.id);
+
+    TransakService.openWidget({
+      walletAddress: address,
+      walletAddresses: walletAddresses,
+      currencyCode: currencyCode,
+      baseCurrencyCode: 'EUR', // Default to EUR for Dutch market
+      apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY, // Will be set when partner account is approved
+      environment: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'STAGING',
+      themeColor: '#F97316', // BLAZE orange
+      disableWalletAddressForm: true, // Hide wallet address input since we provide it
+      hideMenu: false, // Show Transak menu
+      isAutoFillUserData: false, // Let users fill their own data
+    });
+
+    // Close modal after opening Transak
+    setTimeout(() => onClose(), 500);
   };
 
   return (
@@ -123,7 +115,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
               <h3 className="text-sm font-semibold text-gray-600 mb-3">Popular crypto</h3>
               <div className="grid grid-cols-2 gap-3">
                 {supportedAssets.slice(0, 6).map((currencyCode) => {
-                  const displayName = MoonPayService.getDisplayName(currencyCode);
+                  const displayName = TransakService.getDisplayName(currencyCode);
                   return (
                     <motion.button
                       key={currencyCode}
@@ -172,10 +164,10 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
               <div className="flex gap-3">
                 <ShieldCheck className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm">
-                  <p className="text-blue-300 font-medium mb-1">Powered by MoonPay</p>
+                  <p className="text-blue-300 font-medium mb-1">Powered by Transak</p>
                   <p className="text-gray-600 text-xs">
                     Globally trusted fiat-to-crypto service. Crypto is sent directly to your BLAZE Wallet.
-                    Fees: ~4.5% per transactie.
+                    Fees: ~0.99% - 2.99% per transaction.
                   </p>
                 </div>
               </div>
@@ -194,7 +186,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
 
             {/* Disclaimer */}
             <p className="text-xs text-slate-500 text-center mt-4">
-              Door te klikken ga je naar MoonPay. BLAZE Wallet slaat geen betalingsgegevens op.
+              Door te klikken ga je naar Transak. BLAZE Wallet slaat geen betalingsgegevens op.
             </p>
                 </div>
               </div>

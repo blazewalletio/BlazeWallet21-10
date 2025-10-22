@@ -6,7 +6,7 @@ import {
   ArrowUpRight, ArrowDownLeft, ArrowLeft, RefreshCw, Settings, 
   TrendingUp, Eye, EyeOff, Plus, Zap, ChevronRight,
   Repeat, Wallet as WalletIcon, TrendingDown, PieChart, Rocket, CreditCard,
-  Lock, Gift, Vote, Users, Palette, LogOut, CheckCircle
+  Lock, Gift, Vote, Users, Palette, LogOut
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 import { BlockchainService } from '@/lib/blockchain';
@@ -46,7 +46,6 @@ import AIBrainAssistant from './AIBrainAssistant';
 import AISettingsModal from './AISettingsModal';
 import { Sparkles, Shield, Brain, MessageSquare } from 'lucide-react';
 import BottomNavigation, { TabType } from './BottomNavigation';
-import TransactionStatusModal from './TransactionStatusModal';
 
 export default function Dashboard() {
   const { 
@@ -105,7 +104,6 @@ export default function Dashboard() {
 
   // Bottom navigation state
   const [activeTab, setActiveTab] = useState<TabType>('wallet');
-  const [showTransactionStatus, setShowTransactionStatus] = useState(false);
 
   const chain = CHAINS[currentChain];
   const blockchain = new BlockchainService(currentChain as any);
@@ -439,20 +437,6 @@ export default function Dashboard() {
                 <CreditCard className="w-6 h-6 text-white" />
               </div>
               <div className="text-sm font-semibold text-gray-900">Buy</div>
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.12 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowTransactionStatus(true)}
-              className="glass-card card-hover p-4 text-center"
-            >
-              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-2">
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-sm font-semibold text-gray-900">Status</div>
             </motion.button>
 
             <motion.button
@@ -965,7 +949,6 @@ export default function Dashboard() {
       <TokenSelector isOpen={showTokenSelector} onClose={() => setShowTokenSelector(false)} />
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
       <QuickPayModal isOpen={showQuickPay} onClose={() => setShowQuickPay(false)} />
-      <TransactionStatusModal isOpen={showTransactionStatus} onClose={() => setShowTransactionStatus(false)} />
       
       {/* AI Feature Modals */}
       <AnimatePresence>
