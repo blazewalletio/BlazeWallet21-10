@@ -1,6 +1,6 @@
 // Transak integration for fiat on-ramp
 // Docs: https://docs.transak.com/
-// Better alternative to MoonPay with automatic wallet delivery
+// Superior fiat-to-crypto solution with automatic wallet delivery
 
 export interface TransakConfig {
   walletAddress: string;
