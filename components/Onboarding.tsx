@@ -111,55 +111,59 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6 }}
-              className="max-w-md w-full space-y-8"
+              className="max-w-lg w-full"
             >
-              {/* Logo Section */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-center"
-              >
-                <BlazeLogoImage size={80} />
-              </motion.div>
+              {/* Header Section - Logo + Title */}
+              <div className="text-center mb-12">
+                {/* Logo - Clean and centered */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="mb-8"
+                >
+                  <BlazeLogoImage size={100} />
+                </motion.div>
 
-              {/* Title Section */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-center"
-              >
-                <h1 className="text-6xl font-bold bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-600 bg-clip-text text-transparent mb-4 tracking-tight">
-                  Blaze
-                </h1>
-                <p className="text-gray-600 text-xl font-medium mb-2">
-                  Lightning fast crypto
-                </p>
-                <p className="text-gray-500 text-sm">
-                  Set your finances ablaze 🔥
-                </p>
-              </motion.div>
+                {/* Title */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <h1 className="text-7xl font-bold bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-600 bg-clip-text text-transparent mb-4 tracking-tight">
+                    Blaze
+                  </h1>
+                  <p className="text-gray-600 text-2xl font-medium mb-3">
+                    Lightning fast crypto
+                  </p>
+                  <p className="text-gray-500 text-lg">
+                    Set your finances ablaze 🔥
+                  </p>
+                </motion.div>
+              </div>
 
-              {/* Features */}
+              {/* Features Section */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex gap-4 justify-center text-sm"
+                className="mb-12"
               >
-                <span className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  <span className="text-emerald-700 font-medium">Veilig</span>
-                </span>
-                <span className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full border border-blue-200">
-                  <CheckCircle2 className="w-4 h-4 text-blue-500" />
-                  <span className="text-blue-700 font-medium">Snel</span>
-                </span>
-                <span className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-full border border-purple-200">
-                  <CheckCircle2 className="w-4 h-4 text-purple-500" />
-                  <span className="text-purple-700 font-medium">Mooi</span>
-                </span>
+                <div className="flex justify-center gap-6">
+                  <div className="flex items-center gap-3 px-6 py-3 bg-emerald-50 rounded-2xl border border-emerald-200">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                    <span className="text-emerald-700 font-semibold text-lg">Veilig</span>
+                  </div>
+                  <div className="flex items-center gap-3 px-6 py-3 bg-blue-50 rounded-2xl border border-blue-200">
+                    <CheckCircle2 className="w-5 h-5 text-blue-500" />
+                    <span className="text-blue-700 font-semibold text-lg">Snel</span>
+                  </div>
+                  <div className="flex items-center gap-3 px-6 py-3 bg-purple-50 rounded-2xl border border-purple-200">
+                    <CheckCircle2 className="w-5 h-5 text-purple-500" />
+                    <span className="text-purple-700 font-semibold text-lg">Mooi</span>
+                  </div>
+                </div>
               </motion.div>
 
               {/* Action Buttons */}
@@ -171,15 +175,15 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
               >
                 <button
                   onClick={handleCreateWallet}
-                  className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                  className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold py-5 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] text-xl"
                 >
                   Create new wallet
                 </button>
                 <button
                   onClick={() => setStep('import')}
-                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-700 font-semibold py-4 px-6 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                  className="w-full bg-white/90 backdrop-blur-sm border-2 border-gray-200 text-gray-700 font-bold py-5 px-8 rounded-2xl hover:bg-white hover:border-gray-300 hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-xl"
                 >
-                  <Download className="w-5 h-5 inline mr-2" />
+                  <Download className="w-6 h-6 inline mr-3" />
                   Import wallet
                 </button>
               </motion.div>

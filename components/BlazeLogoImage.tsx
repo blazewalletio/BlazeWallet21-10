@@ -73,7 +73,7 @@ export default function BlazeLogoImage({ size = 48, animate = true, className = 
         />
       )}
       
-      {/* Main logo */}
+      {/* Main logo - NO CONTAINER */}
       <motion.div
         variants={animate ? containerVariants : undefined}
         initial={animate ? "hidden" : undefined}
@@ -95,9 +95,6 @@ export default function BlazeLogoImage({ size = 48, animate = true, className = 
             className="rounded-xl shadow-2xl"
             priority
           />
-          
-          {/* Subtle overlay for extra glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-yellow-500/5 rounded-xl pointer-events-none" />
         </motion.div>
       </motion.div>
     </div>
