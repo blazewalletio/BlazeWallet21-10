@@ -33,12 +33,12 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
     const walletAddresses = TransakService.createWalletAddresses(address, chain.id);
 
         try {
-          console.log('🔥 BUY MODAL DEBUG: Starting Transak integration...');
+          console.log('🔥 BUY MODAL DEBUG: Starting NEW Transak integration...');
           console.log('Wallet Address:', address);
           console.log('Wallet Addresses:', walletAddresses);
           console.log('Currency Code:', currencyCode);
           
-          TransakService.openWidget({
+          await TransakService.openWidget({
             walletAddress: address,
             walletAddresses: walletAddresses,
             currencyCode: currencyCode || 'ETH', // Default to ETH if undefined
@@ -51,12 +51,12 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
             isAutoFillUserData: false, // Let users fill their own data
           });
 
-          console.log('✅ BUY MODAL SUCCESS: Transak widget opened');
+          console.log('✅ BUY MODAL SUCCESS: Transak widget opened with session');
           // Close modal after opening Transak
           setTimeout(() => onClose(), 500);
         } catch (error) {
           console.error('❌ BUY MODAL ERROR:', error);
-          alert('Failed to open Transak. Please try again.');
+          alert(`Failed to open Transak: ${error.message || 'Unknown error'}`);
         }
   };
 
