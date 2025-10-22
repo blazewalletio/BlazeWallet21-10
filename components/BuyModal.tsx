@@ -164,7 +164,7 @@ export default function BuyModal({ isOpen, onClose }: BuyModalProps) {
               <div className="flex gap-3">
                 <ShieldCheck className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm">
-                  <p className="text-blue-300 font-medium mb-1">Powered by Transak</p>
+                  <p className="text-blue-300 font-medium mb-1">🔥 Powered by Transak</p>
                   <p className="text-gray-600 text-xs">
                     Globally trusted fiat-to-crypto service. Crypto is sent directly to your BLAZE Wallet.
                     Fees: ~0.99% - 2.99% per transaction.
