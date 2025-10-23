@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PriorityListService } from '@/lib/priority-list-service-v2';
+import { PriorityListService } from '@/lib/priority-list-service';
 
 // GET /api/priority-list - Get priority list status and stats
 export async function GET(request: NextRequest) {
