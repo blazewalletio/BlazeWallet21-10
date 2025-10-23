@@ -9,6 +9,7 @@ import { PRESALE_CONSTANTS, CURRENT_PRESALE } from '@/lib/presale-config';
 import { CHAINS } from '@/lib/chains';
 import { ethers } from 'ethers';
 import { priorityListService } from '@/lib/priority-list-service';
+import PriorityListModal from '@/components/PriorityListModal';
 
 export default function PresaleDashboard() {
   console.log('🎯 PresaleDashboard component rendered');
@@ -46,6 +47,8 @@ export default function PresaleDashboard() {
     isPriorityOnlyPhase: false,
     isPresaleOpenToAll: false,
   });
+
+  const [showPriorityListModal, setShowPriorityListModal] = useState(false);
 
   const progress = (presaleInfo.totalRaised / presaleInfo.hardCap) * 100;
   const tokensYouGet = parseFloat(contributionAmount || '0') / presaleInfo.tokenPrice;
@@ -217,6 +220,7 @@ export default function PresaleDashboard() {
   };
 
   return (
+    <>
     <div className="space-y-6">
       {/* Header */}
       <div>
@@ -232,28 +236,53 @@ export default function PresaleDashboard() {
       {/* Priority List Status Banner */}
       {priorityStatus.isRegistrationOpen && (
         <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4">
-          <div className="flex items-center gap-3">
-            <Crown className="w-5 h-5 text-orange-400" />
-            <div>
-              <h3 className="font-semibold text-orange-400">Priority List Registration Open!</h3>
-              <p className="text-sm text-orange-300">
-                Register now for 48-hour early access to the presale starting November 3, 2025
-              </p>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Crown className="w-5 h-5 text-orange-400" />
+              <div>
+                <h3 className="font-semibold text-orange-400">Priority List Registration Open!</h3>
+                <p className="text-sm text-orange-300">
+                  Register now for 48-hour early access to the presale starting November 3, 2025
+                </p>
+              </div>
             </div>
+            <button
+              onClick={() => setShowPriorityListModal(true)}
+              className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-lg font-semibold text-white flex items-center gap-2 transition-all"
+            >
+              <Crown className="w-4 h-4" />
+              {priorityStatus.isInPriorityList ? 'View Status' : 'Register Now'}
+            </button>
           </div>
         </div>
       )}
 
       {priorityStatus.isPriorityOnlyPhase && (
         <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
-          <div className="flex items-center gap-3">
-            <Crown className="w-5 h-5 text-blue-400" />
-            <div>
-              <h3 className="font-semibold text-blue-400">Priority List Members Only</h3>
-              <p className="text-sm text-blue-300">
-                Presale is currently only open to priority list members. Opens to everyone November 5, 2025
-              </p>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Crown className="w-5 h-5 text-blue-400" />
+              <div>
+                <h3 className="font-semibold text-blue-400">Priority List Members Only</h3>
+                <p className="text-sm text-blue-300">
+                  Presale is currently only open to priority list members. Opens to everyone November 5, 2025
+                </p>
+              </div>
             </div>
+            {priorityStatus.isInPriorityList ? (
+              <div className="px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-lg font-semibold text-green-400 flex items-center gap-2">
+                <CheckCircle className="w-4 h-4" />
+                You're Registered
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowPriorityListModal(true)}
+                className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-lg font-semibold text-white flex items-center gap-2 transition-all"
+              >
+                <Crown className="w-4 h-4" />
+                Join Priority List
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -502,5 +531,12 @@ export default function PresaleDashboard() {
         </div>
       )}
     </div>
+
+    {/* Priority List Modal */}
+    <PriorityListModal
+      isOpen={showPriorityListModal}
+      onClose={() => setShowPriorityListModal(false)}
+    />
+  </>
   );
 }

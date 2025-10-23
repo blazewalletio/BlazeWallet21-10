@@ -333,3 +333,4 @@ export class PriorityListService {
 
 // Export singleton instance
 export const priorityListService = PriorityListService.getInstance();
+
