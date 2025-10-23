@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 // Admin email whitelist
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim());
+const ADMIN_EMAILS_RAW = process.env.ADMIN_EMAILS || '';
+const ADMIN_EMAILS = ADMIN_EMAILS_RAW.split(',').map(e => e.trim()).filter(e => e.length > 0);
+
+console.log('🔐 Admin emails configured:', ADMIN_EMAILS.length > 0 ? ADMIN_EMAILS : 'NONE');
 
 // GET /api/priority-list/admin - Admin dashboard data
 export async function GET(request: NextRequest) {
@@ -10,13 +13,18 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const adminEmail = searchParams.get('admin');
     
+    console.log('🔍 Admin login attempt:', { adminEmail, allowedEmails: ADMIN_EMAILS });
+    
     // Check admin authorization
     if (!adminEmail || !ADMIN_EMAILS.includes(adminEmail)) {
+      console.log('❌ Unauthorized admin login attempt:', adminEmail);
       return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
+        { success: false, message: 'Unauthorized - Invalid admin email' },
         { status: 401 }
       );
     }
+
+    console.log('✅ Admin authorized:', adminEmail);
 
     // Get all registrations
     const { data: registrations, error: regError } = await supabase
@@ -75,10 +83,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { adminEmail, action, walletAddress } = body;
     
+    console.log('🔍 Admin action attempt:', { adminEmail, action, walletAddress });
+    
     // Check admin authorization
     if (!adminEmail || !ADMIN_EMAILS.includes(adminEmail)) {
+      console.log('❌ Unauthorized admin action attempt:', adminEmail);
       return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
+        { success: false, message: 'Unauthorized - Invalid admin email' },
         { status: 401 }
       );
     }
