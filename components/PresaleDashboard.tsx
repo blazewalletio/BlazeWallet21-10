@@ -82,19 +82,6 @@ export default function PresaleDashboard() {
     setError('');
 
     try {
-      // Load priority list status
-      const isInPriorityList = priorityListService.isInPriorityList(address);
-      const isRegistrationOpen = priorityListService.isRegistrationOpen();
-      const isPriorityOnlyPhase = priorityListService.isPriorityOnlyPhase();
-      const isPresaleOpenToAll = priorityListService.isPresaleOpenToAll();
-
-      setPriorityStatus({
-        isInPriorityList,
-        isRegistrationOpen,
-        isPriorityOnlyPhase,
-        isPresaleOpenToAll,
-      });
-
       // Create provider if needed
       let walletWithProvider = wallet;
       
