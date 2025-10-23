@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { priorityListService } from '@/lib/priority-list-service';
+import { sendEmail, generateUserConfirmationEmail, generateAdminNotificationEmail } from '@/lib/email-service';
 
 // GET /api/priority-list - Get priority list status and stats
 export async function GET(request: NextRequest) {
@@ -65,7 +66,39 @@ export async function POST(request: NextRequest) {
       referralCode,
     });
 
-    if (result.success) {
+    if (result.success && result.entry) {
+      // Send confirmation email to user (if email provided)
+      if (email) {
+        const userEmailHtml = generateUserConfirmationEmail({
+          walletAddress: result.entry.walletAddress,
+          registeredAt: result.entry.registeredAt,
+          referralCode: priorityListService.generateReferralCode(walletAddress),
+        });
+
+        await sendEmail({
+          to: email,
+          subject: '🔥 Welcome to BLAZE Priority List - Registration Confirmed!',
+          html: userEmailHtml,
+        });
+      }
+
+      // Send notification email to admin
+      const adminEmailHtml = generateAdminNotificationEmail({
+        walletAddress: result.entry.walletAddress,
+        email,
+        telegram,
+        twitter,
+        registeredAt: result.entry.registeredAt,
+        referralCode: priorityListService.generateReferralCode(walletAddress),
+        referredBy: result.entry.referredBy,
+      });
+
+      await sendEmail({
+        to: 'info@blazewallet.io',
+        subject: `🔥 New Priority List Registration - ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`,
+        html: adminEmailHtml,
+      });
+
       return NextResponse.json({
         success: true,
         message: result.message,

@@ -294,15 +294,15 @@ export default function PresaleDashboard() {
             <div className="flex items-center gap-3">
               <Crown className="w-5 h-5 text-orange-400" />
               <div>
-                <h3 className="font-semibold text-orange-400">Priority List Coming Soon</h3>
+                <h3 className="font-semibold text-orange-400">Priority List - Coming Soon!</h3>
                 <p className="text-sm text-orange-300">
-                  Registration opens October 27, 2025 - Get 48-hour early access to the presale!
+                  Registration opens January 23, 2025 at 10:25 - Get 48-hour early access!
                 </p>
               </div>
             </div>
             <button
               onClick={() => setShowPriorityListModal(true)}
-              className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-lg font-semibold text-white flex items-center gap-2 transition-all"
+              className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-lg font-semibold text-white flex items-center gap-2 transition-all whitespace-nowrap"
             >
               <Crown className="w-4 h-4" />
               {priorityStatus.isInPriorityList ? 'View Status' : 'Learn More'}

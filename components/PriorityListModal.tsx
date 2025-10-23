@@ -40,6 +40,7 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [email, setEmail] = useState('');
   const [referralCode, setReferralCode] = useState('');
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -84,6 +85,7 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
         },
         body: JSON.stringify({
           walletAddress: address,
+          email: email || undefined,
           referralCode: referralCode || undefined,
         }),
       });
@@ -320,6 +322,23 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
                         <p className="text-sm text-green-700">{success}</p>
                       </div>
                     )}
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Email Address (Optional but Recommended)
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="your@email.com"
+                        className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-orange-500 focus:outline-none"
+                        disabled={isRegistering}
+                      />
+                      <div className="text-xs text-gray-600 mt-1">
+                        Get confirmation email and presale updates
+                      </div>
+                    </div>
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
