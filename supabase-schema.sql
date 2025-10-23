@@ -69,6 +69,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger to auto-set position
+DROP TRIGGER IF EXISTS before_insert_position ON priority_list_registrations;
 CREATE TRIGGER before_insert_position
 BEFORE INSERT ON priority_list_registrations
 FOR EACH ROW
@@ -84,6 +85,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger to auto-update updated_at
+DROP TRIGGER IF EXISTS update_priority_list_registrations_updated_at ON priority_list_registrations;
 CREATE TRIGGER update_priority_list_registrations_updated_at
 BEFORE UPDATE ON priority_list_registrations
 FOR EACH ROW
@@ -106,16 +108,19 @@ $$ LANGUAGE plpgsql;
 ALTER TABLE priority_list_registrations ENABLE ROW LEVEL SECURITY;
 
 -- Allow public to read stats (not individual entries)
+DROP POLICY IF EXISTS "Allow public read access to own registration" ON priority_list_registrations;
 CREATE POLICY "Allow public read access to own registration" ON priority_list_registrations
   FOR SELECT
   USING (true);
 
 -- Allow public to insert (register)
+DROP POLICY IF EXISTS "Allow public insert" ON priority_list_registrations;
 CREATE POLICY "Allow public insert" ON priority_list_registrations
   FOR INSERT
   WITH CHECK (true);
 
 -- Only allow users to update their own registration
+DROP POLICY IF EXISTS "Allow update own registration" ON priority_list_registrations;
 CREATE POLICY "Allow update own registration" ON priority_list_registrations
   FOR UPDATE
   USING (wallet_address = current_setting('request.jwt.claims', true)::json->>'wallet_address')
