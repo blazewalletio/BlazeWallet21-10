@@ -303,7 +303,7 @@ export default function TabContent({
           </div>
           <div className="flex-1">
             <div className="font-bold text-gray-900 mb-1">BLAZE Presale</div>
-            <div className="text-sm text-gray-600">Vroege toegang tot tokens</div>
+            <div className="text-sm text-gray-600">Early access to tokens</div>
           </div>
           <ChevronRight className="w-5 h-5 text-gray-400" />
         </div>

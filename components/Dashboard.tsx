@@ -415,7 +415,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <div className="font-semibold text-gray-900 text-lg">BLAZE Presale</div>
-                    <div className="text-sm text-gray-600">Vroege toegang tot tokens</div>
+                    <div className="text-sm text-gray-600">Early access to tokens</div>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -1045,7 +1045,7 @@ export default function Dashboard() {
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
+                Back to Dashboard
               </button>
               <StakingDashboard />
             </div>
@@ -1067,7 +1067,7 @@ export default function Dashboard() {
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
+                Back to Dashboard
               </button>
               <GovernanceDashboard />
             </div>
@@ -1089,7 +1089,7 @@ export default function Dashboard() {
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
+                Back to Dashboard
               </button>
               <LaunchpadDashboard />
             </div>
@@ -1111,7 +1111,7 @@ export default function Dashboard() {
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
+                Back to Dashboard
               </button>
               <NFTMintDashboard />
             </div>
@@ -1133,7 +1133,7 @@ export default function Dashboard() {
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
+                Back to Dashboard
               </button>
               <PresaleDashboard />
             </div>
@@ -1155,7 +1155,7 @@ export default function Dashboard() {
                 onClick={() => setShowReferrals(false)}
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
-                ← Terug naar Dashboard
+                ← Back to Dashboard
               </button>
               <ReferralDashboard />
             </div>
@@ -1176,7 +1176,7 @@ export default function Dashboard() {
                 onClick={() => setShowCashback(false)}
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
-                ← Terug naar Dashboard
+                ← Back to Dashboard
               </button>
               <CashbackTracker />
             </div>
@@ -1198,7 +1198,7 @@ export default function Dashboard() {
                 className="mb-4 text-gray-600 hover:text-gray-900 flex items-center gap-2 font-semibold"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Terug naar Dashboard
+                Back to Dashboard
               </button>
               <VestingDashboard />
             </div>
