@@ -63,15 +63,30 @@ export async function GET(request: NextRequest) {
 // POST /api/priority-list - Register for priority list
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔥 API: Priority list registration request received');
+    
     const body = await request.json();
+    console.log('📦 Request body:', JSON.stringify(body, null, 2));
+    
     const { walletAddress, email, telegram, twitter, referralCode } = body;
+    
+    console.log('🔍 Parsed fields:', {
+      walletAddress,
+      email,
+      telegram,
+      twitter,
+      referralCode
+    });
 
     if (!walletAddress) {
+      console.error('❌ Missing wallet address');
       return NextResponse.json(
         { success: false, message: 'Wallet address is required' },
         { status: 400 }
       );
     }
+    
+    console.log('✅ Wallet address present, calling PriorityListService...');
 
     const result = await PriorityListService.registerForPriorityList(walletAddress, {
       email,
@@ -79,8 +94,11 @@ export async function POST(request: NextRequest) {
       twitter,
       referralCode,
     });
+    
+    console.log('📥 Service result:', JSON.stringify(result, null, 2));
 
     if (result.success) {
+      console.log('✅ Registration successful!');
       return NextResponse.json({
         success: true,
         message: result.message,
@@ -91,13 +109,19 @@ export async function POST(request: NextRequest) {
         },
       });
     } else {
+      console.error('❌ Registration failed:', result.message);
       return NextResponse.json(
         { success: false, message: result.message },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('Error registering for priority list:', error);
+    console.error('💥 API Error registering for priority list:', error);
+    console.error('💥 Error details:', {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return NextResponse.json(
       { success: false, message: 'Failed to register for priority list' },
       { status: 500 }
