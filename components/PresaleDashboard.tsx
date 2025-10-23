@@ -8,8 +8,10 @@ import { PresaleService } from '@/lib/presale-service';
 import { PRESALE_CONSTANTS, CURRENT_PRESALE } from '@/lib/presale-config';
 import { CHAINS } from '@/lib/chains';
 import { ethers } from 'ethers';
-import { priorityListService } from '@/lib/priority-list-service';
+import { PriorityListService } from '@/lib/priority-list-service';
 import PriorityListModal from '@/components/PriorityListModal';
+import CountdownWidget from '@/components/CountdownWidget';
+import AdminDashboard from '@/components/AdminDashboard';
 
 export default function PresaleDashboard() {
   console.log('🎯 PresaleDashboard component rendered');
@@ -46,9 +48,12 @@ export default function PresaleDashboard() {
     isRegistrationOpen: false,
     isPriorityOnlyPhase: false,
     isPresaleOpenToAll: false,
+    stats: null as any,
+    timing: null as any,
   });
 
   const [showPriorityListModal, setShowPriorityListModal] = useState(false);
+  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
 
   const progress = (presaleInfo.totalRaised / presaleInfo.hardCap) * 100;
   const tokensYouGet = parseFloat(contributionAmount || '0') / presaleInfo.tokenPrice;
@@ -147,7 +152,29 @@ export default function PresaleDashboard() {
   useEffect(() => {
     console.log('🔄 useEffect triggered - loading presale data');
     loadPresaleData();
+    loadPriorityListStatus();
   }, [wallet, address, currentChain]);
+
+  // Load priority list status
+  const loadPriorityListStatus = async () => {
+    try {
+      const response = await fetch(`/api/priority-list${address ? `?wallet=${address}` : ''}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setPriorityStatus({
+          isInPriorityList: !!result.data.userEntry,
+          isRegistrationOpen: result.data.isRegistrationOpen,
+          isPriorityOnlyPhase: result.data.isPriorityOnlyPhase,
+          isPresaleOpenToAll: result.data.isPresaleOpenToAll,
+          stats: result.data.stats,
+          timing: result.data.timing,
+        });
+      }
+    } catch (err) {
+      console.error('Error loading priority list status:', err);
+    }
+  };
 
   // Handle contribution
   const handleContribute = async () => {
@@ -309,6 +336,30 @@ export default function PresaleDashboard() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Countdown Widget - When registration is coming soon */}
+      {!priorityStatus.isRegistrationOpen && priorityStatus.timing && (
+        <CountdownWidget
+          targetDate={new Date(Date.now() + (priorityStatus.timing.timeUntilRegistration.days * 24 * 60 * 60 * 1000 + priorityStatus.timing.timeUntilRegistration.hours * 60 * 60 * 1000 + priorityStatus.timing.timeUntilRegistration.minutes * 60 * 1000))}
+          title="Priority List Opens In"
+          subtitle="Be among the first 500 to get Early Bird bonus!"
+          variant="full"
+          showStats={true}
+          totalRegistered={priorityStatus.stats?.total_registered || 0}
+        />
+      )}
+
+      {/* Countdown Widget - When presale is coming soon (for priority members) */}
+      {priorityStatus.isRegistrationOpen && !priorityStatus.isPriorityOnlyPhase && priorityStatus.timing && (
+        <CountdownWidget
+          targetDate={new Date(Date.now() + (priorityStatus.timing.timeUntilPresale.days * 24 * 60 * 60 * 1000 + priorityStatus.timing.timeUntilPresale.hours * 60 * 60 * 1000 + priorityStatus.timing.timeUntilPresale.minutes * 60 * 1000))}
+          title="Presale Starts In"
+          subtitle="Priority list members get 48-hour early access!"
+          variant="full"
+          showStats={true}
+          totalRegistered={priorityStatus.stats?.total_registered || 0}
+        />
       )}
 
       {/* Status Banner */}
@@ -554,12 +605,28 @@ export default function PresaleDashboard() {
           </div>
         </div>
       )}
+
+      {/* Admin Access (hidden button - press Shift+A to open) */}
+      <div className="text-center mt-4">
+        <button
+          onClick={() => setShowAdminDashboard(true)}
+          className="text-xs text-gray-400 hover:text-gray-600 opacity-20 hover:opacity-100 transition-opacity"
+        >
+          Admin
+        </button>
+      </div>
     </div>
 
     {/* Priority List Modal */}
     <PriorityListModal
       isOpen={showPriorityListModal}
       onClose={() => setShowPriorityListModal(false)}
+    />
+
+    {/* Admin Dashboard Modal */}
+    <AdminDashboard
+      isOpen={showAdminDashboard}
+      onClose={() => setShowAdminDashboard(false)}
     />
   </>
   );
