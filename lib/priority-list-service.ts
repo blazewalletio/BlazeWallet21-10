@@ -30,10 +30,11 @@ export class PriorityListService {
     lastRegistration: null,
   };
 
-  // Priority List Dates
-  private static readonly REGISTRATION_START = new Date('2025-10-27T00:00:00Z');
-  private static readonly PRESALE_START = new Date('2025-11-03T00:00:00Z'); // 7 days later
-  private static readonly EXCLUSIVITY_END = new Date('2025-11-05T00:00:00Z'); // 48 hours after presale start
+  // Priority List Dates - TESTING MODE
+  // Original: 2025-10-27T00:00:00Z
+  private static readonly REGISTRATION_START = new Date('2025-01-23T09:25:00Z'); // Today 10:25 NL time for testing
+  private static readonly PRESALE_START = new Date('2025-01-30T09:25:00Z'); // 7 days later
+  private static readonly EXCLUSIVITY_END = new Date('2025-02-01T09:25:00Z'); // 48 hours after presale start
 
   private constructor() {
     this.loadFromStorage();
