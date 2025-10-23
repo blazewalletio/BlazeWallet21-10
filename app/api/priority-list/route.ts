@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     // Get user entry if wallet provided
     let userEntry = null;
-    let userReferrals = [];
+    let userReferrals: any[] = [];
     if (walletAddress) {
       userEntry = await PriorityListService.getRegistration(walletAddress);
       if (userEntry) {
