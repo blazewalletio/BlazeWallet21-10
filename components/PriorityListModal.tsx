@@ -112,16 +112,26 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
 
   // Register for priority list
   const handleRegister = async () => {
+    console.log('🔥 Priority List Registration Started');
+    console.log('📍 Wallet address:', address);
+    console.log('📧 Email:', email);
+    console.log('📱 Telegram:', telegram);
+    console.log('🐦 Twitter:', twitter);
+    console.log('🎫 Referral code:', referralCode);
+    
     if (!address) {
+      console.error('❌ No wallet address found');
       setError('Please connect your wallet first');
       return;
     }
 
     // Validate fields
     if (email && !validateEmail(email)) {
+      console.error('❌ Invalid email format');
       return;
     }
     if (referralCode && !validateReferralCode(referralCode)) {
+      console.error('❌ Invalid referral code format');
       return;
     }
 
@@ -130,31 +140,39 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
     setSuccess('');
 
     try {
+      const payload = {
+        walletAddress: address,
+        email: email || undefined,
+        telegram: telegram || undefined,
+        twitter: twitter || undefined,
+        referralCode: referralCode || undefined,
+      };
+      
+      console.log('📤 Sending registration request:', payload);
+      
       const response = await fetch('/api/priority-list', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          walletAddress: address,
-          email: email || undefined,
-          telegram: telegram || undefined,
-          twitter: twitter || undefined,
-          referralCode: referralCode || undefined,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const result = await response.json();
+      console.log('📥 Registration response:', result);
       
       if (result.success) {
+        console.log('✅ Registration successful!');
         setSuccess(result.message);
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5000);
         await loadPriorityListData(); // Reload data
       } else {
+        console.error('❌ Registration failed:', result.message);
         setError(result.message);
       }
     } catch (err) {
+      console.error('💥 Registration error:', err);
       setError('Failed to register for priority list');
     } finally {
       setIsRegistering(false);
