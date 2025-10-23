@@ -287,6 +287,30 @@ export default function PresaleDashboard() {
         </div>
       )}
 
+      {/* Always show Priority List button if not in active phase */}
+      {!priorityStatus.isRegistrationOpen && !priorityStatus.isPriorityOnlyPhase && (
+        <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Crown className="w-5 h-5 text-orange-400" />
+              <div>
+                <h3 className="font-semibold text-orange-400">Priority List Coming Soon</h3>
+                <p className="text-sm text-orange-300">
+                  Registration opens October 27, 2025 - Get 48-hour early access to the presale!
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowPriorityListModal(true)}
+              className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-lg font-semibold text-white flex items-center gap-2 transition-all"
+            >
+              <Crown className="w-4 h-4" />
+              {priorityStatus.isInPriorityList ? 'View Status' : 'Learn More'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Status Banner */}
       <div className={`rounded-xl p-4 ${
         presaleStatus === 'active' ? 'bg-green-500/10 border border-green-500/20' :
