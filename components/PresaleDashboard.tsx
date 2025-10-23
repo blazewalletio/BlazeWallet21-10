@@ -137,8 +137,12 @@ export default function PresaleDashboard() {
   useEffect(() => {
     console.log('🔄 useEffect triggered - loading presale data');
     loadPresaleData();
-    loadPriorityListStatus();
   }, [wallet, address, currentChain]);
+
+  // Load priority list status separately (only once on mount)
+  useEffect(() => {
+    loadPriorityListStatus();
+  }, [address]); // Only reload when address changes
 
   // Load priority list status
   const loadPriorityListStatus = async () => {
