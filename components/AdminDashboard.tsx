@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   Users, 
   CheckCircle, 
@@ -12,7 +12,6 @@ import {
   Download,
   Trash2,
   Loader2,
-  X,
   Filter,
   Search,
   Send
@@ -39,7 +38,7 @@ interface AdminData {
   leaderboard: any[];
 }
 
-export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; onClose?: () => void }) {
+export default function AdminDashboard() {
   const [adminEmail, setAdminEmail] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [data, setData] = useState<AdminData | null>(null);
@@ -182,42 +181,25 @@ export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; o
   }) || [];
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {onClose && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={onClose}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
-            />
-          )}
-          
-          <div className={onClose ? "fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none" : ""}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              onClick={(e) => e.stopPropagation()}
-              className={onClose ? "w-full max-w-7xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200 shadow-soft-xl pointer-events-auto" : "w-full bg-white rounded-2xl border border-gray-200 shadow-soft-xl"}
-            >
-              {/* Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center z-10">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Admin Dashboard</h2>
-                  <p className="text-sm text-gray-600 mt-1">Priority List Management</p>
-                </div>
-                {onClose && (
-                  <button
-                    onClick={onClose}
-                    className="text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                )}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl border border-gray-200 shadow-soft-xl overflow-hidden"
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-orange-500 to-yellow-500 px-6 py-8">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                <Users className="w-8 h-8 text-white" />
               </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+                <p className="text-white/90 mt-1">Priority List Management</p>
+              </div>
+            </div>
+          </div>
 
               <div className="p-6 space-y-6">
                 {/* Admin Login */}
@@ -473,9 +455,7 @@ export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; o
               </div>
             </motion.div>
           </div>
-        </>
-      )}
-    </AnimatePresence>
+        </div>
   );
 }
 
