@@ -39,7 +39,7 @@ interface AdminData {
   leaderboard: any[];
 }
 
-export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; onClose?: () => void }) {
   const [adminEmail, setAdminEmail] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [data, setData] = useState<AdminData | null>(null);
@@ -172,21 +172,23 @@ export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; o
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
-          />
+          {onClose && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onClose}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            />
+          )}
           
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          <div className={onClose ? "fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none" : ""}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-7xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200 shadow-soft-xl pointer-events-auto"
+              className={onClose ? "w-full max-w-7xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200 shadow-soft-xl pointer-events-auto" : "w-full bg-white rounded-2xl border border-gray-200 shadow-soft-xl"}
             >
               {/* Header */}
               <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center z-10">
@@ -194,12 +196,14 @@ export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; o
                   <h2 className="text-2xl font-bold text-gray-900">Admin Dashboard</h2>
                   <p className="text-sm text-gray-600 mt-1">Priority List Management</p>
                 </div>
-                <button
-                  onClick={onClose}
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+                {onClose && (
+                  <button
+                    onClick={onClose}
+                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                )}
               </div>
 
               <div className="p-6 space-y-6">

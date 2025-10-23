@@ -11,7 +11,6 @@ import { ethers } from 'ethers';
 import { PriorityListService } from '@/lib/priority-list-service';
 import PriorityListModal from '@/components/PriorityListModal';
 import CountdownWidget from '@/components/CountdownWidget';
-import AdminDashboard from '@/components/AdminDashboard';
 
 export default function PresaleDashboard() {
   console.log('🎯 PresaleDashboard component rendered');
@@ -53,7 +52,6 @@ export default function PresaleDashboard() {
   });
 
   const [showPriorityListModal, setShowPriorityListModal] = useState(false);
-  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
 
   const progress = (presaleInfo.totalRaised / presaleInfo.hardCap) * 100;
   const tokensYouGet = parseFloat(contributionAmount || '0') / presaleInfo.tokenPrice;
@@ -594,28 +592,12 @@ export default function PresaleDashboard() {
           </div>
         </div>
       )}
-
-      {/* Admin Access (hidden button - press Shift+A to open) */}
-      <div className="text-center mt-4">
-        <button
-          onClick={() => setShowAdminDashboard(true)}
-          className="text-xs text-gray-400 hover:text-gray-600 opacity-20 hover:opacity-100 transition-opacity"
-        >
-          Admin
-        </button>
-      </div>
     </div>
 
     {/* Priority List Modal */}
     <PriorityListModal
       isOpen={showPriorityListModal}
       onClose={() => setShowPriorityListModal(false)}
-    />
-
-    {/* Admin Dashboard Modal */}
-    <AdminDashboard
-      isOpen={showAdminDashboard}
-      onClose={() => setShowAdminDashboard(false)}
     />
   </>
   );
