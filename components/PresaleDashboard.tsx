@@ -90,8 +90,6 @@ export default function PresaleDashboard() {
         hasAddress: !!address,
         hasProvider: !!walletWithProvider.provider,
         currentChain: currentChain,
-        isInPriorityList,
-        phase: isPriorityOnlyPhase ? 'priority-only' : isPresaleOpenToAll ? 'open-to-all' : 'not-started'
       });
       if (!walletWithProvider.provider) {
         console.log('🔧 Creating provider for wallet...');

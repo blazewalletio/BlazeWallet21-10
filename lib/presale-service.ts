@@ -179,8 +179,6 @@ export class PresaleService {
         amountBNB: amountBNB.toFixed(4),
         valueInWei: valueInWei.toString(),
         presaleAddress: this.presaleContract.target,
-        isPriorityMember: isInPriorityList,
-        phase: isPriorityOnlyPhase ? 'priority-only' : isPresaleOpenToAll ? 'open-to-all' : 'not-started'
       });
       
       // Encode the function call
