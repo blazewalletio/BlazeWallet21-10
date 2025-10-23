@@ -296,7 +296,7 @@ export default function PresaleDashboard() {
               <div>
                 <h3 className="font-semibold text-orange-400">Priority List - Coming Soon!</h3>
                 <p className="text-sm text-orange-300">
-                  Registration opens January 23, 2025 at 10:25 - Get 48-hour early access!
+                  Registration opens October 23, 2025 at 11:00 - Get 48-hour early access!
                 </p>
               </div>
             </div>

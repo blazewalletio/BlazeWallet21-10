@@ -157,13 +157,13 @@ export function generateUserConfirmationEmail(data: {
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="padding: 12px 0; border-left: 3px solid #f97316; padding-left: 16px;">
-                    <div style="color: #f97316; font-size: 14px; font-weight: bold; margin-bottom: 4px;">January 30, 2025</div>
+                    <div style="color: #f97316; font-size: 14px; font-weight: bold; margin-bottom: 4px;">October 30, 2025</div>
                     <div style="color: #4b5563; font-size: 14px;">Presale opens exclusively for Priority List members</div>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; border-left: 3px solid #10b981; padding-left: 16px;">
-                    <div style="color: #10b981; font-size: 14px; font-weight: bold; margin-bottom: 4px;">February 1, 2025</div>
+                    <div style="color: #10b981; font-size: 14px; font-weight: bold; margin-bottom: 4px;">November 1, 2025</div>
                     <div style="color: #4b5563; font-size: 14px;">Presale opens to the public</div>
                   </td>
                 </tr>

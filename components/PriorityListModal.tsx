@@ -407,21 +407,21 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
                       <div>
-                        <div className="font-semibold">October 27, 2025</div>
+                        <div className="font-semibold">October 23, 2025 (NOW)</div>
                         <div className="text-gray-600">Priority list registration opens</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                       <div>
-                        <div className="font-semibold">November 3, 2025</div>
+                        <div className="font-semibold">October 30, 2025</div>
                         <div className="text-gray-600">Presale starts - Priority list only</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                       <div>
-                        <div className="font-semibold">November 5, 2025</div>
+                        <div className="font-semibold">November 1, 2025</div>
                         <div className="text-gray-600">Presale opens to everyone</div>
                       </div>
                     </div>
