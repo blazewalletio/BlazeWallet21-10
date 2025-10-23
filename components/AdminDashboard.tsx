@@ -50,23 +50,36 @@ export default function AdminDashboard({ isOpen, onClose }: { isOpen: boolean; o
 
   // Load admin data
   const loadAdminData = async () => {
-    if (!adminEmail) return;
+    if (!adminEmail) {
+      console.log('❌ No admin email provided');
+      return;
+    }
 
+    console.log('🔐 Attempting admin login with email:', adminEmail);
     setIsLoading(true);
     setError('');
     
     try {
-      const response = await fetch(`/api/priority-list/admin?admin=${encodeURIComponent(adminEmail)}`);
+      const url = `/api/priority-list/admin?admin=${encodeURIComponent(adminEmail)}`;
+      console.log('📡 Fetching admin data from:', url);
+      
+      const response = await fetch(url);
+      console.log('📥 Response status:', response.status);
+      
       const result = await response.json();
+      console.log('📦 Response data:', result);
       
       if (result.success) {
+        console.log('✅ Admin authorization successful!');
         setData(result.data);
         setIsAuthorized(true);
       } else {
-        setError(result.message);
+        console.log('❌ Admin authorization failed:', result.message);
+        setError(result.message || 'Unauthorized');
         setIsAuthorized(false);
       }
     } catch (err) {
+      console.error('💥 Error loading admin data:', err);
       setError('Failed to load admin data');
       setIsAuthorized(false);
     } finally {

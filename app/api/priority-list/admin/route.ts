@@ -5,7 +5,15 @@ import { supabase } from '@/lib/supabase';
 const ADMIN_EMAILS_RAW = process.env.ADMIN_EMAILS || '';
 const ADMIN_EMAILS = ADMIN_EMAILS_RAW.split(',').map(e => e.trim()).filter(e => e.length > 0);
 
-console.log('🔐 Admin emails configured:', ADMIN_EMAILS.length > 0 ? ADMIN_EMAILS : 'NONE');
+// Fallback admin emails if env var is not set (for development/testing)
+const FALLBACK_ADMIN_EMAILS = ['info@blazewallet.io'];
+const ALLOWED_ADMINS = ADMIN_EMAILS.length > 0 ? ADMIN_EMAILS : FALLBACK_ADMIN_EMAILS;
+
+console.log('🔐 Admin emails configured:', {
+  fromEnv: ADMIN_EMAILS.length > 0,
+  count: ALLOWED_ADMINS.length,
+  emails: ALLOWED_ADMINS,
+});
 
 // GET /api/priority-list/admin - Admin dashboard data
 export async function GET(request: NextRequest) {
@@ -13,13 +21,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const adminEmail = searchParams.get('admin');
     
-    console.log('🔍 Admin login attempt:', { adminEmail, allowedEmails: ADMIN_EMAILS });
+    console.log('🔍 Admin login attempt:', { 
+      adminEmail, 
+      allowedEmails: ALLOWED_ADMINS,
+      isAllowed: adminEmail ? ALLOWED_ADMINS.includes(adminEmail) : false
+    });
     
     // Check admin authorization
-    if (!adminEmail || !ADMIN_EMAILS.includes(adminEmail)) {
+    if (!adminEmail || !ALLOWED_ADMINS.includes(adminEmail)) {
       console.log('❌ Unauthorized admin login attempt:', adminEmail);
       return NextResponse.json(
-        { success: false, message: 'Unauthorized - Invalid admin email' },
+        { success: false, message: `Unauthorized - Invalid admin email. Allowed: ${ALLOWED_ADMINS.join(', ')}` },
         { status: 401 }
       );
     }
@@ -86,7 +98,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Admin action attempt:', { adminEmail, action, walletAddress });
     
     // Check admin authorization
-    if (!adminEmail || !ADMIN_EMAILS.includes(adminEmail)) {
+    if (!adminEmail || !ALLOWED_ADMINS.includes(adminEmail)) {
       console.log('❌ Unauthorized admin action attempt:', adminEmail);
       return NextResponse.json(
         { success: false, message: 'Unauthorized - Invalid admin email' },
