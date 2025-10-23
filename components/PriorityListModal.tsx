@@ -16,7 +16,8 @@ import {
   Mail,
   Share2,
   X,
-  Sparkles
+  Sparkles,
+  Wallet
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 
@@ -42,7 +43,13 @@ interface PriorityListData {
 }
 
 export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { address } = useWalletStore();
+  const wallet = useWalletStore();
+  const address = wallet.address;
+  
+  console.log('🔍 PriorityListModal rendered');
+  console.log('📍 Current wallet address:', address);
+  console.log('🔐 Wallet state:', { address: wallet.address, isLocked: wallet.isLocked });
+  
   const [data, setData] = useState<PriorityListData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -438,6 +445,31 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
                 {data?.isRegistrationOpen && !data?.userEntry && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-900">Register for Priority List</h3>
+                    
+                    {/* Wallet Address Display */}
+                    {address && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <Wallet className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs text-blue-600 font-medium">Connected Wallet</div>
+                          <div className="text-sm font-mono text-blue-900 truncate">
+                            {address.slice(0, 6)}...{address.slice(-4)}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {!address && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium text-yellow-900">Wallet Not Connected</p>
+                          <p className="text-xs text-yellow-700 mt-1">Please unlock or connect your wallet first.</p>
+                        </div>
+                      </div>
+                    )}
                     
                     {error && (
                       <motion.div 
