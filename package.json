@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.76.1",
     "@types/crypto-js": "^4.2.2",
     "@uniswap/sdk-core": "^7.7.2",
     "@uniswap/smart-order-router": "^4.22.21",
     "@uniswap/v3-sdk": "^3.25.2",
+    "@vercel/kv": "^3.0.0",
     "@zxing/library": "^0.21.3",
     "bip39": "^3.1.0",
     "canvas-confetti": "^1.9.3",
@@ -25,6 +27,7 @@
     "next-intl": "^4.3.12",
     "qrcode": "^1.5.3",
     "react": "^18.3.1",
+    "react-confetti": "^6.4.0",
     "react-dom": "^18.3.1",
     "react-number-format": "^5.4.4",
     "react-spring": "^10.0.3",

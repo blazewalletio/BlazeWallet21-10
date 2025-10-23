@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Confetti from 'react-confetti';
 import { 
   Clock, 
   Users, 
@@ -10,22 +11,29 @@ import {
   Rocket, 
   Gift,
   Copy,
-  ExternalLink,
-  Loader2
+  Loader2,
+  Trophy,
+  Mail,
+  Share2,
+  X,
+  Sparkles
 } from 'lucide-react';
 import { useWalletStore } from '@/lib/wallet-store';
 
 interface PriorityListData {
   stats: {
-    totalRegistered: number;
-    verifiedCount: number;
-    referralCount: number;
-    lastRegistration: string | null;
+    total_registered: number;
+    verified_count: number;
+    referral_count: number;
+    early_bird_count: number;
+    email_provided_count: number;
+    last_registration: string | null;
   };
   isRegistrationOpen: boolean;
   isPriorityOnlyPhase: boolean;
   isPresaleOpenToAll: boolean;
   userEntry: any;
+  userReferrals: any[];
   timing: {
     timeUntilRegistration: { days: number; hours: number; minutes: number; seconds: number };
     timeUntilPresale: { days: number; hours: number; minutes: number; seconds: number };
@@ -41,7 +49,13 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [email, setEmail] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [twitter, setTwitter] = useState('');
   const [referralCode, setReferralCode] = useState('');
+  const [showExtraFields, setShowExtraFields] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [referralError, setReferralError] = useState('');
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // Load priority list data
@@ -66,10 +80,48 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
     }
   };
 
+  // Validate email in real-time
+  const validateEmail = (email: string) => {
+    if (!email) {
+      setEmailError('');
+      return true;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Invalid email format');
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
+
+  // Validate referral code in real-time
+  const validateReferralCode = (code: string) => {
+    if (!code) {
+      setReferralError('');
+      return true;
+    }
+    const codeRegex = /^BLAZE[A-Z0-9]{6}$/;
+    if (!codeRegex.test(code)) {
+      setReferralError('Invalid format (BLAZE + 6 characters)');
+      return false;
+    }
+    setReferralError('');
+    return true;
+  };
+
   // Register for priority list
   const handleRegister = async () => {
     if (!address) {
       setError('Please connect your wallet first');
+      return;
+    }
+
+    // Validate fields
+    if (email && !validateEmail(email)) {
+      return;
+    }
+    if (referralCode && !validateReferralCode(referralCode)) {
       return;
     }
 
@@ -86,6 +138,8 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
         body: JSON.stringify({
           walletAddress: address,
           email: email || undefined,
+          telegram: telegram || undefined,
+          twitter: twitter || undefined,
           referralCode: referralCode || undefined,
         }),
       });
@@ -94,6 +148,8 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
       
       if (result.success) {
         setSuccess(result.message);
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
         await loadPriorityListData(); // Reload data
       } else {
         setError(result.message);
@@ -107,10 +163,19 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
 
   // Copy referral code
   const copyReferralCode = () => {
-    if (data?.userEntry?.referralCode) {
-      navigator.clipboard.writeText(data.userEntry.referralCode);
+    if (data?.userEntry?.referral_code) {
+      navigator.clipboard.writeText(data.userEntry.referral_code);
       setSuccess('Referral code copied to clipboard!');
+      setTimeout(() => setSuccess(''), 3000);
     }
+  };
+
+  // Share on Twitter
+  const shareOnTwitter = () => {
+    if (!data?.userEntry?.referral_code) return;
+    const text = `I just joined the @BlazeWallet Priority List! 🔥\n\nGet 48-hour early access to the presale with my referral code: ${data.userEntry.referral_code}\n\nJoin now:`;
+    const url = `https://my.blazewallet.io?ref=${data.userEntry.referral_code}`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
   };
 
   // Countdown timer
@@ -184,6 +249,15 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
     <AnimatePresence>
       {isOpen && (
         <>
+          {showConfetti && (
+            <Confetti
+              width={window.innerWidth}
+              height={window.innerHeight}
+              recycle={false}
+              numberOfPieces={500}
+            />
+          )}
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -201,7 +275,7 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
               className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-gray-200 shadow-soft-xl pointer-events-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center">
+              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl flex justify-between items-center z-10">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                     <Rocket className="w-6 h-6 text-orange-500" />
@@ -213,7 +287,7 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
                   onClick={onClose}
                   className="text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  <AlertCircle className="w-6 h-6" />
+                  <X className="w-6 h-6" />
                 </button>
               </div>
 
@@ -248,93 +322,146 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
                 {/* Stats Grid */}
                 {data && (
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-gray-50 border border-gray-200 rounded-xl p-4"
+                    >
                       <Users className="w-5 h-5 text-blue-500 mb-2" />
-                      <div className="text-2xl font-bold text-gray-900">{data.stats.totalRegistered}</div>
+                      <div className="text-2xl font-bold text-gray-900">{data.stats.total_registered}</div>
                       <div className="text-xs text-gray-600">Registered</div>
-                    </div>
+                    </motion.div>
 
-                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                      <CheckCircle className="w-5 h-5 text-green-500 mb-2" />
-                      <div className="text-2xl font-bold text-gray-900">{data.stats.verifiedCount}</div>
-                      <div className="text-xs text-gray-600">Verified</div>
-                    </div>
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="bg-gray-50 border border-gray-200 rounded-xl p-4"
+                    >
+                      <Sparkles className="w-5 h-5 text-yellow-500 mb-2" />
+                      <div className="text-2xl font-bold text-gray-900">{data.stats.early_bird_count}</div>
+                      <div className="text-xs text-gray-600">Early Birds</div>
+                    </motion.div>
 
-                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="bg-gray-50 border border-gray-200 rounded-xl p-4"
+                    >
                       <Gift className="w-5 h-5 text-purple-500 mb-2" />
-                      <div className="text-2xl font-bold text-gray-900">{data.stats.referralCount}</div>
+                      <div className="text-2xl font-bold text-gray-900">{data.stats.referral_count}</div>
                       <div className="text-xs text-gray-600">Referrals</div>
-                    </div>
+                    </motion.div>
                   </div>
                 )}
 
-                {/* User Status */}
+                {/* User Status - Enhanced */}
                 {data?.userEntry && (
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                    <div className="flex items-center gap-2 text-green-700 font-semibold mb-2">
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4"
+                  >
+                    <div className="flex items-center gap-2 text-green-700 font-semibold mb-3">
                       <CheckCircle className="w-5 h-5" />
-                      You're Registered!
+                      You're Registered! {data.userEntry.is_early_bird && '🎉 Early Bird!'}
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
+                        <span className="text-gray-600">Position:</span>
+                        <span className="font-semibold text-lg text-orange-600">#{data.userEntry.position}</span>
+                      </div>
+                      <div className="flex justify-between">
                         <span className="text-gray-600">Registered:</span>
-                        <span className="font-semibold">{new Date(data.userEntry.registeredAt).toLocaleDateString()}</span>
+                        <span className="font-semibold">{new Date(data.userEntry.registered_at).toLocaleDateString()}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Status:</span>
-                        <span className="font-semibold text-green-600">
-                          {data.userEntry.isVerified ? 'Verified' : 'Pending Verification'}
+                        <span className={`font-semibold ${data.userEntry.email_verified_at ? 'text-green-600' : 'text-orange-600'}`}>
+                          {data.userEntry.email_verified_at ? '✓ Verified' : 'Pending Verification'}
                         </span>
                       </div>
-                      {data.userEntry.referralCode && (
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Your Referral Code:</span>
+                      {data.userEntry.referral_code && (
+                        <div className="mt-4 pt-4 border-t border-green-200">
+                          <div className="font-semibold text-gray-900 mb-2">Your Referral Code:</div>
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold font-mono">{data.userEntry.referralCode}</span>
+                            <code className="flex-1 px-3 py-2 bg-white rounded-lg border border-green-300 font-mono text-lg text-center text-orange-600">
+                              {data.userEntry.referral_code}
+                            </code>
                             <button
                               onClick={copyReferralCode}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="p-2 bg-white hover:bg-green-100 rounded-lg border border-green-300 transition-colors"
+                              title="Copy"
                             >
-                              <Copy className="w-4 h-4" />
+                              <Copy className="w-5 h-5 text-green-600" />
+                            </button>
+                            <button
+                              onClick={shareOnTwitter}
+                              className="p-2 bg-white hover:bg-green-100 rounded-lg border border-green-300 transition-colors"
+                              title="Share on Twitter"
+                            >
+                              <Share2 className="w-5 h-5 text-green-600" />
                             </button>
                           </div>
+                          {data.userReferrals && data.userReferrals.length > 0 && (
+                            <div className="mt-3 text-sm">
+                              <Trophy className="w-4 h-4 inline mr-1 text-yellow-500" />
+                              <span className="font-semibold">{data.userReferrals.length}</span> referrals
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
-                {/* Registration Form */}
+                {/* Registration Form - Enhanced */}
                 {data?.isRegistrationOpen && !data?.userEntry && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-900">Register for Priority List</h3>
                     
                     {error && (
-                      <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                      <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3"
+                      >
                         <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                         <p className="text-sm text-red-700">{error}</p>
-                      </div>
+                      </motion.div>
                     )}
 
                     {success && (
-                      <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
+                      <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3"
+                      >
                         <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                         <p className="text-sm text-green-700">{success}</p>
-                      </div>
+                      </motion.div>
                     )}
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        Email Address (Optional but Recommended)
+                      <label className="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        Email Address (Recommended)
                       </label>
                       <input
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          validateEmail(e.target.value);
+                        }}
                         placeholder="your@email.com"
-                        className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-orange-500 focus:outline-none"
+                        className={`w-full px-4 py-3 bg-gray-50 rounded-xl border ${emailError ? 'border-red-300' : 'border-gray-200'} focus:border-orange-500 focus:outline-none transition-colors`}
                         disabled={isRegistering}
                       />
+                      {emailError && (
+                        <div className="text-xs text-red-600 mt-1">{emailError}</div>
+                      )}
                       <div className="text-xs text-gray-600 mt-1">
                         Get confirmation email and presale updates
                       </div>
@@ -347,19 +474,71 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
                       <input
                         type="text"
                         value={referralCode}
-                        onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                        onChange={(e) => {
+                          const upper = e.target.value.toUpperCase();
+                          setReferralCode(upper);
+                          validateReferralCode(upper);
+                        }}
                         placeholder="BLAZE123456"
-                        className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-orange-500 focus:outline-none"
+                        className={`w-full px-4 py-3 bg-gray-50 rounded-xl border ${referralError ? 'border-red-300' : 'border-gray-200'} focus:border-orange-500 focus:outline-none font-mono transition-colors`}
                         disabled={isRegistering}
                       />
+                      {referralError && (
+                        <div className="text-xs text-red-600 mt-1">{referralError}</div>
+                      )}
                       <div className="text-xs text-gray-600 mt-1">
-                        Enter a referral code if you were invited by someone
+                        Enter a referral code if you were invited
                       </div>
                     </div>
 
+                    {/* Extra Fields Toggle */}
+                    <button
+                      onClick={() => setShowExtraFields(!showExtraFields)}
+                      className="text-sm text-orange-600 hover:text-orange-700 font-semibold"
+                    >
+                      {showExtraFields ? '− Hide' : '+ Add'} social media (optional)
+                    </button>
+
+                    {showExtraFields && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-4"
+                      >
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-900 mb-2">
+                            Telegram Username (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            value={telegram}
+                            onChange={(e) => setTelegram(e.target.value)}
+                            placeholder="@username"
+                            className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-orange-500 focus:outline-none"
+                            disabled={isRegistering}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-900 mb-2">
+                            Twitter Handle (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            value={twitter}
+                            onChange={(e) => setTwitter(e.target.value)}
+                            placeholder="@username"
+                            className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-orange-500 focus:outline-none"
+                            disabled={isRegistering}
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+
                     <button
                       onClick={handleRegister}
-                      disabled={isRegistering || !address}
+                      disabled={isRegistering || !address || !!emailError || !!referralError}
                       className="w-full py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-xl font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all"
                     >
                       {isRegistering ? (
@@ -395,7 +574,11 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
                     </div>
                     <div className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>Exclusive updates and announcements</span>
+                      <span>Exclusive Telegram group access</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Sparkles className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <span>First 500: Early Bird bonus!</span>
                     </div>
                   </div>
                 </div>
@@ -442,4 +625,3 @@ export default function PriorityListModal({ isOpen, onClose }: { isOpen: boolean
     </AnimatePresence>
   );
 }
-

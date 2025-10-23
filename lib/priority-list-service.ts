@@ -1,112 +1,77 @@
-// Priority List Service for Blaze Presale
-// Handles registration from October 27, 2025 with 48-hour exclusivity
+// Priority List Service with Supabase Backend
+// Handles registration, email verification, referrals, and admin functions
 
-export interface PriorityListEntry {
-  id: string;
-  walletAddress: string;
+import { supabase, PriorityListRegistration, PriorityListStats, ReferralLeaderboardEntry } from './supabase';
+import { sendEmail, generateUserConfirmationEmail, generateAdminNotificationEmail } from './email-service';
+
+export interface RegisterOptions {
   email?: string;
   telegram?: string;
   twitter?: string;
-  registeredAt: Date;
-  isVerified: boolean;
   referralCode?: string;
-  referredBy?: string;
 }
 
-export interface PriorityListStats {
-  totalRegistered: number;
-  verifiedCount: number;
-  referralCount: number;
-  lastRegistration: Date | null;
+export interface RegisterResult {
+  success: boolean;
+  message: string;
+  entry?: PriorityListRegistration;
+  position?: number;
+  isEarlyBird?: boolean;
 }
+
+// Priority List Dates
+const REGISTRATION_START = new Date('2025-10-23T09:00:00Z');
+const PRESALE_START = new Date('2025-10-30T09:00:00Z');
+const EXCLUSIVITY_END = new Date('2025-11-01T09:00:00Z');
+const EARLY_BIRD_LIMIT = 500; // First 500 get early bird bonus
 
 export class PriorityListService {
-  private static instance: PriorityListService;
-  private entries: Map<string, PriorityListEntry> = new Map();
-  private stats: PriorityListStats = {
-    totalRegistered: 0,
-    verifiedCount: 0,
-    referralCount: 0,
-    lastRegistration: null,
-  };
-
-  // Priority List Dates - TESTING MODE
-  // Original: 2025-10-27T00:00:00Z
-  // Testing: Registration opens NOW for testing
-  private static readonly REGISTRATION_START = new Date('2025-10-23T09:00:00Z'); // NOW - 23 Oct 2025 11:00 CEST
-  private static readonly PRESALE_START = new Date('2025-10-30T09:00:00Z'); // 7 days later
-  private static readonly EXCLUSIVITY_END = new Date('2025-11-01T09:00:00Z'); // 48 hours after presale start
-
-  private constructor() {
-    this.loadFromStorage();
-  }
-
-  static getInstance(): PriorityListService {
-    if (!PriorityListService.instance) {
-      PriorityListService.instance = new PriorityListService();
-    }
-    return PriorityListService.instance;
-  }
-
   /**
    * Check if priority list registration is open
    */
-  isRegistrationOpen(): boolean {
+  static isRegistrationOpen(): boolean {
     const now = new Date();
-    return now >= PriorityListService.REGISTRATION_START && now < PriorityListService.PRESALE_START;
+    return now >= REGISTRATION_START && now < PRESALE_START;
   }
 
   /**
-   * Check if presale is in priority-only phase (first 48 hours)
+   * Check if presale is in priority-only phase
    */
-  isPriorityOnlyPhase(): boolean {
+  static isPriorityOnlyPhase(): boolean {
     const now = new Date();
-    return now >= PriorityListService.PRESALE_START && now < PriorityListService.EXCLUSIVITY_END;
+    return now >= PRESALE_START && now < EXCLUSIVITY_END;
   }
 
   /**
    * Check if presale is open to everyone
    */
-  isPresaleOpenToAll(): boolean {
+  static isPresaleOpenToAll(): boolean {
     const now = new Date();
-    return now >= PriorityListService.EXCLUSIVITY_END;
+    return now >= EXCLUSIVITY_END;
   }
 
   /**
    * Register for priority list
    */
-  async registerForPriorityList(
+  static async registerForPriorityList(
     walletAddress: string,
-    options: {
-      email?: string;
-      telegram?: string;
-      twitter?: string;
-      referralCode?: string;
-    } = {}
-  ): Promise<{ success: boolean; message: string; entry?: PriorityListEntry }> {
+    options: RegisterOptions = {}
+  ): Promise<RegisterResult> {
     try {
       // Validate registration period
       if (!this.isRegistrationOpen()) {
         const now = new Date();
-        if (now < PriorityListService.REGISTRATION_START) {
+        if (now < REGISTRATION_START) {
           return {
             success: false,
-            message: `Priority list registration opens on October 27, 2025 at 00:00 UTC`,
+            message: `Priority list registration opens on October 23, 2025 at 11:00 CEST`,
           };
         } else {
           return {
             success: false,
-            message: `Priority list registration closed. Presale starts November 3, 2025.`,
+            message: `Priority list registration closed. Presale starts October 30, 2025.`,
           };
         }
-      }
-
-      // Check if already registered
-      if (this.entries.has(walletAddress.toLowerCase())) {
-        return {
-          success: false,
-          message: 'This wallet is already registered for the priority list.',
-        };
       }
 
       // Validate wallet address
@@ -117,36 +82,150 @@ export class PriorityListService {
         };
       }
 
-      // Check referral code if provided
-      if (options.referralCode && !this.isValidReferralCode(options.referralCode)) {
+      // Check if wallet already registered
+      const { data: existing } = await supabase
+        .from('priority_list_registrations')
+        .select('*')
+        .eq('wallet_address', walletAddress.toLowerCase())
+        .single();
+
+      if (existing) {
         return {
           success: false,
-          message: 'Invalid referral code.',
+          message: 'This wallet is already registered for the priority list.',
         };
       }
 
-      // Create entry
-      const entry: PriorityListEntry = {
-        id: this.generateId(),
-        walletAddress: walletAddress.toLowerCase(),
+      // Check if email already registered
+      if (options.email) {
+        const { data: emailExists } = await supabase
+          .from('priority_list_registrations')
+          .select('wallet_address')
+          .ilike('email', options.email)
+          .single();
+
+        if (emailExists) {
+          return {
+            success: false,
+            message: 'This email is already registered with another wallet.',
+          };
+        }
+      }
+
+      // Validate and find referrer
+      let referredBy: string | undefined;
+      if (options.referralCode) {
+        if (!this.isValidReferralCode(options.referralCode)) {
+          return {
+            success: false,
+            message: 'Invalid referral code format.',
+          };
+        }
+
+        const { data: referrer } = await supabase
+          .from('priority_list_registrations')
+          .select('wallet_address')
+          .eq('referral_code', options.referralCode)
+          .single();
+
+        if (!referrer) {
+          return {
+            success: false,
+            message: 'Referral code not found.',
+          };
+        }
+
+        referredBy = referrer.wallet_address;
+      }
+
+      // Generate referral code for new user
+      const referralCode = this.generateReferralCode(walletAddress);
+
+      // Generate email verification token
+      const emailVerificationToken = options.email ? this.generateVerificationToken() : undefined;
+
+      // Check if early bird (first 500)
+      const { count } = await supabase
+        .from('priority_list_registrations')
+        .select('*', { count: 'exact', head: true });
+
+      const isEarlyBird = (count || 0) < EARLY_BIRD_LIMIT;
+
+      // Insert registration
+      const { data, error } = await supabase
+        .from('priority_list_registrations')
+        .insert({
+          wallet_address: walletAddress.toLowerCase(),
+          email: options.email,
+          telegram: options.telegram,
+          twitter: options.twitter,
+          referral_code: referralCode,
+          referred_by: referredBy,
+          is_early_bird: isEarlyBird,
+          email_verification_token: emailVerificationToken,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase insert error:', error);
+        return {
+          success: false,
+          message: 'Failed to register. Please try again.',
+        };
+      }
+
+      // Create email verification token record
+      if (options.email && emailVerificationToken) {
+        await supabase
+          .from('email_verification_tokens')
+          .insert({
+            wallet_address: walletAddress.toLowerCase(),
+            token: emailVerificationToken,
+            expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+          });
+      }
+
+      // Send confirmation email (with verification link if email provided)
+      if (options.email) {
+        const userEmailHtml = generateUserConfirmationEmail({
+          walletAddress: data.wallet_address,
+          registeredAt: new Date(data.registered_at),
+          referralCode: data.referral_code,
+        });
+
+        await sendEmail({
+          to: options.email,
+          subject: '🔥 Welcome to BLAZE Priority List - Confirm Your Email!',
+          html: userEmailHtml,
+        });
+      }
+
+      // Send notification to admin
+      const adminEmailHtml = generateAdminNotificationEmail({
+        walletAddress: data.wallet_address,
         email: options.email,
         telegram: options.telegram,
         twitter: options.twitter,
-        registeredAt: new Date(),
-        isVerified: false,
-        referralCode: options.referralCode,
-        referredBy: options.referralCode ? this.getReferrerByCode(options.referralCode) : undefined,
-      };
+        registeredAt: new Date(data.registered_at),
+        referralCode: data.referral_code,
+        referredBy: data.referred_by,
+      });
 
-      // Save entry
-      this.entries.set(walletAddress.toLowerCase(), entry);
-      this.updateStats();
-      this.saveToStorage();
+      await sendEmail({
+        to: 'info@blazewallet.io',
+        subject: `🔥 New Priority List Registration #${data.position} - ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`,
+        html: adminEmailHtml,
+      });
 
       return {
         success: true,
-        message: 'Successfully registered for priority list! You will have 48-hour early access to the presale.',
-        entry,
+        message: isEarlyBird 
+          ? `🎉 Success! You're registered as Early Bird #${data.position}! Check your email for confirmation.`
+          : `Successfully registered for priority list! You're #${data.position}. Check your email for confirmation.`,
+        entry: data,
+        position: data.position,
+        isEarlyBird: data.is_early_bird,
       };
     } catch (error) {
       console.error('Error registering for priority list:', error);
@@ -158,181 +237,210 @@ export class PriorityListService {
   }
 
   /**
-   * Check if wallet is in priority list
+   * Verify email with token
    */
-  isInPriorityList(walletAddress: string): boolean {
-    return this.entries.has(walletAddress.toLowerCase());
+  static async verifyEmail(token: string): Promise<{ success: boolean; message: string }> {
+    try {
+      // Find token
+      const { data: tokenData, error: tokenError } = await supabase
+        .from('email_verification_tokens')
+        .select('*')
+        .eq('token', token)
+        .is('used_at', null)
+        .single();
+
+      if (tokenError || !tokenData) {
+        return {
+          success: false,
+          message: 'Invalid or expired verification token.',
+        };
+      }
+
+      // Check if expired
+      if (new Date(tokenData.expires_at) < new Date()) {
+        return {
+          success: false,
+          message: 'Verification token has expired. Please request a new one.',
+        };
+      }
+
+      // Mark token as used
+      await supabase
+        .from('email_verification_tokens')
+        .update({ used_at: new Date().toISOString() })
+        .eq('id', tokenData.id);
+
+      // Update registration
+      await supabase
+        .from('priority_list_registrations')
+        .update({
+          email_verified_at: new Date().toISOString(),
+          is_verified: true,
+        })
+        .eq('wallet_address', tokenData.wallet_address);
+
+      return {
+        success: true,
+        message: 'Email verified successfully!',
+      };
+    } catch (error) {
+      console.error('Error verifying email:', error);
+      return {
+        success: false,
+        message: 'Failed to verify email. Please try again.',
+      };
+    }
   }
 
   /**
-   * Get priority list entry
+   * Get registration by wallet address
    */
-  getPriorityEntry(walletAddress: string): PriorityListEntry | null {
-    return this.entries.get(walletAddress.toLowerCase()) || null;
-  }
+  static async getRegistration(walletAddress: string): Promise<PriorityListRegistration | null> {
+    const { data, error } = await supabase
+      .from('priority_list_registrations')
+      .select('*')
+      .eq('wallet_address', walletAddress.toLowerCase())
+      .single();
 
-  /**
-   * Get all priority list entries (admin only)
-   */
-  getAllEntries(): PriorityListEntry[] {
-    return Array.from(this.entries.values());
+    if (error) {
+      console.error('Error fetching registration:', error);
+      return null;
+    }
+
+    return data;
   }
 
   /**
    * Get priority list statistics
    */
-  getStats(): PriorityListStats {
-    return { ...this.stats };
-  }
+  static async getStats(): Promise<PriorityListStats | null> {
+    const { data, error } = await supabase
+      .from('priority_list_stats')
+      .select('*')
+      .single();
 
-  /**
-   * Verify a priority list entry (admin only)
-   */
-  verifyEntry(walletAddress: string): boolean {
-    const entry = this.entries.get(walletAddress.toLowerCase());
-    if (entry) {
-      entry.isVerified = true;
-      this.updateStats();
-      this.saveToStorage();
-      return true;
+    if (error) {
+      console.error('Error fetching stats:', error);
+      return null;
     }
-    return false;
+
+    return data;
   }
 
   /**
-   * Generate referral code
+   * Get referral leaderboard
    */
-  generateReferralCode(walletAddress: string): string {
+  static async getLeaderboard(limit: number = 10): Promise<ReferralLeaderboardEntry[]> {
+    const { data, error } = await supabase
+      .from('referral_leaderboard')
+      .select('*')
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching leaderboard:', error);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Get user's referrals
+   */
+  static async getUserReferrals(walletAddress: string): Promise<PriorityListRegistration[]> {
+    const { data, error } = await supabase
+      .from('priority_list_registrations')
+      .select('*')
+      .eq('referred_by', walletAddress.toLowerCase())
+      .order('registered_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching referrals:', error);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Check if wallet is in priority list
+   */
+  static async isInPriorityList(walletAddress: string): Promise<boolean> {
+    const { data } = await supabase
+      .from('priority_list_registrations')
+      .select('id')
+      .eq('wallet_address', walletAddress.toLowerCase())
+      .single();
+
+    return !!data;
+  }
+
+  /**
+   * Get time until registration/presale/exclusivity end
+   */
+  static getTimeUntilRegistration(): { days: number; hours: number; minutes: number; seconds: number } {
+    return this.calculateTimeDiff(REGISTRATION_START);
+  }
+
+  static getTimeUntilPresale(): { days: number; hours: number; minutes: number; seconds: number } {
+    return this.calculateTimeDiff(PRESALE_START);
+  }
+
+  static getTimeUntilExclusivityEnd(): { days: number; hours: number; minutes: number; seconds: number } {
+    return this.calculateTimeDiff(EXCLUSIVITY_END);
+  }
+
+  // Helper methods
+  private static calculateTimeDiff(targetDate: Date): { days: number; hours: number; minutes: number; seconds: number } {
+    const now = new Date();
+    const diff = targetDate.getTime() - now.getTime();
+    
+    if (diff <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+  }
+
+  private static isValidWalletAddress(address: string): boolean {
+    return /^0x[a-fA-F0-9]{40}$/.test(address);
+  }
+
+  private static isValidReferralCode(code: string): boolean {
+    return /^BLAZE[A-Z0-9]{6}$/.test(code);
+  }
+
+  private static generateReferralCode(walletAddress: string): string {
     const hash = this.simpleHash(walletAddress);
     return `BLAZE${hash.toString(36).toUpperCase().slice(0, 6)}`;
   }
 
-  /**
-   * Get time until registration opens
-   */
-  getTimeUntilRegistration(): { days: number; hours: number; minutes: number; seconds: number } {
-    const now = new Date();
-    const diff = PriorityListService.REGISTRATION_START.getTime() - now.getTime();
-    
-    if (diff <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    return { days, hours, minutes, seconds };
-  }
-
-  /**
-   * Get time until presale starts
-   */
-  getTimeUntilPresale(): { days: number; hours: number; minutes: number; seconds: number } {
-    const now = new Date();
-    const diff = PriorityListService.PRESALE_START.getTime() - now.getTime();
-    
-    if (diff <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    return { days, hours, minutes, seconds };
-  }
-
-  /**
-   * Get time until exclusivity ends
-   */
-  getTimeUntilExclusivityEnd(): { days: number; hours: number; minutes: number; seconds: number } {
-    const now = new Date();
-    const diff = PriorityListService.EXCLUSIVITY_END.getTime() - now.getTime();
-    
-    if (diff <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    return { days, hours, minutes, seconds };
-  }
-
-  // Private helper methods
-  private isValidWalletAddress(address: string): boolean {
-    return /^0x[a-fA-F0-9]{40}$/.test(address);
-  }
-
-  private isValidReferralCode(code: string): boolean {
-    return /^BLAZE[A-Z0-9]{6}$/.test(code);
-  }
-
-  private getReferrerByCode(code: string): string | undefined {
-    // Find the wallet address that generated this referral code
-    for (const [address, entry] of this.entries.entries()) {
-      if (this.generateReferralCode(address) === code) {
-        return address;
-      }
-    }
-    return undefined;
-  }
-
-  private generateId(): string {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
-  }
-
-  private simpleHash(str: string): number {
+  private static simpleHash(str: string): number {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
+      hash = hash & hash;
     }
     return Math.abs(hash);
   }
 
-  private updateStats(): void {
-    const entries = Array.from(this.entries.values());
-    this.stats.totalRegistered = entries.length;
-    this.stats.verifiedCount = entries.filter(e => e.isVerified).length;
-    this.stats.referralCount = entries.filter(e => e.referredBy).length;
-    this.stats.lastRegistration = entries.length > 0 
-      ? new Date(Math.max(...entries.map(e => e.registeredAt.getTime())))
-      : null;
+  private static generateVerificationToken(): string {
+    return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
   }
 
-  private saveToStorage(): void {
-    try {
-      const data = {
-        entries: Array.from(this.entries.entries()),
-        stats: this.stats,
-      };
-      localStorage.setItem('blaze_priority_list', JSON.stringify(data));
-    } catch (error) {
-      console.error('Failed to save priority list to storage:', error);
-    }
-  }
-
-  private loadFromStorage(): void {
-    try {
-      const data = localStorage.getItem('blaze_priority_list');
-      if (data) {
-        const parsed = JSON.parse(data);
-        this.entries = new Map(parsed.entries);
-        this.stats = parsed.stats;
-      }
-    } catch (error) {
-      console.error('Failed to load priority list from storage:', error);
-    }
+  /**
+   * Generate referral code for a wallet
+   */
+  static generateReferralCodeForWallet(walletAddress: string): string {
+    return this.generateReferralCode(walletAddress);
   }
 }
-
-// Export singleton instance
-export const priorityListService = PriorityListService.getInstance();
 

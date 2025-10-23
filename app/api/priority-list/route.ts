@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { priorityListService } from '@/lib/priority-list-service';
-import { sendEmail, generateUserConfirmationEmail, generateAdminNotificationEmail } from '@/lib/email-service';
+import { PriorityListService } from '@/lib/priority-list-service-v2';
 
 // GET /api/priority-list - Get priority list status and stats
 export async function GET(request: NextRequest) {
@@ -8,33 +7,48 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const walletAddress = searchParams.get('wallet');
 
-    const stats = priorityListService.getStats();
-    const isRegistrationOpen = priorityListService.isRegistrationOpen();
-    const isPriorityOnlyPhase = priorityListService.isPriorityOnlyPhase();
-    const isPresaleOpenToAll = priorityListService.isPresaleOpenToAll();
+    // Get stats
+    const stats = await PriorityListService.getStats();
+    
+    // Get timing info
+    const timing = {
+      timeUntilRegistration: PriorityListService.getTimeUntilRegistration(),
+      timeUntilPresale: PriorityListService.getTimeUntilPresale(),
+      timeUntilExclusivityEnd: PriorityListService.getTimeUntilExclusivityEnd(),
+    };
 
+    // Get status flags
+    const isRegistrationOpen = PriorityListService.isRegistrationOpen();
+    const isPriorityOnlyPhase = PriorityListService.isPriorityOnlyPhase();
+    const isPresaleOpenToAll = PriorityListService.isPresaleOpenToAll();
+
+    // Get user entry if wallet provided
     let userEntry = null;
+    let userReferrals = [];
     if (walletAddress) {
-      userEntry = priorityListService.getPriorityEntry(walletAddress);
+      userEntry = await PriorityListService.getRegistration(walletAddress);
+      if (userEntry) {
+        userReferrals = await PriorityListService.getUserReferrals(walletAddress);
+      }
     }
-
-    const timeUntilRegistration = priorityListService.getTimeUntilRegistration();
-    const timeUntilPresale = priorityListService.getTimeUntilPresale();
-    const timeUntilExclusivityEnd = priorityListService.getTimeUntilExclusivityEnd();
 
     return NextResponse.json({
       success: true,
       data: {
-        stats,
+        stats: stats || {
+          total_registered: 0,
+          verified_count: 0,
+          referral_count: 0,
+          early_bird_count: 0,
+          email_provided_count: 0,
+          last_registration: null,
+        },
         isRegistrationOpen,
         isPriorityOnlyPhase,
         isPresaleOpenToAll,
         userEntry,
-        timing: {
-          timeUntilRegistration,
-          timeUntilPresale,
-          timeUntilExclusivityEnd,
-        },
+        userReferrals,
+        timing,
       },
     });
   } catch (error) {
@@ -59,50 +73,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await priorityListService.registerForPriorityList(walletAddress, {
+    const result = await PriorityListService.registerForPriorityList(walletAddress, {
       email,
       telegram,
       twitter,
       referralCode,
     });
 
-    if (result.success && result.entry) {
-      // Send confirmation email to user (if email provided)
-      if (email) {
-        const userEmailHtml = generateUserConfirmationEmail({
-          walletAddress: result.entry.walletAddress,
-          registeredAt: result.entry.registeredAt,
-          referralCode: priorityListService.generateReferralCode(walletAddress),
-        });
-
-        await sendEmail({
-          to: email,
-          subject: '🔥 Welcome to BLAZE Priority List - Registration Confirmed!',
-          html: userEmailHtml,
-        });
-      }
-
-      // Send notification email to admin
-      const adminEmailHtml = generateAdminNotificationEmail({
-        walletAddress: result.entry.walletAddress,
-        email,
-        telegram,
-        twitter,
-        registeredAt: result.entry.registeredAt,
-        referralCode: priorityListService.generateReferralCode(walletAddress),
-        referredBy: result.entry.referredBy,
-      });
-
-      await sendEmail({
-        to: 'info@blazewallet.io',
-        subject: `🔥 New Priority List Registration - ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`,
-        html: adminEmailHtml,
-      });
-
+    if (result.success) {
       return NextResponse.json({
         success: true,
         message: result.message,
-        data: result.entry,
+        data: {
+          entry: result.entry,
+          position: result.position,
+          isEarlyBird: result.isEarlyBird,
+        },
       });
     } else {
       return NextResponse.json(
@@ -118,45 +104,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-// PUT /api/priority-list - Verify entry (admin only)
-export async function PUT(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { walletAddress, action } = body;
-
-    if (!walletAddress || !action) {
-      return NextResponse.json(
-        { success: false, message: 'Wallet address and action are required' },
-        { status: 400 }
-      );
-    }
-
-    if (action === 'verify') {
-      const success = priorityListService.verifyEntry(walletAddress);
-      if (success) {
-        return NextResponse.json({
-          success: true,
-          message: 'Entry verified successfully',
-        });
-      } else {
-        return NextResponse.json(
-          { success: false, message: 'Entry not found' },
-          { status: 404 }
-        );
-      }
-    }
-
-    return NextResponse.json(
-      { success: false, message: 'Invalid action' },
-      { status: 400 }
-    );
-  } catch (error) {
-    console.error('Error updating priority list entry:', error);
-    return NextResponse.json(
-      { success: false, message: 'Failed to update entry' },
-      { status: 500 }
-    );
-  }
-}
-
